@@ -11,11 +11,15 @@ import { Footer } from "./components/Footer";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import EmailAuth from "./pages/EmailAuth";
 import Users from "./pages/Users";
+import Inventory from "./pages/Inventory";
+import StockMovements from "./pages/StockMovements";
 import POS from "./pages/POS";
 import Vendors from "./pages/Vendors";
 import PurchaseOrders from "./pages/PurchaseOrders";
 import Analytics from "./pages/Analytics";
+import Files from "./pages/Files";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
