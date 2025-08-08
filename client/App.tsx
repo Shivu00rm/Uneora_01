@@ -10,6 +10,12 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import Users from "./pages/Users";
+import POS from "./pages/POS";
+import Vendors from "./pages/Vendors";
+import PurchaseOrders from "./pages/PurchaseOrders";
+import Analytics from "./pages/Analytics";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
