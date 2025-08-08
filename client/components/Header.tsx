@@ -26,7 +26,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6">
             <Link to="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Dashboard
             </Link>
@@ -36,11 +36,14 @@ export function Header() {
             <Link to="/pos" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               POS
             </Link>
+            <Link to="/vendors" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Vendors
+            </Link>
             <Link to="/analytics" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Analytics
             </Link>
-            <Link to="/automation" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Automation
+            <Link to="/users" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Users
             </Link>
           </nav>
 
