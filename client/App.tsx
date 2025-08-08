@@ -32,13 +32,19 @@ const App = () => (
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/inventory" element={<Placeholder title="Inventory Management" description="Comprehensive inventory tracking with real-time stock updates, batch management, and automated alerts." feature="Coming Soon" />} />
-              <Route path="/pos" element={<Placeholder title="Point of Sale" description="GST-compliant billing system with barcode scanning and integrated payment processing." feature="Coming Soon" />} />
-              <Route path="/analytics" element={<Placeholder title="AI Analytics" description="Demand forecasting, vendor scoring, and intelligent business insights powered by AI." feature="AI Powered" />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/inventory" element={<Placeholder title="Inventory Management" description="Comprehensive inventory tracking with real-time stock updates, batch management, and automated alerts." feature="Real-time Sync" />} />
+              <Route path="/pos" element={<POS />} />
+              <Route path="/vendors" element={<Vendors />} />
+              <Route path="/purchase-orders" element={<PurchaseOrders />} />
+              <Route path="/analytics" element={<Analytics />} />
               <Route path="/automation" element={<Placeholder title="Smart Automation" description="Drag-and-drop workflow builder with intelligent triggers and automated actions." feature="Automation" />} />
               <Route path="/ecommerce" element={<Placeholder title="E-commerce Sync" description="Real-time synchronization with Shopify, Amazon, WooCommerce and other platforms." feature="Multi-Channel" />} />
               <Route path="/consulting" element={<Placeholder title="MSME Consulting" description="Expert business consulting services with AI-powered analysis and recommendations." feature="Expert Support" />} />
+              <Route path="/payments" element={<Placeholder title="Payment Integration" description="Razorpay and UPI integration for seamless payment processing." feature="Razorpay/UPI" />} />
+              <Route path="/alerts" element={<Placeholder title="WhatsApp Alerts" description="Automated WhatsApp notifications for stock alerts, orders, and business updates." feature="WhatsApp API" />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
