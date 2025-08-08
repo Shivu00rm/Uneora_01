@@ -39,16 +39,7 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/users" element={<Users />} />
-              <Route
-                path="/inventory"
-                element={
-                  <Placeholder
-                    title="Inventory Management"
-                    description="Comprehensive inventory tracking with real-time stock updates, batch management, and automated alerts."
-                    feature="Real-time Sync"
-                  />
-                }
-              />
+              <Route path="/inventory" element={<Inventory />} />
               <Route path="/pos" element={<POS />} />
               <Route path="/vendors" element={<Vendors />} />
               <Route path="/purchase-orders" element={<PurchaseOrders />} />
