@@ -92,6 +92,13 @@ export function Header() {
                 POS
               </Link>
               <Link
+                to="/vendors"
+                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Vendors
+              </Link>
+              <Link
                 to="/analytics"
                 className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setIsMenuOpen(false)}
@@ -99,16 +106,18 @@ export function Header() {
                 Analytics
               </Link>
               <Link
-                to="/automation"
+                to="/users"
                 className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Automation
+                Users
               </Link>
               <div className="border-t pt-4 space-y-2">
-                <Button variant="ghost" size="sm" className="w-full">
-                  Sign In
-                </Button>
+                <Link to="/login">
+                  <Button variant="ghost" size="sm" className="w-full">
+                    Sign In
+                  </Button>
+                </Link>
                 <Button size="sm" className="w-full">
                   Start Free Trial
                 </Button>
