@@ -9,24 +9,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  Package, 
-  Plus, 
-  Search, 
-  Download, 
-  Upload,
+import {
+  Package,
+  Plus,
+  Search,
   AlertTriangle,
   TrendingUp,
   TrendingDown,
   Eye,
   Edit,
   BarChart3,
-  FileSpreadsheet,
-  CloudUpload,
   History,
   CheckCircle,
   XCircle
 } from "lucide-react";
+import { ExcelImportExport } from "@/components/ExcelImportExport";
 
 const mockInventory = [
   {
