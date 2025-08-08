@@ -3,22 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  Upload, 
-  File, 
-  Image, 
-  FileText, 
-  Download, 
-  Trash2, 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Upload,
+  File,
+  Image,
+  FileText,
+  Download,
+  Trash2,
   Eye,
   CloudUpload,
   CheckCircle,
   AlertTriangle,
   RefreshCw,
   Folder,
-  Plus
+  Plus,
 } from "lucide-react";
 
 interface UploadedFile {
@@ -39,31 +53,33 @@ const mockFiles: UploadedFile[] = [
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     uploadDate: "2024-01-15",
     url: "https://r2.example.com/files/inventory_template.xlsx",
-    category: "excel"
+    category: "excel",
   },
   {
-    id: "2", 
+    id: "2",
     name: "product_catalog.pdf",
     size: 2048000,
     type: "application/pdf",
     uploadDate: "2024-01-14",
     url: "https://r2.example.com/files/product_catalog.pdf",
-    category: "document"
+    category: "document",
   },
   {
     id: "3",
     name: "warehouse_layout.jpg",
     size: 1536000,
-    type: "image/jpeg", 
+    type: "image/jpeg",
     uploadDate: "2024-01-13",
     url: "https://r2.example.com/files/warehouse_layout.jpg",
-    category: "image"
-  }
+    category: "image",
+  },
 ];
 
 export function FileUpload() {
   const [isDragOver, setIsDragOver] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
+  const [uploadProgress, setUploadProgress] = useState<{
+    [key: string]: number;
+  }>({});
   const [files, setFiles] = useState<UploadedFile[]>(mockFiles);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -77,10 +93,14 @@ export function FileUpload() {
 
   const getFileIcon = (category: string) => {
     switch (category) {
-      case "image": return <Image className="h-4 w-4 text-blue-500" />;
-      case "document": return <FileText className="h-4 w-4 text-red-500" />;
-      case "excel": return <File className="h-4 w-4 text-emerald-500" />;
-      default: return <File className="h-4 w-4 text-muted-foreground" />;
+      case "image":
+        return <Image className="h-4 w-4 text-blue-500" />;
+      case "document":
+        return <FileText className="h-4 w-4 text-red-500" />;
+      case "excel":
+        return <File className="h-4 w-4 text-emerald-500" />;
+      default:
+        return <File className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
@@ -104,7 +124,7 @@ export function FileUpload() {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const droppedFiles = Array.from(e.dataTransfer.files);
     handleFileUpload(droppedFiles);
   }, []);
@@ -118,40 +138,40 @@ export function FileUpload() {
 
   const handleFileUpload = async (fileList: File[]) => {
     setIsUploading(true);
-    
+
     for (const file of fileList) {
       const fileId = `temp-${Date.now()}-${file.name}`;
-      
+
       // Simulate upload progress
       for (let progress = 0; progress <= 100; progress += 10) {
-        setUploadProgress(prev => ({ ...prev, [fileId]: progress }));
-        await new Promise(resolve => setTimeout(resolve, 200));
+        setUploadProgress((prev) => ({ ...prev, [fileId]: progress }));
+        await new Promise((resolve) => setTimeout(resolve, 200));
       }
-      
+
       // Add to files list after upload completes
       const newFile: UploadedFile = {
         id: Date.now().toString(),
         name: file.name,
         size: file.size,
         type: file.type,
-        uploadDate: new Date().toISOString().split('T')[0],
+        uploadDate: new Date().toISOString().split("T")[0],
         url: `https://r2.example.com/files/${file.name}`,
-        category: getFileCategory(file.type)
+        category: getFileCategory(file.type),
       };
-      
-      setFiles(prev => [newFile, ...prev]);
-      setUploadProgress(prev => {
+
+      setFiles((prev) => [newFile, ...prev]);
+      setUploadProgress((prev) => {
         const newProgress = { ...prev };
         delete newProgress[fileId];
         return newProgress;
       });
     }
-    
+
     setIsUploading(false);
   };
 
   const handleDelete = (fileId: string) => {
-    setFiles(prev => prev.filter(file => file.id !== fileId));
+    setFiles((prev) => prev.filter((file) => file.id !== fileId));
   };
 
   return (
@@ -167,8 +187,8 @@ export function FileUpload() {
         <CardContent>
           <div
             className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              isDragOver 
-                ? "border-primary bg-primary/5" 
+              isDragOver
+                ? "border-primary bg-primary/5"
                 : "border-muted-foreground/25"
             }`}
             onDragOver={handleDragOver}
@@ -177,7 +197,9 @@ export function FileUpload() {
           >
             <CloudUpload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <div className="space-y-2">
-              <h3 className="text-lg font-medium">Upload Files to Cloudflare R2</h3>
+              <h3 className="text-lg font-medium">
+                Upload Files to Cloudflare R2
+              </h3>
               <p className="text-muted-foreground">
                 Drag and drop files here, or click to browse
               </p>
@@ -207,7 +229,7 @@ export function FileUpload() {
               {Object.entries(uploadProgress).map(([fileId, progress]) => (
                 <div key={fileId} className="space-y-1">
                   <div className="flex justify-between text-sm">
-                    <span>{fileId.split('-').pop()}</span>
+                    <span>{fileId.split("-").pop()}</span>
                     <span>{progress}%</span>
                   </div>
                   <Progress value={progress} className="h-2" />
@@ -257,7 +279,10 @@ export function FileUpload() {
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <label htmlFor="folder-name" className="text-sm font-medium">
+                      <label
+                        htmlFor="folder-name"
+                        className="text-sm font-medium"
+                      >
                         Folder Name
                       </label>
                       <input
@@ -309,25 +334,28 @@ export function FileUpload() {
                     <TableCell>{formatFileSize(file.size)}</TableCell>
                     <TableCell>{file.uploadDate}</TableCell>
                     <TableCell>
-                      <Badge variant="default" className="flex items-center gap-1 w-fit">
+                      <Badge
+                        variant="default"
+                        className="flex items-center gap-1 w-fit"
+                      >
                         <CheckCircle className="h-3 w-3" />
                         Uploaded
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           size="sm"
-                          onClick={() => window.open(file.url, '_blank')}
+                          onClick={() => window.open(file.url, "_blank")}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           size="sm"
                           onClick={() => {
-                            const link = document.createElement('a');
+                            const link = document.createElement("a");
                             link.href = file.url;
                             link.download = file.name;
                             link.click();
@@ -335,8 +363,8 @@ export function FileUpload() {
                         >
                           <Download className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           size="sm"
                           onClick={() => handleDelete(file.id)}
                           className="text-destructive hover:text-destructive"

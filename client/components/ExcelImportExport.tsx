@@ -3,23 +3,43 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  Upload, 
-  Download, 
-  FileSpreadsheet, 
-  CheckCircle, 
-  AlertTriangle, 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Upload,
+  Download,
+  FileSpreadsheet,
+  CheckCircle,
+  AlertTriangle,
   XCircle,
   Eye,
   CloudUpload,
   File,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
 
 interface ImportPreview {
@@ -41,7 +61,7 @@ const mockImportPreview: ImportPreview[] = [
     category: "Electronics",
     price: 8999,
     stock: 50,
-    status: "valid"
+    status: "valid",
   },
   {
     row: 2,
@@ -50,7 +70,7 @@ const mockImportPreview: ImportPreview[] = [
     category: "Electronics",
     price: 2499,
     stock: 30,
-    status: "valid"
+    status: "valid",
   },
   {
     row: 3,
@@ -60,7 +80,7 @@ const mockImportPreview: ImportPreview[] = [
     price: 79900,
     stock: 25,
     status: "warning",
-    issues: ["Product already exists - will update stock"]
+    issues: ["Product already exists - will update stock"],
   },
   {
     row: 4,
@@ -70,8 +90,8 @@ const mockImportPreview: ImportPreview[] = [
     price: 1999,
     stock: 10,
     status: "error",
-    issues: ["SKU is required", "Name exceeds character limit"]
-  }
+    issues: ["SKU is required", "Name exceeds character limit"],
+  },
 ];
 
 const exportTemplates = [
@@ -79,26 +99,42 @@ const exportTemplates = [
     id: "inventory",
     name: "Full Inventory",
     description: "Complete inventory with all product details",
-    fields: ["SKU", "Name", "Category", "Current Stock", "Reorder Level", "Unit Price", "Supplier", "Location"]
+    fields: [
+      "SKU",
+      "Name",
+      "Category",
+      "Current Stock",
+      "Reorder Level",
+      "Unit Price",
+      "Supplier",
+      "Location",
+    ],
   },
   {
     id: "stock_levels",
     name: "Stock Levels Only",
     description: "Current stock quantities and status",
-    fields: ["SKU", "Name", "Current Stock", "Reorder Level", "Status"]
+    fields: ["SKU", "Name", "Current Stock", "Reorder Level", "Status"],
   },
   {
     id: "low_stock",
     name: "Low Stock Report",
     description: "Items requiring restock attention",
-    fields: ["SKU", "Name", "Current Stock", "Reorder Level", "Supplier", "Last Order Date"]
+    fields: [
+      "SKU",
+      "Name",
+      "Current Stock",
+      "Reorder Level",
+      "Supplier",
+      "Last Order Date",
+    ],
   },
   {
     id: "movements",
     name: "Stock Movements",
     description: "Historical stock movement data",
-    fields: ["Date", "SKU", "Product", "Type", "Quantity", "Reason", "User"]
-  }
+    fields: ["Date", "SKU", "Product", "Type", "Quantity", "Reason", "User"],
+  },
 ];
 
 export function ExcelImportExport() {
@@ -111,7 +147,11 @@ export function ExcelImportExport() {
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+    if (
+      file &&
+      file.type ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
       setSelectedFile(file);
       setImportStep(2);
       // Simulate file processing
@@ -122,10 +162,10 @@ export function ExcelImportExport() {
   const startImport = () => {
     setImportStep(4);
     setImportProgress(0);
-    
+
     // Simulate import progress
     const interval = setInterval(() => {
-      setImportProgress(prev => {
+      setImportProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           setImportStep(5);
@@ -138,24 +178,31 @@ export function ExcelImportExport() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "valid": return <CheckCircle className="h-4 w-4 text-emerald-500" />;
-      case "warning": return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case "error": return <XCircle className="h-4 w-4 text-red-500" />;
-      default: return null;
+      case "valid":
+        return <CheckCircle className="h-4 w-4 text-emerald-500" />;
+      case "warning":
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+      case "error":
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      default:
+        return null;
     }
   };
 
   return (
     <div className="flex gap-2">
       {/* Import Dialog */}
-      <Dialog open={isImportOpen} onOpenChange={(open) => {
-        setIsImportOpen(open);
-        if (!open) {
-          setImportStep(1);
-          setSelectedFile(null);
-          setImportProgress(0);
-        }
-      }}>
+      <Dialog
+        open={isImportOpen}
+        onOpenChange={(open) => {
+          setIsImportOpen(open);
+          if (!open) {
+            setImportStep(1);
+            setSelectedFile(null);
+            setImportProgress(0);
+          }
+        }}
+      >
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
             <Upload className="mr-2 h-4 w-4" />
@@ -169,24 +216,48 @@ export function ExcelImportExport() {
               Upload an Excel file to bulk import inventory data
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-6">
             {/* Step Indicator */}
             <div className="flex items-center justify-between text-sm">
-              <div className={`flex items-center gap-2 ${importStep >= 1 ? "text-primary" : "text-muted-foreground"}`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${importStep >= 1 ? "bg-primary text-primary-foreground" : "bg-muted"}`}>1</div>
+              <div
+                className={`flex items-center gap-2 ${importStep >= 1 ? "text-primary" : "text-muted-foreground"}`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center ${importStep >= 1 ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+                >
+                  1
+                </div>
                 <span>Upload File</span>
               </div>
-              <div className={`flex items-center gap-2 ${importStep >= 2 ? "text-primary" : "text-muted-foreground"}`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${importStep >= 2 ? "bg-primary text-primary-foreground" : "bg-muted"}`}>2</div>
+              <div
+                className={`flex items-center gap-2 ${importStep >= 2 ? "text-primary" : "text-muted-foreground"}`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center ${importStep >= 2 ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+                >
+                  2
+                </div>
                 <span>Validate</span>
               </div>
-              <div className={`flex items-center gap-2 ${importStep >= 3 ? "text-primary" : "text-muted-foreground"}`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${importStep >= 3 ? "bg-primary text-primary-foreground" : "bg-muted"}`}>3</div>
+              <div
+                className={`flex items-center gap-2 ${importStep >= 3 ? "text-primary" : "text-muted-foreground"}`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center ${importStep >= 3 ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+                >
+                  3
+                </div>
                 <span>Preview</span>
               </div>
-              <div className={`flex items-center gap-2 ${importStep >= 4 ? "text-primary" : "text-muted-foreground"}`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${importStep >= 4 ? "bg-primary text-primary-foreground" : "bg-muted"}`}>4</div>
+              <div
+                className={`flex items-center gap-2 ${importStep >= 4 ? "text-primary" : "text-muted-foreground"}`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center ${importStep >= 4 ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+                >
+                  4
+                </div>
                 <span>Import</span>
               </div>
             </div>
@@ -198,7 +269,9 @@ export function ExcelImportExport() {
                   <CloudUpload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <div className="space-y-2">
                     <h3 className="text-lg font-medium">Upload Excel File</h3>
-                    <p className="text-muted-foreground">Select an .xlsx file with inventory data</p>
+                    <p className="text-muted-foreground">
+                      Select an .xlsx file with inventory data
+                    </p>
                     <Input
                       type="file"
                       accept=".xlsx,.xls"
@@ -208,7 +281,9 @@ export function ExcelImportExport() {
                   </div>
                 </div>
                 <div className="p-4 bg-muted/30 rounded-lg">
-                  <h4 className="font-medium mb-2">Excel Format Requirements:</h4>
+                  <h4 className="font-medium mb-2">
+                    Excel Format Requirements:
+                  </h4>
                   <ul className="text-sm text-muted-foreground space-y-1">
                     <li>• Column A: SKU (required)</li>
                     <li>• Column B: Product Name (required)</li>
@@ -231,7 +306,9 @@ export function ExcelImportExport() {
                 <RefreshCw className="h-12 w-12 text-primary animate-spin mx-auto" />
                 <div>
                   <h3 className="text-lg font-medium">Processing File</h3>
-                  <p className="text-muted-foreground">Validating data and checking for errors...</p>
+                  <p className="text-muted-foreground">
+                    Validating data and checking for errors...
+                  </p>
                 </div>
                 <div className="max-w-xs mx-auto">
                   <Progress value={75} className="h-2" />
@@ -259,7 +336,7 @@ export function ExcelImportExport() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="border rounded-lg overflow-hidden">
                   <Table>
                     <TableHeader>
@@ -279,7 +356,13 @@ export function ExcelImportExport() {
                         <TableRow key={item.row}>
                           <TableCell>{getStatusIcon(item.status)}</TableCell>
                           <TableCell>{item.row}</TableCell>
-                          <TableCell>{item.sku || <span className="text-muted-foreground">Missing</span>}</TableCell>
+                          <TableCell>
+                            {item.sku || (
+                              <span className="text-muted-foreground">
+                                Missing
+                              </span>
+                            )}
+                          </TableCell>
                           <TableCell>{item.name}</TableCell>
                           <TableCell>{item.category}</TableCell>
                           <TableCell>₹{item.price.toLocaleString()}</TableCell>
@@ -296,7 +379,7 @@ export function ExcelImportExport() {
                     </TableBody>
                   </Table>
                 </div>
-                
+
                 <div className="flex gap-2">
                   <Button onClick={startImport} className="flex-1">
                     Import Valid Records (2)
@@ -314,11 +397,20 @@ export function ExcelImportExport() {
                 <RefreshCw className="h-12 w-12 text-primary animate-spin mx-auto" />
                 <div>
                   <h3 className="text-lg font-medium">Importing Data</h3>
-                  <p className="text-muted-foreground">Processing {mockImportPreview.filter(i => i.status !== "error").length} records...</p>
+                  <p className="text-muted-foreground">
+                    Processing{" "}
+                    {
+                      mockImportPreview.filter((i) => i.status !== "error")
+                        .length
+                    }{" "}
+                    records...
+                  </p>
                 </div>
                 <div className="max-w-xs mx-auto">
                   <Progress value={importProgress} className="h-2" />
-                  <p className="text-sm text-muted-foreground mt-1">{importProgress}% Complete</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {importProgress}% Complete
+                  </p>
                 </div>
               </div>
             )}
@@ -329,18 +421,24 @@ export function ExcelImportExport() {
                 <CheckCircle className="h-12 w-12 text-emerald-500 mx-auto" />
                 <div>
                   <h3 className="text-lg font-medium">Import Complete!</h3>
-                  <p className="text-muted-foreground">Successfully imported 2 products</p>
+                  <p className="text-muted-foreground">
+                    Successfully imported 2 products
+                  </p>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-center gap-6">
-                    <div>Added: <span className="font-medium">2 products</span></div>
-                    <div>Updated: <span className="font-medium">0 products</span></div>
-                    <div>Skipped: <span className="font-medium">1 products</span></div>
+                    <div>
+                      Added: <span className="font-medium">2 products</span>
+                    </div>
+                    <div>
+                      Updated: <span className="font-medium">0 products</span>
+                    </div>
+                    <div>
+                      Skipped: <span className="font-medium">1 products</span>
+                    </div>
                   </div>
                 </div>
-                <Button onClick={() => setIsImportOpen(false)}>
-                  Done
-                </Button>
+                <Button onClick={() => setIsImportOpen(false)}>Done</Button>
               </div>
             )}
           </div>
@@ -362,16 +460,18 @@ export function ExcelImportExport() {
               Choose what data to export to Excel format
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-6">
             <div className="space-y-4">
               <Label>Export Template</Label>
               <div className="grid grid-cols-1 gap-3">
                 {exportTemplates.map((template) => (
-                  <Card 
-                    key={template.id} 
+                  <Card
+                    key={template.id}
                     className={`cursor-pointer transition-colors ${
-                      selectedExportTemplate === template.id ? "ring-2 ring-primary" : ""
+                      selectedExportTemplate === template.id
+                        ? "ring-2 ring-primary"
+                        : ""
                     }`}
                     onClick={() => setSelectedExportTemplate(template.id)}
                   >
@@ -381,16 +481,24 @@ export function ExcelImportExport() {
                           <input
                             type="radio"
                             checked={selectedExportTemplate === template.id}
-                            onChange={() => setSelectedExportTemplate(template.id)}
+                            onChange={() =>
+                              setSelectedExportTemplate(template.id)
+                            }
                             className="text-primary"
                           />
                         </div>
                         <div className="flex-1">
                           <h4 className="font-medium">{template.name}</h4>
-                          <p className="text-sm text-muted-foreground">{template.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {template.description}
+                          </p>
                           <div className="flex flex-wrap gap-1 mt-2">
                             {template.fields.slice(0, 4).map((field) => (
-                              <Badge key={field} variant="outline" className="text-xs">
+                              <Badge
+                                key={field}
+                                variant="outline"
+                                className="text-xs"
+                              >
                                 {field}
                               </Badge>
                             ))}
@@ -409,8 +517,8 @@ export function ExcelImportExport() {
             </div>
 
             <div className="flex gap-2">
-              <Button 
-                className="flex-1" 
+              <Button
+                className="flex-1"
                 disabled={!selectedExportTemplate}
                 onClick={() => {
                   // Simulate download

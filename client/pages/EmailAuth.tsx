@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Package, Mail, Shield, ArrowLeft, RefreshCw } from "lucide-react";
 
@@ -17,17 +23,17 @@ export default function EmailAuth() {
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
       setStep(2);
       setResendCooldown(30);
-      
+
       // Start countdown
       const interval = setInterval(() => {
-        setResendCooldown(prev => {
+        setResendCooldown((prev) => {
           if (prev <= 1) {
             clearInterval(interval);
             return 0;
@@ -40,11 +46,11 @@ export default function EmailAuth() {
 
   const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) return;
-    
+
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    
+
     // Auto-focus next input
     if (value && index < 5) {
       const nextInput = document.getElementById(`otp-${index + 1}`);
@@ -56,7 +62,7 @@ export default function EmailAuth() {
     e.preventDefault();
     const otpValue = otp.join("");
     if (otpValue.length !== 6) return;
-    
+
     setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
@@ -72,10 +78,10 @@ export default function EmailAuth() {
 
   const handleResendOtp = () => {
     if (resendCooldown > 0) return;
-    
+
     setResendCooldown(30);
     const interval = setInterval(() => {
-      setResendCooldown(prev => {
+      setResendCooldown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
           return 0;
@@ -90,13 +96,20 @@ export default function EmailAuth() {
       <div className="w-full max-w-md space-y-6">
         {/* Logo */}
         <div className="text-center">
-          <Link to="/" className="flex items-center justify-center space-x-2 mb-4">
+          <Link
+            to="/"
+            className="flex items-center justify-center space-x-2 mb-4"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
               <Package className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold text-foreground">FlowStock</span>
+            <span className="text-2xl font-bold text-foreground">
+              FlowStock
+            </span>
           </Link>
-          <p className="text-muted-foreground">Secure authentication with email verification</p>
+          <p className="text-muted-foreground">
+            Secure authentication with email verification
+          </p>
         </div>
 
         <Card>
@@ -116,9 +129,9 @@ export default function EmailAuth() {
                 <form onSubmit={handleEmailSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input 
-                      id="email" 
-                      type="email" 
+                    <Input
+                      id="email"
+                      type="email"
                       placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -126,8 +139,12 @@ export default function EmailAuth() {
                       disabled={isLoading}
                     />
                   </div>
-                  
-                  <Button className="w-full" type="submit" disabled={isLoading || !email}>
+
+                  <Button
+                    className="w-full"
+                    type="submit"
+                    disabled={isLoading || !email}
+                  >
                     {isLoading ? (
                       <>
                         <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
@@ -143,7 +160,10 @@ export default function EmailAuth() {
                 </form>
 
                 <div className="text-center mt-4">
-                  <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    to="/login"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Back to traditional login
                   </Link>
                 </div>
@@ -176,12 +196,16 @@ export default function EmailAuth() {
                           type="text"
                           maxLength={1}
                           value={digit}
-                          onChange={(e) => handleOtpChange(index, e.target.value)}
+                          onChange={(e) =>
+                            handleOtpChange(index, e.target.value)
+                          }
                           className="w-12 h-12 text-center text-lg font-medium"
                           disabled={isLoading}
                           onKeyDown={(e) => {
                             if (e.key === "Backspace" && !digit && index > 0) {
-                              const prevInput = document.getElementById(`otp-${index - 1}`);
+                              const prevInput = document.getElementById(
+                                `otp-${index - 1}`,
+                              );
                               prevInput?.focus();
                             }
                           }}
@@ -189,10 +213,10 @@ export default function EmailAuth() {
                       ))}
                     </div>
                   </div>
-                  
-                  <Button 
-                    className="w-full" 
-                    type="submit" 
+
+                  <Button
+                    className="w-full"
+                    type="submit"
                     disabled={isLoading || otp.join("").length !== 6}
                   >
                     {isLoading ? (
@@ -213,23 +237,21 @@ export default function EmailAuth() {
                   <p className="text-sm text-muted-foreground">
                     Didn't receive the code?
                   </p>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     size="sm"
                     onClick={handleResendOtp}
                     disabled={resendCooldown > 0}
                   >
-                    {resendCooldown > 0 ? (
-                      `Resend in ${resendCooldown}s`
-                    ) : (
-                      "Resend Code"
-                    )}
+                    {resendCooldown > 0
+                      ? `Resend in ${resendCooldown}s`
+                      : "Resend Code"}
                   </Button>
                 </div>
 
                 <div className="text-center mt-4">
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     size="sm"
                     onClick={() => setStep(1)}
                     className="text-muted-foreground"
@@ -242,7 +264,8 @@ export default function EmailAuth() {
                 {/* Demo hint */}
                 <div className="mt-4 p-3 bg-muted rounded-lg">
                   <p className="text-sm text-muted-foreground text-center">
-                    <strong>Demo:</strong> Use code <Badge variant="outline">123456</Badge> to continue
+                    <strong>Demo:</strong> Use code{" "}
+                    <Badge variant="outline">123456</Badge> to continue
                   </p>
                 </div>
               </CardContent>
@@ -270,15 +293,16 @@ export default function EmailAuth() {
                     Welcome to FlowStock! Redirecting to your dashboard...
                   </p>
                 </div>
-                
+
                 <Link to="/dashboard">
-                  <Button className="w-full">
-                    Go to Dashboard
-                  </Button>
+                  <Button className="w-full">Go to Dashboard</Button>
                 </Link>
-                
+
                 <div className="text-center">
-                  <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    to="/"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Back to home
                   </Link>
                 </div>

@@ -3,12 +3,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Package,
   Plus,
@@ -21,7 +41,7 @@ import {
   BarChart3,
   History,
   CheckCircle,
-  XCircle
+  XCircle,
 } from "lucide-react";
 import { ExcelImportExport } from "@/components/ExcelImportExport";
 
@@ -40,15 +60,25 @@ const mockInventory = [
     lastUpdated: "2024-01-15",
     status: "in_stock",
     movements: [
-      { type: "in", quantity: 20, date: "2024-01-10", reason: "Purchase Order PO-2024-001" },
-      { type: "out", quantity: 5, date: "2024-01-12", reason: "Sale - Invoice INV-001" }
-    ]
+      {
+        type: "in",
+        quantity: 20,
+        date: "2024-01-10",
+        reason: "Purchase Order PO-2024-001",
+      },
+      {
+        type: "out",
+        quantity: 5,
+        date: "2024-01-12",
+        reason: "Sale - Invoice INV-001",
+      },
+    ],
   },
   {
     id: 2,
     sku: "SAM-GB-PRO",
     name: "Samsung Galaxy Buds Pro",
-    category: "Electronics", 
+    category: "Electronics",
     currentStock: 3,
     reorderLevel: 15,
     maxStock: 100,
@@ -58,9 +88,19 @@ const mockInventory = [
     lastUpdated: "2024-01-14",
     status: "low_stock",
     movements: [
-      { type: "in", quantity: 50, date: "2024-01-05", reason: "Purchase Order PO-2024-002" },
-      { type: "out", quantity: 47, date: "2024-01-14", reason: "Bulk Sale - INV-025" }
-    ]
+      {
+        type: "in",
+        quantity: 50,
+        date: "2024-01-05",
+        reason: "Purchase Order PO-2024-002",
+      },
+      {
+        type: "out",
+        quantity: 47,
+        date: "2024-01-14",
+        reason: "Bulk Sale - INV-025",
+      },
+    ],
   },
   {
     id: 3,
@@ -76,8 +116,13 @@ const mockInventory = [
     lastUpdated: "2024-01-13",
     status: "out_of_stock",
     movements: [
-      { type: "out", quantity: 25, date: "2024-01-13", reason: "Sale - Multiple Orders" }
-    ]
+      {
+        type: "out",
+        quantity: 25,
+        date: "2024-01-13",
+        reason: "Sale - Multiple Orders",
+      },
+    ],
   },
   {
     id: 4,
@@ -93,18 +138,32 @@ const mockInventory = [
     lastUpdated: "2024-01-12",
     status: "in_stock",
     movements: [
-      { type: "in", quantity: 50, date: "2024-01-08", reason: "Purchase Order PO-2024-003" },
-      { type: "out", quantity: 5, date: "2024-01-12", reason: "Sale - INV-020" }
-    ]
-  }
+      {
+        type: "in",
+        quantity: 50,
+        date: "2024-01-08",
+        reason: "Purchase Order PO-2024-003",
+      },
+      {
+        type: "out",
+        quantity: 5,
+        date: "2024-01-12",
+        reason: "Sale - INV-020",
+      },
+    ],
+  },
 ];
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "in_stock": return "default";
-    case "low_stock": return "secondary";
-    case "out_of_stock": return "destructive";
-    default: return "outline";
+    case "in_stock":
+      return "default";
+    case "low_stock":
+      return "secondary";
+    case "out_of_stock":
+      return "destructive";
+    default:
+      return "outline";
   }
 };
 
@@ -121,33 +180,48 @@ export default function Inventory() {
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [isStockMovementOpen, setIsStockMovementOpen] = useState(false);
 
-  const filteredInventory = mockInventory.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.sku.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
-    const matchesStatus = selectedStatus === "all" || item.status === selectedStatus;
-    
+  const filteredInventory = mockInventory.filter((item) => {
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.sku.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || item.category === selectedCategory;
+    const matchesStatus =
+      selectedStatus === "all" || item.status === selectedStatus;
+
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const lowStockItems = mockInventory.filter(item => item.currentStock <= item.reorderLevel);
-  const outOfStockItems = mockInventory.filter(item => item.currentStock === 0);
-  const totalValue = mockInventory.reduce((sum, item) => sum + (item.currentStock * item.unitPrice), 0);
+  const lowStockItems = mockInventory.filter(
+    (item) => item.currentStock <= item.reorderLevel,
+  );
+  const outOfStockItems = mockInventory.filter(
+    (item) => item.currentStock === 0,
+  );
+  const totalValue = mockInventory.reduce(
+    (sum, item) => sum + item.currentStock * item.unitPrice,
+    0,
+  );
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Inventory Management</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Inventory Management
+          </h1>
           <p className="text-muted-foreground">
             Track stock levels, movements, and get automated alerts
           </p>
         </div>
-        
+
         <div className="flex flex-wrap gap-2">
           <ExcelImportExport />
-          <Dialog open={isStockMovementOpen} onOpenChange={setIsStockMovementOpen}>
+          <Dialog
+            open={isStockMovementOpen}
+            onOpenChange={setIsStockMovementOpen}
+          >
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
                 <History className="mr-2 h-4 w-4" />
@@ -169,7 +243,7 @@ export default function Inventory() {
                       <SelectValue placeholder="Select product" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockInventory.map(item => (
+                      {mockInventory.map((item) => (
                         <SelectItem key={item.id} value={item.sku}>
                           {item.name} - {item.sku}
                         </SelectItem>
@@ -192,15 +266,25 @@ export default function Inventory() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="quantity">Quantity</Label>
-                  <Input id="quantity" type="number" placeholder="Enter quantity" />
+                  <Input
+                    id="quantity"
+                    type="number"
+                    placeholder="Enter quantity"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="reason">Reason</Label>
-                  <Textarea id="reason" placeholder="Reason for stock movement" />
+                  <Textarea
+                    id="reason"
+                    placeholder="Reason for stock movement"
+                  />
                 </div>
                 <div className="flex gap-2 pt-4">
                   <Button className="flex-1">Record Movement</Button>
-                  <Button variant="outline" onClick={() => setIsStockMovementOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsStockMovementOpen(false)}
+                  >
                     Cancel
                   </Button>
                 </div>
@@ -267,19 +351,29 @@ export default function Inventory() {
                       <SelectValue placeholder="Select supplier" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="techsupply">TechSupply India</SelectItem>
-                      <SelectItem value="electronics">Electronics Hub</SelectItem>
+                      <SelectItem value="techsupply">
+                        TechSupply India
+                      </SelectItem>
+                      <SelectItem value="electronics">
+                        Electronics Hub
+                      </SelectItem>
                       <SelectItem value="fashion">Fashion Hub</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="md:col-span-2 space-y-2">
                   <Label htmlFor="product-description">Description</Label>
-                  <Textarea id="product-description" placeholder="Product description" />
+                  <Textarea
+                    id="product-description"
+                    placeholder="Product description"
+                  />
                 </div>
                 <div className="md:col-span-2 flex gap-2 pt-4">
                   <Button className="flex-1">Add Product</Button>
-                  <Button variant="outline" onClick={() => setIsAddProductOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsAddProductOpen(false)}
+                  >
                     Cancel
                   </Button>
                 </div>
@@ -293,7 +387,9 @@ export default function Inventory() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Products
+            </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -304,12 +400,18 @@ export default function Inventory() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Low Stock Alerts</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Low Stock Alerts
+            </CardTitle>
             <AlertTriangle className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{lowStockItems.length}</div>
-            <p className="text-xs text-muted-foreground">Items need restocking</p>
+            <div className="text-2xl font-bold text-yellow-600">
+              {lowStockItems.length}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Items need restocking
+            </p>
           </CardContent>
         </Card>
 
@@ -319,8 +421,12 @@ export default function Inventory() {
             <XCircle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-destructive">{outOfStockItems.length}</div>
-            <p className="text-xs text-muted-foreground">Immediate attention needed</p>
+            <div className="text-2xl font-bold text-destructive">
+              {outOfStockItems.length}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Immediate attention needed
+            </p>
           </CardContent>
         </Card>
 
@@ -330,8 +436,12 @@ export default function Inventory() {
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{(totalValue / 100000).toFixed(1)}L</div>
-            <p className="text-xs text-muted-foreground">Current inventory value</p>
+            <div className="text-2xl font-bold">
+              ₹{(totalValue / 100000).toFixed(1)}L
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Current inventory value
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -358,7 +468,10 @@ export default function Inventory() {
                     className="pl-9"
                   />
                 </div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <Select
+                  value={selectedCategory}
+                  onValueChange={setSelectedCategory}
+                >
                   <SelectTrigger className="w-full sm:w-48">
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
@@ -369,7 +482,10 @@ export default function Inventory() {
                     <SelectItem value="Footwear">Footwear</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <Select
+                  value={selectedStatus}
+                  onValueChange={setSelectedStatus}
+                >
                   <SelectTrigger className="w-full sm:w-48">
                     <SelectValue placeholder="All Status" />
                   </SelectTrigger>
@@ -387,7 +503,9 @@ export default function Inventory() {
           {/* Inventory Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Inventory Items ({filteredInventory.length})</CardTitle>
+              <CardTitle>
+                Inventory Items ({filteredInventory.length})
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
@@ -404,14 +522,21 @@ export default function Inventory() {
                 </TableHeader>
                 <TableBody>
                   {filteredInventory.map((item) => {
-                    const currentStatus = getStockStatus(item.currentStock, item.reorderLevel);
+                    const currentStatus = getStockStatus(
+                      item.currentStock,
+                      item.reorderLevel,
+                    );
                     return (
                       <TableRow key={item.id}>
                         <TableCell>
                           <div className="space-y-1">
                             <div className="font-medium">{item.name}</div>
-                            <div className="text-sm text-muted-foreground">SKU: {item.sku}</div>
-                            <div className="text-sm text-muted-foreground">Location: {item.location}</div>
+                            <div className="text-sm text-muted-foreground">
+                              SKU: {item.sku}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              Location: {item.location}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -419,7 +544,9 @@ export default function Inventory() {
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
-                            <div className="font-medium">{item.currentStock} units</div>
+                            <div className="font-medium">
+                              {item.currentStock} units
+                            </div>
                             <div className="text-sm text-muted-foreground">
                               Reorder at: {item.reorderLevel}
                             </div>
@@ -430,8 +557,15 @@ export default function Inventory() {
                             {currentStatus.replace("_", " ")}
                           </Badge>
                         </TableCell>
-                        <TableCell>₹{item.unitPrice.toLocaleString()}</TableCell>
-                        <TableCell>₹{(item.currentStock * item.unitPrice).toLocaleString()}</TableCell>
+                        <TableCell>
+                          ₹{item.unitPrice.toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          ₹
+                          {(
+                            item.currentStock * item.unitPrice
+                          ).toLocaleString()}
+                        </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
                             <Button variant="ghost" size="sm">
@@ -462,48 +596,59 @@ export default function Inventory() {
             <CardContent>
               <div className="space-y-4">
                 {outOfStockItems.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg bg-destructive/5">
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between p-4 border rounded-lg bg-destructive/5"
+                  >
                     <div className="space-y-1">
                       <div className="font-medium flex items-center gap-2">
                         <XCircle className="h-4 w-4 text-destructive" />
                         {item.name}
                       </div>
-                      <div className="text-sm text-muted-foreground">SKU: {item.sku}</div>
-                      <div className="text-sm text-destructive font-medium">OUT OF STOCK</div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
-                        Create PO
-                      </Button>
-                      <Button size="sm">
-                        Add Stock
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-                
-                {lowStockItems.filter(item => item.currentStock > 0).map((item) => (
-                  <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg bg-yellow-50 dark:bg-yellow-950/20">
-                    <div className="space-y-1">
-                      <div className="font-medium flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                        {item.name}
+                      <div className="text-sm text-muted-foreground">
+                        SKU: {item.sku}
                       </div>
-                      <div className="text-sm text-muted-foreground">SKU: {item.sku}</div>
-                      <div className="text-sm text-yellow-600 font-medium">
-                        Only {item.currentStock} units left (Reorder at {item.reorderLevel})
+                      <div className="text-sm text-destructive font-medium">
+                        OUT OF STOCK
                       </div>
                     </div>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline">
                         Create PO
                       </Button>
-                      <Button size="sm">
-                        Add Stock
-                      </Button>
+                      <Button size="sm">Add Stock</Button>
                     </div>
                   </div>
                 ))}
+
+                {lowStockItems
+                  .filter((item) => item.currentStock > 0)
+                  .map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between p-4 border rounded-lg bg-yellow-50 dark:bg-yellow-950/20"
+                    >
+                      <div className="space-y-1">
+                        <div className="font-medium flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                          {item.name}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          SKU: {item.sku}
+                        </div>
+                        <div className="text-sm text-yellow-600 font-medium">
+                          Only {item.currentStock} units left (Reorder at{" "}
+                          {item.reorderLevel})
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline">
+                          Create PO
+                        </Button>
+                        <Button size="sm">Add Stock</Button>
+                      </div>
+                    </div>
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -519,9 +664,12 @@ export default function Inventory() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockInventory.flatMap(item => 
+                {mockInventory.flatMap((item) =>
                   item.movements.map((movement, index) => (
-                    <div key={`${item.id}-${index}`} className="flex items-center justify-between p-3 border rounded">
+                    <div
+                      key={`${item.id}-${index}`}
+                      className="flex items-center justify-between p-3 border rounded"
+                    >
                       <div className="flex items-center gap-3">
                         {movement.type === "in" ? (
                           <TrendingUp className="h-4 w-4 text-emerald-500" />
@@ -530,17 +678,24 @@ export default function Inventory() {
                         )}
                         <div>
                           <div className="font-medium">{item.name}</div>
-                          <div className="text-sm text-muted-foreground">{movement.reason}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {movement.reason}
+                          </div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className={`font-medium ${movement.type === "in" ? "text-emerald-600" : "text-red-600"}`}>
-                          {movement.type === "in" ? "+" : "-"}{movement.quantity} units
+                        <div
+                          className={`font-medium ${movement.type === "in" ? "text-emerald-600" : "text-red-600"}`}
+                        >
+                          {movement.type === "in" ? "+" : "-"}
+                          {movement.quantity} units
                         </div>
-                        <div className="text-sm text-muted-foreground">{movement.date}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {movement.date}
+                        </div>
                       </div>
                     </div>
-                  ))
+                  )),
                 )}
               </div>
             </CardContent>
