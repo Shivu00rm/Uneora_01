@@ -49,9 +49,11 @@ export function Header() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              Sign In
-            </Button>
+            <Link to="/login">
+              <Button variant="ghost" size="sm">
+                Sign In
+              </Button>
+            </Link>
             <Button size="sm">
               Start Free Trial
             </Button>
