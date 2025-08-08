@@ -146,14 +146,7 @@ export default function Inventory() {
         </div>
         
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Export Excel
-          </Button>
-          <Button variant="outline" size="sm">
-            <Upload className="mr-2 h-4 w-4" />
-            Import Excel
-          </Button>
+          <ExcelImportExport />
           <Dialog open={isStockMovementOpen} onOpenChange={setIsStockMovementOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
