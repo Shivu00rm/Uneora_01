@@ -4,22 +4,35 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  ShoppingCart, 
-  Scan, 
-  Plus, 
-  Minus, 
-  Trash2, 
-  Calculator, 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  ShoppingCart,
+  Scan,
+  Plus,
+  Minus,
+  Trash2,
+  Calculator,
   CreditCard,
   Printer,
   Receipt,
   User,
   Search,
-  Percent
+  Percent,
 } from "lucide-react";
 
 interface CartItem {
@@ -33,10 +46,38 @@ interface CartItem {
 }
 
 const mockProducts = [
-  { id: 1, name: "Apple iPhone 14", sku: "APL-IP14-128", price: 79900, gstRate: 18, category: "Electronics" },
-  { id: 2, name: "Samsung Galaxy Buds", sku: "SAM-GB-PRO", price: 15990, gstRate: 18, category: "Electronics" },
-  { id: 3, name: "Nike Air Max Shoes", sku: "NIK-AM-270", price: 12995, gstRate: 12, category: "Footwear" },
-  { id: 4, name: "Levi's Jeans", sku: "LEV-511-32", price: 3999, gstRate: 12, category: "Clothing" }
+  {
+    id: 1,
+    name: "Apple iPhone 14",
+    sku: "APL-IP14-128",
+    price: 79900,
+    gstRate: 18,
+    category: "Electronics",
+  },
+  {
+    id: 2,
+    name: "Samsung Galaxy Buds",
+    sku: "SAM-GB-PRO",
+    price: 15990,
+    gstRate: 18,
+    category: "Electronics",
+  },
+  {
+    id: 3,
+    name: "Nike Air Max Shoes",
+    sku: "NIK-AM-270",
+    price: 12995,
+    gstRate: 12,
+    category: "Footwear",
+  },
+  {
+    id: 4,
+    name: "Levi's Jeans",
+    sku: "LEV-511-32",
+    price: 3999,
+    gstRate: 12,
+    category: "Clothing",
+  },
 ];
 
 export default function POS() {
@@ -46,14 +87,16 @@ export default function POS() {
   const [discountPercent, setDiscountPercent] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
 
-  const addToCart = (product: typeof mockProducts[0]) => {
-    const existingItem = cart.find(item => item.id === product.id);
+  const addToCart = (product: (typeof mockProducts)[0]) => {
+    const existingItem = cart.find((item) => item.id === product.id);
     if (existingItem) {
-      setCart(cart.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
+      setCart(
+        cart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        ),
+      );
     } else {
       setCart([...cart, { ...product, quantity: 1 }]);
     }
@@ -61,20 +104,20 @@ export default function POS() {
 
   const updateQuantity = (id: number, quantity: number) => {
     if (quantity <= 0) {
-      setCart(cart.filter(item => item.id !== id));
+      setCart(cart.filter((item) => item.id !== id));
     } else {
-      setCart(cart.map(item => 
-        item.id === id ? { ...item, quantity } : item
-      ));
+      setCart(
+        cart.map((item) => (item.id === id ? { ...item, quantity } : item)),
+      );
     }
   };
 
   const removeFromCart = (id: number) => {
-    setCart(cart.filter(item => item.id !== id));
+    setCart(cart.filter((item) => item.id !== id));
   };
 
   const calculateSubtotal = () => {
-    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
   const calculateGST = () => {
@@ -93,9 +136,10 @@ export default function POS() {
     return calculateSubtotal() + calculateGST() - calculateDiscount();
   };
 
-  const filteredProducts = mockProducts.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.sku.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = mockProducts.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.sku.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -103,7 +147,9 @@ export default function POS() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Point of Sale</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Point of Sale
+          </h1>
           <p className="text-muted-foreground">GST-compliant billing system</p>
         </div>
         <div className="flex gap-2">
@@ -145,12 +191,17 @@ export default function POS() {
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="cursor-pointer hover:shadow-md transition-shadow">
+              <Card
+                key={product.id}
+                className="cursor-pointer hover:shadow-md transition-shadow"
+              >
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
                       <h3 className="font-medium text-sm">{product.name}</h3>
-                      <p className="text-xs text-muted-foreground">{product.sku}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {product.sku}
+                      </p>
                       <Badge variant="outline" className="text-xs mt-1">
                         {product.category}
                       </Badge>
@@ -158,8 +209,12 @@ export default function POS() {
                   </div>
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-lg font-bold">₹{product.price.toLocaleString()}</p>
-                      <p className="text-xs text-muted-foreground">GST: {product.gstRate}%</p>
+                      <p className="text-lg font-bold">
+                        ₹{product.price.toLocaleString()}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        GST: {product.gstRate}%
+                      </p>
                     </div>
                     <Button size="sm" onClick={() => addToCart(product)}>
                       <Plus className="h-4 w-4" />
@@ -182,14 +237,21 @@ export default function POS() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Select value={selectedCustomer} onValueChange={setSelectedCustomer}>
+              <Select
+                value={selectedCustomer}
+                onValueChange={setSelectedCustomer}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select customer (optional)" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="walk-in">Walk-in Customer</SelectItem>
-                  <SelectItem value="raj-sharma">Raj Sharma - 9876543210</SelectItem>
-                  <SelectItem value="priya-patel">Priya Patel - 9876543211</SelectItem>
+                  <SelectItem value="raj-sharma">
+                    Raj Sharma - 9876543210
+                  </SelectItem>
+                  <SelectItem value="priya-patel">
+                    Priya Patel - 9876543211
+                  </SelectItem>
                   <SelectItem value="new">+ Add New Customer</SelectItem>
                 </SelectContent>
               </Select>
@@ -213,30 +275,43 @@ export default function POS() {
               ) : (
                 <div className="space-y-3">
                   {cart.map((item) => (
-                    <div key={item.id} className="flex items-center gap-2 p-2 border rounded">
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-2 p-2 border rounded"
+                    >
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">₹{item.price} each</p>
+                        <p className="text-sm font-medium truncate">
+                          {item.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          ₹{item.price} each
+                        </p>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
-                        <span className="w-8 text-center text-sm">{item.quantity}</span>
-                        <Button 
-                          variant="outline" 
+                        <span className="w-8 text-center text-sm">
+                          {item.quantity}
+                        </span>
+                        <Button
+                          variant="outline"
                           size="sm"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
                       </div>
-                      <Button 
-                        variant="ghost" 
+                      <Button
+                        variant="ghost"
                         size="sm"
                         onClick={() => removeFromCart(item.id)}
                         className="text-destructive"
@@ -305,7 +380,10 @@ export default function POS() {
                 {/* Payment Method */}
                 <div className="space-y-2">
                   <Label htmlFor="payment">Payment Method</Label>
-                  <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                  <Select
+                    value={paymentMethod}
+                    onValueChange={setPaymentMethod}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select payment method" />
                     </SelectTrigger>

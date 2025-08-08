@@ -3,17 +3,37 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  Plus, 
-  Search, 
-  Eye, 
-  Download, 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Plus,
+  Search,
+  Eye,
+  Download,
   Calendar,
   Package,
   IndianRupee,
@@ -24,7 +44,7 @@ import {
   Truck,
   FileText,
   Edit,
-  Send
+  Send,
 } from "lucide-react";
 
 const mockPurchaseOrders = [
@@ -37,10 +57,10 @@ const mockPurchaseOrders = [
     items: 12,
     totalAmount: 125000,
     approvedBy: "Rajesh Sharma",
-    progress: 25
+    progress: 25,
   },
   {
-    id: "PO-2024-002", 
+    id: "PO-2024-002",
     vendor: "Fashion Hub Distributors",
     date: "2024-01-12",
     expectedDelivery: "2024-01-20",
@@ -48,7 +68,7 @@ const mockPurchaseOrders = [
     items: 8,
     totalAmount: 85000,
     approvedBy: "Priya Patel",
-    progress: 60
+    progress: 60,
   },
   {
     id: "PO-2024-003",
@@ -58,8 +78,8 @@ const mockPurchaseOrders = [
     status: "delivered",
     items: 15,
     totalAmount: 200000,
-    approvedBy: "Rajesh Sharma", 
-    progress: 100
+    approvedBy: "Rajesh Sharma",
+    progress: 100,
   },
   {
     id: "PO-2024-004",
@@ -70,8 +90,8 @@ const mockPurchaseOrders = [
     items: 5,
     totalAmount: 25000,
     approvedBy: "",
-    progress: 0
-  }
+    progress: 0,
+  },
 ];
 
 const statusConfig = {
@@ -80,7 +100,7 @@ const statusConfig = {
   approved: { color: "default", icon: CheckCircle, label: "Approved" },
   shipped: { color: "default", icon: Truck, label: "Shipped" },
   delivered: { color: "default", icon: Package, label: "Delivered" },
-  cancelled: { color: "destructive", icon: XCircle, label: "Cancelled" }
+  cancelled: { color: "destructive", icon: XCircle, label: "Cancelled" },
 } as const;
 
 export default function PurchaseOrders() {
@@ -88,11 +108,13 @@ export default function PurchaseOrders() {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [isCreatePOOpen, setIsCreatePOOpen] = useState(false);
 
-  const filteredOrders = mockPurchaseOrders.filter(order => {
-    const matchesSearch = order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         order.vendor.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = selectedStatus === "all" || order.status === selectedStatus;
-    
+  const filteredOrders = mockPurchaseOrders.filter((order) => {
+    const matchesSearch =
+      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.vendor.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      selectedStatus === "all" || order.status === selectedStatus;
+
     return matchesSearch && matchesStatus;
   });
 
@@ -110,8 +132,10 @@ export default function PurchaseOrders() {
   const getPriorityColor = (expectedDelivery: string) => {
     const deliveryDate = new Date(expectedDelivery);
     const today = new Date();
-    const diffDays = Math.ceil((deliveryDate.getTime() - today.getTime()) / (1000 * 3600 * 24));
-    
+    const diffDays = Math.ceil(
+      (deliveryDate.getTime() - today.getTime()) / (1000 * 3600 * 24),
+    );
+
     if (diffDays < 0) return "text-destructive";
     if (diffDays <= 3) return "text-yellow-600";
     return "text-muted-foreground";
@@ -122,12 +146,14 @@ export default function PurchaseOrders() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Purchase Orders</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Purchase Orders
+          </h1>
           <p className="text-muted-foreground">
             Manage and track all purchase orders with real-time status updates
           </p>
         </div>
-        
+
         <Dialog open={isCreatePOOpen} onOpenChange={setIsCreatePOOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -150,9 +176,15 @@ export default function PurchaseOrders() {
                     <SelectValue placeholder="Select vendor" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="techsupply">TechSupply India Pvt Ltd</SelectItem>
-                    <SelectItem value="fashionhub">Fashion Hub Distributors</SelectItem>
-                    <SelectItem value="globalelec">Global Electronics Corp</SelectItem>
+                    <SelectItem value="techsupply">
+                      TechSupply India Pvt Ltd
+                    </SelectItem>
+                    <SelectItem value="fashionhub">
+                      Fashion Hub Distributors
+                    </SelectItem>
+                    <SelectItem value="globalelec">
+                      Global Electronics Corp
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -180,7 +212,10 @@ export default function PurchaseOrders() {
               </div>
               <div className="md:col-span-2 space-y-2">
                 <Label htmlFor="po-notes">Notes</Label>
-                <Textarea id="po-notes" placeholder="Additional instructions or notes" />
+                <Textarea
+                  id="po-notes"
+                  placeholder="Additional instructions or notes"
+                />
               </div>
               <div className="md:col-span-2 space-y-4 border-t pt-4">
                 <h4 className="font-medium">Order Items</h4>
@@ -199,7 +234,9 @@ export default function PurchaseOrders() {
                       <SelectContent>
                         <SelectItem value="laptop">Dell Laptop</SelectItem>
                         <SelectItem value="mouse">Wireless Mouse</SelectItem>
-                        <SelectItem value="keyboard">Mechanical Keyboard</SelectItem>
+                        <SelectItem value="keyboard">
+                          Mechanical Keyboard
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <Input type="number" placeholder="Qty" />
@@ -214,7 +251,10 @@ export default function PurchaseOrders() {
               </div>
               <div className="md:col-span-2 flex gap-2 pt-4">
                 <Button className="flex-1">Create Purchase Order</Button>
-                <Button variant="outline" onClick={() => setIsCreatePOOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsCreatePOOpen(false)}
+                >
                   Cancel
                 </Button>
               </div>
@@ -231,19 +271,26 @@ export default function PurchaseOrders() {
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockPurchaseOrders.length}</div>
+            <div className="text-2xl font-bold">
+              {mockPurchaseOrders.length}
+            </div>
             <p className="text-xs text-muted-foreground">This month</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Approval</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Pending Approval
+            </CardTitle>
             <Clock className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockPurchaseOrders.filter(po => po.status === "pending").length}
+              {
+                mockPurchaseOrders.filter((po) => po.status === "pending")
+                  .length
+              }
             </div>
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
@@ -256,7 +303,11 @@ export default function PurchaseOrders() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockPurchaseOrders.filter(po => po.status === "approved" || po.status === "shipped").length}
+              {
+                mockPurchaseOrders.filter(
+                  (po) => po.status === "approved" || po.status === "shipped",
+                ).length
+              }
             </div>
             <p className="text-xs text-muted-foreground">Being processed</p>
           </CardContent>
@@ -269,7 +320,14 @@ export default function PurchaseOrders() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ₹{(mockPurchaseOrders.reduce((sum, po) => sum + po.totalAmount, 0) / 100000).toFixed(1)}L
+              ₹
+              {(
+                mockPurchaseOrders.reduce(
+                  (sum, po) => sum + po.totalAmount,
+                  0,
+                ) / 100000
+              ).toFixed(1)}
+              L
             </div>
             <p className="text-xs text-muted-foreground">This month</p>
           </CardContent>
@@ -298,7 +356,10 @@ export default function PurchaseOrders() {
                     className="pl-9"
                   />
                 </div>
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <Select
+                  value={selectedStatus}
+                  onValueChange={setSelectedStatus}
+                >
                   <SelectTrigger className="w-full sm:w-48">
                     <SelectValue placeholder="All Status" />
                   </SelectTrigger>
@@ -354,12 +415,18 @@ export default function PurchaseOrders() {
                         <div className="font-medium">{order.vendor}</div>
                       </TableCell>
                       <TableCell>
-                        {getStatusBadge(order.status as keyof typeof statusConfig)}
+                        {getStatusBadge(
+                          order.status as keyof typeof statusConfig,
+                        )}
                       </TableCell>
                       <TableCell>
-                        <div className={`flex items-center gap-1 ${getPriorityColor(order.expectedDelivery)}`}>
+                        <div
+                          className={`flex items-center gap-1 ${getPriorityColor(order.expectedDelivery)}`}
+                        >
                           <Calendar className="h-3 w-3" />
-                          {new Date(order.expectedDelivery).toLocaleDateString()}
+                          {new Date(
+                            order.expectedDelivery,
+                          ).toLocaleDateString()}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -383,7 +450,11 @@ export default function PurchaseOrders() {
                             <Download className="h-4 w-4" />
                           </Button>
                           {order.status === "pending" && (
-                            <Button variant="ghost" size="sm" className="text-emerald-600">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-emerald-600"
+                            >
                               <CheckCircle className="h-4 w-4" />
                             </Button>
                           )}
@@ -408,14 +479,20 @@ export default function PurchaseOrders() {
             <CardContent>
               <div className="space-y-4">
                 {mockPurchaseOrders
-                  .filter(order => order.status === "pending")
+                  .filter((order) => order.status === "pending")
                   .map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={order.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="space-y-1">
                         <div className="font-medium">{order.id}</div>
-                        <div className="text-sm text-muted-foreground">{order.vendor}</div>
                         <div className="text-sm text-muted-foreground">
-                          ₹{order.totalAmount.toLocaleString()} • {order.items} items
+                          {order.vendor}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          ₹{order.totalAmount.toLocaleString()} • {order.items}{" "}
+                          items
                         </div>
                       </div>
                       <div className="flex gap-2">
@@ -423,7 +500,10 @@ export default function PurchaseOrders() {
                           <Eye className="h-4 w-4 mr-2" />
                           Review
                         </Button>
-                        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+                        <Button
+                          size="sm"
+                          className="bg-emerald-600 hover:bg-emerald-700"
+                        >
                           <CheckCircle className="h-4 w-4 mr-2" />
                           Approve
                         </Button>
@@ -450,24 +530,38 @@ export default function PurchaseOrders() {
             <CardContent>
               <div className="space-y-4">
                 {mockPurchaseOrders
-                  .filter(order => order.status === "approved" || order.status === "shipped" || order.status === "delivered")
+                  .filter(
+                    (order) =>
+                      order.status === "approved" ||
+                      order.status === "shipped" ||
+                      order.status === "delivered",
+                  )
                   .map((order) => (
                     <div key={order.id} className="p-4 border rounded-lg">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <div className="font-medium">{order.id}</div>
-                          <div className="text-sm text-muted-foreground">{order.vendor}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {order.vendor}
+                          </div>
                         </div>
-                        {getStatusBadge(order.status as keyof typeof statusConfig)}
+                        {getStatusBadge(
+                          order.status as keyof typeof statusConfig,
+                        )}
                       </div>
                       <div className="w-full bg-muted rounded-full h-2 mb-2">
-                        <div 
-                          className="bg-primary h-2 rounded-full transition-all duration-300" 
+                        <div
+                          className="bg-primary h-2 rounded-full transition-all duration-300"
                           style={{ width: `${order.progress}%` }}
                         />
                       </div>
                       <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>Expected: {new Date(order.expectedDelivery).toLocaleDateString()}</span>
+                        <span>
+                          Expected:{" "}
+                          {new Date(
+                            order.expectedDelivery,
+                          ).toLocaleDateString()}
+                        </span>
                         <span>{order.progress}% Complete</span>
                       </div>
                     </div>

@@ -8,7 +8,7 @@ import {
   ShoppingCart,
   DollarSign,
   Users,
-  BarChart3
+  BarChart3,
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -26,7 +26,9 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Products
+            </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -39,14 +41,14 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Low Stock Items
+            </CardTitle>
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive">23</div>
-            <p className="text-xs text-muted-foreground">
-              Requires attention
-            </p>
+            <p className="text-xs text-muted-foreground">Requires attention</p>
           </CardContent>
         </Card>
 
@@ -57,9 +59,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₹2,34,567</div>
-            <p className="text-xs text-muted-foreground">
-              +8% from last month
-            </p>
+            <p className="text-xs text-muted-foreground">+8% from last month</p>
           </CardContent>
         </Card>
 
@@ -70,9 +70,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">47</div>
-            <p className="text-xs text-muted-foreground">
-              +3 new today
-            </p>
+            <p className="text-xs text-muted-foreground">+3 new today</p>
           </CardContent>
         </Card>
       </div>
@@ -91,20 +89,26 @@ export default function Dashboard() {
               <div className="flex items-center justify-between py-2 border-b">
                 <div>
                   <p className="font-medium">Stock Updated: Laptop Dell XPS</p>
-                  <p className="text-sm text-muted-foreground">Quantity: 15 → 12</p>
+                  <p className="text-sm text-muted-foreground">
+                    Quantity: 15 → 12
+                  </p>
                 </div>
                 <Badge variant="outline">2 hours ago</Badge>
               </div>
               <div className="flex items-center justify-between py-2 border-b">
                 <div>
                   <p className="font-medium">Low Stock Alert: iPhone Cases</p>
-                  <p className="text-sm text-muted-foreground">Only 3 units left</p>
+                  <p className="text-sm text-muted-foreground">
+                    Only 3 units left
+                  </p>
                 </div>
                 <Badge variant="destructive">4 hours ago</Badge>
               </div>
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <p className="font-medium">New Product Added: Wireless Headphones</p>
+                  <p className="font-medium">
+                    New Product Added: Wireless Headphones
+                  </p>
                   <p className="text-sm text-muted-foreground">SKU: WH-001</p>
                 </div>
                 <Badge variant="secondary">1 day ago</Badge>
@@ -151,7 +155,9 @@ export default function Dashboard() {
             <div className="h-64 flex items-center justify-center bg-muted/30 rounded-lg">
               <div className="text-center">
                 <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Chart visualization coming soon</p>
+                <p className="text-muted-foreground">
+                  Chart visualization coming soon
+                </p>
               </div>
             </div>
           </CardContent>
@@ -165,7 +171,9 @@ export default function Dashboard() {
             <div className="h-64 flex items-center justify-center bg-muted/30 rounded-lg">
               <div className="text-center">
                 <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Product analytics coming soon</p>
+                <p className="text-muted-foreground">
+                  Product analytics coming soon
+                </p>
               </div>
             </div>
           </CardContent>

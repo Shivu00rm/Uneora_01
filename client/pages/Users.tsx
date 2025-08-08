@@ -3,22 +3,42 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  UserPlus, 
-  Search, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Shield, 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  UserPlus,
+  Search,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Shield,
   Users as UsersIcon,
   Crown,
   Briefcase,
-  User
+  User,
 } from "lucide-react";
 
 const mockUsers = [
@@ -29,25 +49,25 @@ const mockUsers = [
     role: "owner",
     status: "active",
     lastLogin: "2 hours ago",
-    permissions: ["all"]
+    permissions: ["all"],
   },
   {
     id: 2,
     name: "Priya Patel",
-    email: "priya@flowstock.in", 
+    email: "priya@flowstock.in",
     role: "manager",
     status: "active",
     lastLogin: "1 day ago",
-    permissions: ["inventory", "reports", "vendors"]
+    permissions: ["inventory", "reports", "vendors"],
   },
   {
     id: 3,
     name: "Amit Kumar",
     email: "amit@flowstock.in",
     role: "cashier",
-    status: "active", 
+    status: "active",
     lastLogin: "5 minutes ago",
-    permissions: ["pos", "inventory_view"]
+    permissions: ["pos", "inventory_view"],
   },
   {
     id: 4,
@@ -56,31 +76,32 @@ const mockUsers = [
     role: "staff",
     status: "inactive",
     lastLogin: "3 days ago",
-    permissions: ["inventory_view"]
-  }
+    permissions: ["inventory_view"],
+  },
 ];
 
 const roleIcons = {
   owner: Crown,
   manager: Briefcase,
   cashier: User,
-  staff: User
+  staff: User,
 };
 
 const roleColors = {
   owner: "default",
-  manager: "secondary", 
+  manager: "secondary",
   cashier: "outline",
-  staff: "outline"
+  staff: "outline",
 } as const;
 
 export default function Users() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
 
-  const filteredUsers = mockUsers.filter(user => 
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = mockUsers.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -88,12 +109,14 @@ export default function Users() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">User Management</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            User Management
+          </h1>
           <p className="text-muted-foreground">
             Manage team members and their access permissions
           </p>
         </div>
-        
+
         <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -105,7 +128,8 @@ export default function Users() {
             <DialogHeader>
               <DialogTitle>Add New User</DialogTitle>
               <DialogDescription>
-                Create a new team member account with specific role and permissions.
+                Create a new team member account with specific role and
+                permissions.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -115,7 +139,11 @@ export default function Users() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" placeholder="Enter email address" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter email address"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="role">Role</Label>
@@ -136,7 +164,10 @@ export default function Users() {
               </div>
               <div className="flex gap-2 pt-4">
                 <Button className="flex-1">Create User</Button>
-                <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddUserOpen(false)}
+                >
                   Cancel
                 </Button>
               </div>
@@ -232,17 +263,27 @@ export default function Users() {
                         </div>
                         <div>
                           <div className="font-medium">{user.name}</div>
-                          <div className="text-sm text-muted-foreground">{user.email}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {user.email}
+                          </div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={roleColors[user.role as keyof typeof roleColors]}>
+                      <Badge
+                        variant={
+                          roleColors[user.role as keyof typeof roleColors]
+                        }
+                      >
                         {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={user.status === "active" ? "default" : "secondary"}>
+                      <Badge
+                        variant={
+                          user.status === "active" ? "default" : "secondary"
+                        }
+                      >
                         {user.status}
                       </Badge>
                     </TableCell>
@@ -252,7 +293,11 @@ export default function Users() {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {user.permissions.slice(0, 2).map((permission) => (
-                          <Badge key={permission} variant="outline" className="text-xs">
+                          <Badge
+                            key={permission}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {permission.replace("_", " ")}
                           </Badge>
                         ))}
@@ -268,7 +313,11 @@ export default function Users() {
                         <Button variant="ghost" size="sm">
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-destructive">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive"
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>

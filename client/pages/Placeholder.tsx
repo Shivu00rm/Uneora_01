@@ -10,7 +10,11 @@ interface PlaceholderProps {
   feature?: string;
 }
 
-export default function Placeholder({ title, description, feature }: PlaceholderProps) {
+export default function Placeholder({
+  title,
+  description,
+  feature,
+}: PlaceholderProps) {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="max-w-2xl mx-auto text-center">
@@ -31,8 +35,9 @@ export default function Placeholder({ title, description, feature }: Placeholder
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">{description}</p>
             <p className="text-sm text-muted-foreground">
-              This feature is currently in development. Please continue prompting 
-              to help us build out this page with the specific functionality you need.
+              This feature is currently in development. Please continue
+              prompting to help us build out this page with the specific
+              functionality you need.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link to="/">
@@ -42,9 +47,7 @@ export default function Placeholder({ title, description, feature }: Placeholder
                 </Button>
               </Link>
               <Link to="/dashboard">
-                <Button>
-                  Go to Dashboard
-                </Button>
+                <Button>Go to Dashboard</Button>
               </Link>
             </div>
           </CardContent>

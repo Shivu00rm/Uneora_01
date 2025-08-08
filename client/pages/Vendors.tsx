@@ -3,18 +3,38 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { 
-  UserPlus, 
-  Search, 
-  Star, 
-  TrendingUp, 
+import {
+  UserPlus,
+  Search,
+  Star,
+  TrendingUp,
   TrendingDown,
   Package,
   Phone,
@@ -25,7 +45,7 @@ import {
   FileText,
   AlertTriangle,
   CheckCircle,
-  Clock
+  Clock,
 } from "lucide-react";
 
 const mockVendors = [
@@ -45,7 +65,7 @@ const mockVendors = [
     onTimeDelivery: 95,
     qualityScore: 92,
     paymentTerms: "Net 30",
-    joinedDate: "2023-01-15"
+    joinedDate: "2023-01-15",
   },
   {
     id: 2,
@@ -63,7 +83,7 @@ const mockVendors = [
     onTimeDelivery: 88,
     qualityScore: 90,
     paymentTerms: "Net 15",
-    joinedDate: "2023-03-22"
+    joinedDate: "2023-03-22",
   },
   {
     id: 3,
@@ -81,15 +101,15 @@ const mockVendors = [
     onTimeDelivery: 82,
     qualityScore: 85,
     paymentTerms: "Advance",
-    joinedDate: "2023-08-10"
-  }
+    joinedDate: "2023-08-10",
+  },
 ];
 
 const performanceMetrics = [
   { label: "On-time Delivery", value: 91, trend: "up" },
   { label: "Quality Score", value: 89, trend: "up" },
   { label: "Price Competitiveness", value: 76, trend: "down" },
-  { label: "Communication", value: 94, trend: "up" }
+  { label: "Communication", value: 94, trend: "up" },
 ];
 
 export default function Vendors() {
@@ -98,30 +118,41 @@ export default function Vendors() {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [isAddVendorOpen, setIsAddVendorOpen] = useState(false);
 
-  const filteredVendors = mockVendors.filter(vendor => {
-    const matchesSearch = vendor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         vendor.contact.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || vendor.category === selectedCategory;
-    const matchesStatus = selectedStatus === "all" || vendor.status === selectedStatus;
-    
+  const filteredVendors = mockVendors.filter((vendor) => {
+    const matchesSearch =
+      vendor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vendor.contact.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || vendor.category === selectedCategory;
+    const matchesStatus =
+      selectedStatus === "all" || vendor.status === selectedStatus;
+
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "default";
-      case "pending": return "secondary";
-      case "suspended": return "destructive";
-      default: return "outline";
+      case "active":
+        return "default";
+      case "pending":
+        return "secondary";
+      case "suspended":
+        return "destructive";
+      default:
+        return "outline";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "active": return CheckCircle;
-      case "pending": return Clock;
-      case "suspended": return AlertTriangle;
-      default: return Clock;
+      case "active":
+        return CheckCircle;
+      case "pending":
+        return Clock;
+      case "suspended":
+        return AlertTriangle;
+      default:
+        return Clock;
     }
   };
 
@@ -130,12 +161,14 @@ export default function Vendors() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Vendor Management</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Vendor Management
+          </h1>
           <p className="text-muted-foreground">
             Manage suppliers and track their performance metrics
           </p>
         </div>
-        
+
         <Dialog open={isAddVendorOpen} onOpenChange={setIsAddVendorOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -157,11 +190,18 @@ export default function Vendors() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="contact-person">Contact Person</Label>
-                <Input id="contact-person" placeholder="Enter contact person name" />
+                <Input
+                  id="contact-person"
+                  placeholder="Enter contact person name"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vendor-email">Email</Label>
-                <Input id="vendor-email" type="email" placeholder="Enter email address" />
+                <Input
+                  id="vendor-email"
+                  type="email"
+                  placeholder="Enter email address"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vendor-phone">Phone</Label>
@@ -188,11 +228,17 @@ export default function Vendors() {
               </div>
               <div className="md:col-span-2 space-y-2">
                 <Label htmlFor="vendor-address">Address</Label>
-                <Textarea id="vendor-address" placeholder="Enter complete address" />
+                <Textarea
+                  id="vendor-address"
+                  placeholder="Enter complete address"
+                />
               </div>
               <div className="md:col-span-2 flex gap-2 pt-4">
                 <Button className="flex-1">Create Vendor</Button>
-                <Button variant="outline" onClick={() => setIsAddVendorOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddVendorOpen(false)}
+                >
                   Cancel
                 </Button>
               </div>
@@ -208,8 +254,12 @@ export default function Vendors() {
           return (
             <Card key={index}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{metric.label}</CardTitle>
-                <TrendIcon className={`h-4 w-4 ${metric.trend === "up" ? "text-emerald-500" : "text-red-500"}`} />
+                <CardTitle className="text-sm font-medium">
+                  {metric.label}
+                </CardTitle>
+                <TrendIcon
+                  className={`h-4 w-4 ${metric.trend === "up" ? "text-emerald-500" : "text-red-500"}`}
+                />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{metric.value}%</div>
@@ -242,7 +292,10 @@ export default function Vendors() {
                     className="pl-9"
                   />
                 </div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <Select
+                  value={selectedCategory}
+                  onValueChange={setSelectedCategory}
+                >
                   <SelectTrigger className="w-full sm:w-48">
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
@@ -253,7 +306,10 @@ export default function Vendors() {
                     <SelectItem value="Food">Food & Beverages</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <Select
+                  value={selectedStatus}
+                  onValueChange={setSelectedStatus}
+                >
                   <SelectTrigger className="w-full sm:w-32">
                     <SelectValue placeholder="All Status" />
                   </SelectTrigger>
@@ -314,7 +370,10 @@ export default function Vendors() {
                           <Badge variant="outline">{vendor.category}</Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={getStatusColor(vendor.status)} className="flex items-center gap-1 w-fit">
+                          <Badge
+                            variant={getStatusColor(vendor.status)}
+                            className="flex items-center gap-1 w-fit"
+                          >
                             <StatusIcon className="h-3 w-3" />
                             {vendor.status}
                           </Badge>
@@ -338,7 +397,9 @@ export default function Vendors() {
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="sm">View Details</Button>
+                          <Button variant="ghost" size="sm">
+                            View Details
+                          </Button>
                         </TableCell>
                       </TableRow>
                     );
@@ -365,11 +426,18 @@ export default function Vendors() {
                     .sort((a, b) => b.rating - a.rating)
                     .slice(0, 3)
                     .map((vendor, index) => (
-                      <div key={vendor.id} className="flex items-center gap-3 p-3 border rounded">
-                        <div className="text-lg font-bold text-muted-foreground">#{index + 1}</div>
+                      <div
+                        key={vendor.id}
+                        className="flex items-center gap-3 p-3 border rounded"
+                      >
+                        <div className="text-lg font-bold text-muted-foreground">
+                          #{index + 1}
+                        </div>
                         <div className="flex-1">
                           <div className="font-medium">{vendor.name}</div>
-                          <div className="text-sm text-muted-foreground">{vendor.category}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {vendor.category}
+                          </div>
                         </div>
                         <div className="text-right">
                           <div className="flex items-center gap-1">
@@ -395,7 +463,9 @@ export default function Vendors() {
                 <div className="h-64 flex items-center justify-center bg-muted/30 rounded-lg">
                   <div className="text-center">
                     <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Performance chart visualization</p>
+                    <p className="text-muted-foreground">
+                      Performance chart visualization
+                    </p>
                     <p className="text-sm text-muted-foreground">Coming soon</p>
                   </div>
                 </div>
@@ -416,8 +486,12 @@ export default function Vendors() {
               <div className="h-64 flex items-center justify-center bg-muted/30 rounded-lg">
                 <div className="text-center">
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">Purchase order tracking</p>
-                  <p className="text-sm text-muted-foreground">Integration with PO module coming soon</p>
+                  <p className="text-muted-foreground">
+                    Purchase order tracking
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Integration with PO module coming soon
+                  </p>
                 </div>
               </div>
             </CardContent>

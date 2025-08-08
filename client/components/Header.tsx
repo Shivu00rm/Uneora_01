@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { 
-  Package, 
-  BarChart3, 
-  ShoppingCart, 
+import {
+  Package,
+  BarChart3,
+  ShoppingCart,
   Settings,
   Menu,
-  X
+  X,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -27,22 +27,40 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/dashboard"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
               Dashboard
             </Link>
-            <Link to="/inventory" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/inventory"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
               Inventory
             </Link>
-            <Link to="/pos" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/pos"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
               POS
             </Link>
-            <Link to="/vendors" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/vendors"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
               Vendors
             </Link>
-            <Link to="/analytics" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/analytics"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
               Analytics
             </Link>
-            <Link to="/users" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/users"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
               Users
             </Link>
           </nav>
@@ -54,9 +72,7 @@ export function Header() {
                 Sign In
               </Button>
             </Link>
-            <Button size="sm">
-              Start Free Trial
-            </Button>
+            <Button size="sm">Start Free Trial</Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -64,7 +80,11 @@ export function Header() {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
         </div>
 

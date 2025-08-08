@@ -35,16 +35,70 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/inventory" element={<Placeholder title="Inventory Management" description="Comprehensive inventory tracking with real-time stock updates, batch management, and automated alerts." feature="Real-time Sync" />} />
+              <Route
+                path="/inventory"
+                element={
+                  <Placeholder
+                    title="Inventory Management"
+                    description="Comprehensive inventory tracking with real-time stock updates, batch management, and automated alerts."
+                    feature="Real-time Sync"
+                  />
+                }
+              />
               <Route path="/pos" element={<POS />} />
               <Route path="/vendors" element={<Vendors />} />
               <Route path="/purchase-orders" element={<PurchaseOrders />} />
               <Route path="/analytics" element={<Analytics />} />
-              <Route path="/automation" element={<Placeholder title="Smart Automation" description="Drag-and-drop workflow builder with intelligent triggers and automated actions." feature="Automation" />} />
-              <Route path="/ecommerce" element={<Placeholder title="E-commerce Sync" description="Real-time synchronization with Shopify, Amazon, WooCommerce and other platforms." feature="Multi-Channel" />} />
-              <Route path="/consulting" element={<Placeholder title="MSME Consulting" description="Expert business consulting services with AI-powered analysis and recommendations." feature="Expert Support" />} />
-              <Route path="/payments" element={<Placeholder title="Payment Integration" description="Razorpay and UPI integration for seamless payment processing." feature="Razorpay/UPI" />} />
-              <Route path="/alerts" element={<Placeholder title="WhatsApp Alerts" description="Automated WhatsApp notifications for stock alerts, orders, and business updates." feature="WhatsApp API" />} />
+              <Route
+                path="/automation"
+                element={
+                  <Placeholder
+                    title="Smart Automation"
+                    description="Drag-and-drop workflow builder with intelligent triggers and automated actions."
+                    feature="Automation"
+                  />
+                }
+              />
+              <Route
+                path="/ecommerce"
+                element={
+                  <Placeholder
+                    title="E-commerce Sync"
+                    description="Real-time synchronization with Shopify, Amazon, WooCommerce and other platforms."
+                    feature="Multi-Channel"
+                  />
+                }
+              />
+              <Route
+                path="/consulting"
+                element={
+                  <Placeholder
+                    title="MSME Consulting"
+                    description="Expert business consulting services with AI-powered analysis and recommendations."
+                    feature="Expert Support"
+                  />
+                }
+              />
+              <Route
+                path="/payments"
+                element={
+                  <Placeholder
+                    title="Payment Integration"
+                    description="Razorpay and UPI integration for seamless payment processing."
+                    feature="Razorpay/UPI"
+                  />
+                }
+              />
+              <Route
+                path="/alerts"
+                element={
+                  <Placeholder
+                    title="WhatsApp Alerts"
+                    description="Automated WhatsApp notifications for stock alerts, orders, and business updates."
+                    feature="WhatsApp API"
+                  />
+                }
+              />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

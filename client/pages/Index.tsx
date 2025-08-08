@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Package, 
-  BarChart3, 
-  ShoppingCart, 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Package,
+  BarChart3,
+  ShoppingCart,
   Zap,
   Smartphone,
   Shield,
@@ -17,7 +23,7 @@ import {
   Bot,
   Users,
   TrendingUp,
-  Workflow
+  Workflow,
 } from "lucide-react";
 
 export default function Index() {
@@ -29,20 +35,20 @@ export default function Index() {
           <Badge className="mb-6 bg-primary/10 text-primary hover:bg-primary/20">
             🚀 India's First Automation-Native Inventory Platform
           </Badge>
-          
+
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight mb-6">
             <span className="text-foreground">Smart Inventory for</span>{" "}
             <span className="bg-gradient-to-r from-primary via-brand-500 to-accent bg-clip-text text-transparent">
               Modern MSMEs
             </span>
           </h1>
-          
+
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
-            FlowStock revolutionizes inventory management with AI-powered automation, 
-            GST compliance, real-time e-commerce sync, and intelligent analytics. 
-            Built for India's growing businesses.
+            FlowStock revolutionizes inventory management with AI-powered
+            automation, GST compliance, real-time e-commerce sync, and
+            intelligent analytics. Built for India's growing businesses.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button size="lg" className="text-lg px-8 py-4">
               Start Free Trial
@@ -57,15 +63,21 @@ export default function Index() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto text-center">
             <div>
               <div className="text-3xl font-bold text-primary">10K+</div>
-              <div className="text-sm text-muted-foreground">Businesses Trust FlowStock</div>
+              <div className="text-sm text-muted-foreground">
+                Businesses Trust FlowStock
+              </div>
             </div>
             <div>
               <div className="text-3xl font-bold text-primary">99.9%</div>
-              <div className="text-sm text-muted-foreground">Uptime Guarantee</div>
+              <div className="text-sm text-muted-foreground">
+                Uptime Guarantee
+              </div>
             </div>
             <div>
               <div className="text-3xl font-bold text-primary">50%</div>
-              <div className="text-sm text-muted-foreground">Time Saved on Average</div>
+              <div className="text-sm text-muted-foreground">
+                Time Saved on Average
+              </div>
             </div>
           </div>
         </div>
@@ -82,8 +94,8 @@ export default function Index() {
               Everything Your Business Needs
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From inventory tracking to AI analytics, FlowStock provides a complete 
-              ecosystem for modern business operations.
+              From inventory tracking to AI analytics, FlowStock provides a
+              complete ecosystem for modern business operations.
             </p>
           </div>
 
@@ -96,7 +108,8 @@ export default function Index() {
                 </div>
                 <CardTitle>Smart Inventory</CardTitle>
                 <CardDescription>
-                  Real-time stock tracking with automated low-stock alerts and batch management
+                  Real-time stock tracking with automated low-stock alerts and
+                  batch management
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -109,7 +122,8 @@ export default function Index() {
                 </div>
                 <CardTitle>GST-Compliant POS</CardTitle>
                 <CardDescription>
-                  Integrated billing system with barcode scanning and automatic GST calculations
+                  Integrated billing system with barcode scanning and automatic
+                  GST calculations
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -122,7 +136,8 @@ export default function Index() {
                 </div>
                 <CardTitle>Smart Automation</CardTitle>
                 <CardDescription>
-                  Drag-and-drop workflow builder with intelligent triggers and actions
+                  Drag-and-drop workflow builder with intelligent triggers and
+                  actions
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -135,7 +150,8 @@ export default function Index() {
                 </div>
                 <CardTitle>E-commerce Sync</CardTitle>
                 <CardDescription>
-                  Real-time synchronization with Shopify, Amazon, and WooCommerce
+                  Real-time synchronization with Shopify, Amazon, and
+                  WooCommerce
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -148,7 +164,8 @@ export default function Index() {
                 </div>
                 <CardTitle>AI Analytics</CardTitle>
                 <CardDescription>
-                  Demand forecasting, vendor scoring, and intelligent reorder recommendations
+                  Demand forecasting, vendor scoring, and intelligent reorder
+                  recommendations
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -161,7 +178,8 @@ export default function Index() {
                 </div>
                 <CardTitle>Multi-Warehouse</CardTitle>
                 <CardDescription>
-                  Manage multiple locations with centralized control and real-time visibility
+                  Manage multiple locations with centralized control and
+                  real-time visibility
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -180,7 +198,8 @@ export default function Index() {
               Choose Your Growth Plan
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Start free and scale as you grow. No hidden fees, transparent pricing for every business size.
+              Start free and scale as you grow. No hidden fees, transparent
+              pricing for every business size.
             </p>
           </div>
 
@@ -189,8 +208,13 @@ export default function Index() {
             <Card className="relative">
               <CardHeader>
                 <CardTitle>Starter</CardTitle>
-                <CardDescription>Perfect for small businesses getting started</CardDescription>
-                <div className="text-4xl font-bold">₹999<span className="text-lg text-muted-foreground">/month</span></div>
+                <CardDescription>
+                  Perfect for small businesses getting started
+                </CardDescription>
+                <div className="text-4xl font-bold">
+                  ₹999
+                  <span className="text-lg text-muted-foreground">/month</span>
+                </div>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -216,12 +240,19 @@ export default function Index() {
             {/* Growth Plan */}
             <Card className="relative border-primary shadow-lg">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
+                <Badge className="bg-primary text-primary-foreground">
+                  Most Popular
+                </Badge>
               </div>
               <CardHeader>
                 <CardTitle>Growth</CardTitle>
-                <CardDescription>For growing businesses with multiple channels</CardDescription>
-                <div className="text-4xl font-bold">₹2,999<span className="text-lg text-muted-foreground">/month</span></div>
+                <CardDescription>
+                  For growing businesses with multiple channels
+                </CardDescription>
+                <div className="text-4xl font-bold">
+                  ₹2,999
+                  <span className="text-lg text-muted-foreground">/month</span>
+                </div>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -248,8 +279,13 @@ export default function Index() {
             <Card className="relative">
               <CardHeader>
                 <CardTitle>Pro</CardTitle>
-                <CardDescription>Enterprise features with AI and consulting</CardDescription>
-                <div className="text-4xl font-bold">₹9,999<span className="text-lg text-muted-foreground">/month</span></div>
+                <CardDescription>
+                  Enterprise features with AI and consulting
+                </CardDescription>
+                <div className="text-4xl font-bold">
+                  ₹9,999
+                  <span className="text-lg text-muted-foreground">/month</span>
+                </div>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -282,8 +318,8 @@ export default function Index() {
             Ready to Transform Your Business?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Join thousands of Indian businesses already using FlowStock to streamline 
-            their operations and boost growth.
+            Join thousands of Indian businesses already using FlowStock to
+            streamline their operations and boost growth.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8 py-4">
