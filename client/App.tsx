@@ -20,6 +20,8 @@ import Vendors from "./pages/Vendors";
 import PurchaseOrders from "./pages/PurchaseOrders";
 import Analytics from "./pages/Analytics";
 import Files from "./pages/Files";
+import SuperAdmin from "./pages/SuperAdmin";
+import OrgFlows from "./pages/OrgFlows";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
