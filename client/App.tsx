@@ -22,6 +22,11 @@ import Analytics from "./pages/Analytics";
 import Files from "./pages/Files";
 import SuperAdmin from "./pages/SuperAdmin";
 import OrgFlows from "./pages/OrgFlows";
+import AppDashboard from "./pages/app/AppDashboard";
+import TeamManagement from "./pages/app/TeamManagement";
+import { TenantLayout } from "./components/TenantLayout";
+import { RoleSelector } from "./components/RoleSelector";
+import { RoleRoute } from "./components/ProtectedRoute";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
@@ -44,7 +49,7 @@ export default function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/email-auth" element={<EmailAuth />} />
 
-                  {/* Protected Routes */}
+                  {/* Legacy Protected Routes - Redirect to role-appropriate routes */}
                   <Route
                     path="/dashboard"
                     element={
@@ -181,14 +186,119 @@ export default function App() {
                   />
 
                   {/* Super Admin Routes */}
-                  <Route path="/super-admin" element={<SuperAdmin />} />
-                  <Route path="/org-flows" element={<OrgFlows />} />
+                  <Route
+                    path="/super-admin"
+                    element={
+                      <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
+                        <SuperAdmin />
+                      </RoleRoute>
+                    }
+                  />
+                  <Route
+                    path="/org-flows"
+                    element={
+                      <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
+                        <OrgFlows />
+                      </RoleRoute>
+                    }
+                  />
+
+                  {/* Tenant App Routes */}
+                  <Route
+                    path="/app/*"
+                    element={
+                      <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER"]}>
+                        <TenantLayout>
+                          <Routes>
+                            <Route path="dashboard" element={<AppDashboard />} />
+                            <Route
+                              path="inventory"
+                              element={
+                                <ProtectedRoute requiredModule="inventory" requiredAction="view">
+                                  <Inventory />
+                                </ProtectedRoute>
+                              }
+                            />
+                            <Route
+                              path="stock-movements"
+                              element={
+                                <ProtectedRoute requiredModule="stock_movements" requiredAction="view">
+                                  <StockMovements />
+                                </ProtectedRoute>
+                              }
+                            />
+                            <Route
+                              path="pos"
+                              element={
+                                <ProtectedRoute requiredModule="pos" requiredAction="view">
+                                  <POS />
+                                </ProtectedRoute>
+                              }
+                            />
+                            <Route
+                              path="vendors"
+                              element={
+                                <ProtectedRoute requiredModule="vendors" requiredAction="view">
+                                  <Vendors />
+                                </ProtectedRoute>
+                              }
+                            />
+                            <Route
+                              path="purchase-orders"
+                              element={
+                                <ProtectedRoute requiredModule="purchase_orders" requiredAction="view">
+                                  <PurchaseOrders />
+                                </ProtectedRoute>
+                              }
+                            />
+                            <Route
+                              path="analytics"
+                              element={
+                                <ProtectedRoute requiredModule="analytics" requiredAction="view">
+                                  <Analytics />
+                                </ProtectedRoute>
+                              }
+                            />
+                            <Route
+                              path="files"
+                              element={
+                                <ProtectedRoute requiredModule="files" requiredAction="view">
+                                  <Files />
+                                </ProtectedRoute>
+                              }
+                            />
+                            <Route
+                              path="team"
+                              element={
+                                <ProtectedRoute allowedRoles={["ORG_ADMIN"]} requiredModule="users" requiredAction="view">
+                                  <TeamManagement />
+                                </ProtectedRoute>
+                              }
+                            />
+                            <Route
+                              path="settings"
+                              element={
+                                <ProtectedRoute allowedRoles={["ORG_ADMIN"]} requiredModule="settings" requiredAction="view">
+                                  <Placeholder
+                                    title="Organization Settings"
+                                    description="Manage your organization's settings and preferences."
+                                    feature="Settings"
+                                  />
+                                </ProtectedRoute>
+                              }
+                            />
+                          </Routes>
+                        </TenantLayout>
+                      </RoleRoute>
+                    }
+                  />
 
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
               <Footer />
+              <RoleSelector />
             </div>
           </BrowserRouter>
           </SuperAdminProvider>
