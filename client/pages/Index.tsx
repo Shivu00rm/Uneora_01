@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -25,8 +26,30 @@ import {
   TrendingUp,
   Workflow,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Index() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      // Redirect authenticated users to their appropriate dashboard
+      if (user.role === "SUPER_ADMIN") {
+        navigate("/super-admin");
+      } else if (user.role === "ORG_ADMIN" || user.role === "ORG_USER") {
+        navigate("/app/dashboard");
+      } else {
+        // Legacy role system fallback
+        navigate("/dashboard");
+      }
+    }
+  }, [user, navigate]);
+
+  // Don't render homepage if user is authenticated
+  if (user) {
+    return null;
+  }
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
