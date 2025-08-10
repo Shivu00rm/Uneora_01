@@ -37,13 +37,23 @@ interface SuperAdminUser {
   lastLogin: string;
 }
 
+interface PlanChange {
+  orgId: string;
+  oldPlan: string;
+  newPlan: string;
+  timestamp: string;
+  adminName: string;
+}
+
 interface SuperAdminContextType {
   organizations: Organization[];
   systemMetrics: SystemMetrics;
   superAdminUser: SuperAdminUser | null;
   isSuperAdmin: boolean;
+  recentPlanChanges: PlanChange[];
   updateOrganizationPlan: (orgId: string, plan: string) => void;
   suspendOrganization: (orgId: string) => void;
+  reactivateOrganization: (orgId: string) => void;
   getOrganizationMetrics: (orgId: string) => any;
   hasSystemPermission: (permission: string) => boolean;
 }
@@ -159,17 +169,31 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   const [organizations, setOrganizations] = useState<Organization[]>(mockOrganizations);
   const [systemMetrics] = useState<SystemMetrics>(mockSystemMetrics);
   const [superAdminUser] = useState<SuperAdminUser | null>(mockSuperAdminUser);
+  const [recentPlanChanges, setRecentPlanChanges] = useState<PlanChange[]>([]);
 
   const isSuperAdmin = superAdminUser?.role === "super_admin" || false;
 
   const updateOrganizationPlan = (orgId: string, plan: string) => {
-    setOrganizations(prev => 
-      prev.map(org => 
-        org.id === orgId 
-          ? { ...org, plan: plan as Organization["plan"] }
-          : org
-      )
-    );
+    const org = organizations.find(o => o.id === orgId);
+    if (org) {
+      const planChange: PlanChange = {
+        orgId,
+        oldPlan: org.plan,
+        newPlan: plan,
+        timestamp: new Date().toISOString(),
+        adminName: superAdminUser?.name || "System Admin"
+      };
+
+      setRecentPlanChanges(prev => [planChange, ...prev.slice(0, 9)]); // Keep last 10 changes
+
+      setOrganizations(prev =>
+        prev.map(o =>
+          o.id === orgId
+            ? { ...o, plan: plan as Organization["plan"] }
+            : o
+        )
+      );
+    }
   };
 
   const suspendOrganization = (orgId: string) => {
@@ -177,6 +201,16 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
       prev.map(org =>
         org.id === orgId
           ? { ...org, status: "suspended" }
+          : org
+      )
+    );
+  };
+
+  const reactivateOrganization = (orgId: string) => {
+    setOrganizations(prev =>
+      prev.map(org =>
+        org.id === orgId
+          ? { ...org, status: "active" }
           : org
       )
     );
@@ -204,8 +238,10 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     systemMetrics,
     superAdminUser,
     isSuperAdmin,
+    recentPlanChanges,
     updateOrganizationPlan,
     suspendOrganization,
+    reactivateOrganization,
     getOrganizationMetrics,
     hasSystemPermission
   };
