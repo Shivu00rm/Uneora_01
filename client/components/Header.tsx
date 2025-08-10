@@ -17,7 +17,8 @@ import {
   LogOut,
   Crown,
   Briefcase,
-  ChevronDown
+  ChevronDown,
+  Activity
 } from "lucide-react";
 
 export function Header() {
