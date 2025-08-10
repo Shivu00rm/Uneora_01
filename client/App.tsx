@@ -198,7 +198,7 @@ export default function App() {
                     path="/org-flows"
                     element={
                       <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
-                        <OrgFlows />
+                        <OrganizationMonitor />
                       </RoleRoute>
                     }
                   />
