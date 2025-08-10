@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
+import { InvoiceTemplate } from "@/components/InvoiceTemplate";
 import {
   Shield,
   Users,
@@ -27,23 +28,31 @@ import {
   BarChart3,
   Globe,
   Clock,
-  RefreshCw
+  RefreshCw,
+  RotateCcw,
+  Mail,
+  Download,
+  History
 } from "lucide-react";
 
 export default function SuperAdmin() {
-  const { 
-    organizations, 
-    systemMetrics, 
-    isSuperAdmin, 
+  const {
+    organizations,
+    systemMetrics,
+    isSuperAdmin,
+    recentPlanChanges,
     updateOrganizationPlan,
-    suspendOrganization 
+    suspendOrganization,
+    reactivateOrganization
   } = useSuperAdmin();
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPlan, setSelectedPlan] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedOrg, setSelectedOrg] = useState<any>(null);
   const [isOrgDetailsOpen, setIsOrgDetailsOpen] = useState(false);
+  const [isInvoiceDialogOpen, setIsInvoiceDialogOpen] = useState(false);
+  const [planChangeMessage, setPlanChangeMessage] = useState("");
 
 
   const filteredOrganizations = organizations.filter(org => {
@@ -89,6 +98,43 @@ export default function SuperAdmin() {
     setIsOrgDetailsOpen(true);
   };
 
+  const handleSendInvoice = (org: any) => {
+    setSelectedOrg(org);
+    setIsInvoiceDialogOpen(true);
+  };
+
+  const generateInvoiceNumber = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    return `FS-${year}${month}-${random}`;
+  };
+
+  const handlePlanChange = (orgId: string, newPlan: string) => {
+    const org = organizations.find(o => o.id === orgId);
+    if (org) {
+      updateOrganizationPlan(orgId, newPlan);
+      setPlanChangeMessage(`Plan updated: ${org.name} changed from ${org.plan} to ${newPlan}`);
+      setTimeout(() => setPlanChangeMessage(""), 5000);
+    }
+  };
+
+  const handleReactivateOrganization = (orgId: string) => {
+    reactivateOrganization(orgId);
+  };
+
+  const downloadInvoicePDF = () => {
+    // In a real implementation, this would generate and download a PDF
+    window.print();
+  };
+
+  const sendInvoiceEmail = () => {
+    // In a real implementation, this would send the invoice via email
+    alert(`Invoice sent to ${selectedOrg?.billingEmail || selectedOrg?.name}`);
+    setIsInvoiceDialogOpen(false);
+  };
+
   return (
     <div className="py-8">
       {/* Header */}
@@ -115,6 +161,16 @@ export default function SuperAdmin() {
           </Button>
         </div>
       </div>
+
+      {/* Plan Change Notification */}
+      {planChangeMessage && (
+        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+          <div className="flex items-center gap-2 text-emerald-800">
+            <CheckCircle className="h-5 w-5" />
+            <span className="font-medium">{planChangeMessage}</span>
+          </div>
+        </div>
+      )}
 
       {/* System Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -167,7 +223,14 @@ export default function SuperAdmin() {
       <Tabs defaultValue="organizations" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="organizations">Organizations</TabsTrigger>
-          <TabsTrigger value="billing">Billing & Plans</TabsTrigger>
+          <TabsTrigger value="billing">
+            Billing & Plans
+            {recentPlanChanges.length > 0 && (
+              <Badge variant="secondary" className="ml-2 text-xs">
+                {recentPlanChanges.length}
+              </Badge>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="api-keys">API Keys</TabsTrigger>
           <TabsTrigger value="team">Admin Team</TabsTrigger>
         </TabsList>
@@ -286,21 +349,31 @@ export default function SuperAdmin() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={() => handleViewOrganization(org)}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => suspendOrganization(org.id)}
-                            disabled={org.status === "suspended"}
-                          >
-                            <Ban className="h-4 w-4" />
-                          </Button>
+                          {org.status === "suspended" ? (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleReactivateOrganization(org.id)}
+                              className="text-emerald-600 hover:text-emerald-700"
+                            >
+                              <RotateCcw className="h-4 w-4" />
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => suspendOrganization(org.id)}
+                            >
+                              <Ban className="h-4 w-4" />
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -313,6 +386,38 @@ export default function SuperAdmin() {
 
 
         <TabsContent value="billing" className="space-y-6">
+          {/* Recent Plan Changes */}
+          {recentPlanChanges.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5" />
+                  Recent Plan Changes
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {recentPlanChanges.slice(0, 5).map((change, index) => {
+                    const org = organizations.find(o => o.id === change.orgId);
+                    return (
+                      <div key={index} className="flex items-center justify-between p-3 border rounded">
+                        <div>
+                          <div className="font-medium">{org?.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            Changed from <Badge variant="outline">{change.oldPlan}</Badge> to <Badge variant="default">{change.newPlan}</Badge>
+                          </div>
+                        </div>
+                        <div className="text-sm text-muted-foreground text-right">
+                          <div>{new Date(change.timestamp).toLocaleDateString()}</div>
+                          <div>by {change.adminName}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          )}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -560,9 +665,9 @@ export default function SuperAdmin() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-4">
                     <Label htmlFor="plan-select">Change Plan:</Label>
-                    <Select 
+                    <Select
                       defaultValue={selectedOrg.plan}
-                      onValueChange={(value) => updateOrganizationPlan(selectedOrg.id, value)}
+                      onValueChange={(value) => handlePlanChange(selectedOrg.id, value)}
                     >
                       <SelectTrigger className="w-48">
                         <SelectValue />
@@ -576,12 +681,76 @@ export default function SuperAdmin() {
                     </Select>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline">Send Invoice</Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleSendInvoice(selectedOrg)}
+                    >
+                      <Mail className="mr-2 h-4 w-4" />
+                      Send Invoice
+                    </Button>
                     <Button variant="outline">Apply Credit</Button>
-                    <Button variant="destructive">Suspend Account</Button>
+                    {selectedOrg.status === "suspended" ? (
+                      <Button
+                        variant="default"
+                        onClick={() => handleReactivateOrganization(selectedOrg.id)}
+                        className="bg-emerald-600 hover:bg-emerald-700"
+                      >
+                        <RotateCcw className="mr-2 h-4 w-4" />
+                        Reactivate Account
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="destructive"
+                        onClick={() => suspendOrganization(selectedOrg.id)}
+                      >
+                        <Ban className="mr-2 h-4 w-4" />
+                        Suspend Account
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Invoice Dialog */}
+      <Dialog open={isInvoiceDialogOpen} onOpenChange={setIsInvoiceDialogOpen}>
+        <DialogContent className="sm:max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Generate Invoice - {selectedOrg?.name}</DialogTitle>
+            <DialogDescription>
+              Preview and send invoice to {selectedOrg?.billingEmail}
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedOrg && (
+            <div className="space-y-6">
+              <InvoiceTemplate
+                organization={{
+                  ...selectedOrg,
+                  billingEmail: selectedOrg.billingEmail || `billing@${selectedOrg.domain}`
+                }}
+                invoiceNumber={generateInvoiceNumber()}
+                issueDate={new Date().toISOString()}
+                dueDate={new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString()}
+                adminName="System Owner"
+              />
+
+              <div className="flex gap-2 pt-4 border-t">
+                <Button onClick={sendInvoiceEmail} className="flex-1">
+                  <Mail className="mr-2 h-4 w-4" />
+                  Send Invoice via Email
+                </Button>
+                <Button variant="outline" onClick={downloadInvoicePDF}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Download PDF
+                </Button>
+                <Button variant="outline" onClick={() => setIsInvoiceDialogOpen(false)}>
+                  Cancel
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>
