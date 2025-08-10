@@ -32,7 +32,8 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-          <Toaster />
+          <SuperAdminProvider>
+            <Toaster />
           <Sonner />
           <BrowserRouter>
             <div className="min-h-screen flex flex-col">
@@ -179,6 +180,10 @@ export default function App() {
                     }
                   />
 
+                  {/* Super Admin Routes */}
+                  <Route path="/super-admin" element={<SuperAdmin />} />
+                  <Route path="/org-flows" element={<OrgFlows />} />
+
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
@@ -186,6 +191,7 @@ export default function App() {
               <Footer />
             </div>
           </BrowserRouter>
+          </SuperAdminProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
