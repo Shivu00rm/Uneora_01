@@ -124,7 +124,7 @@ export default function SuperAdmin() {
             FlowStock Super Admin
           </h1>
           <p className="text-muted-foreground">
-            Platform management console for monitoring and managing all organizations
+            Platform management console - billing, organizations, and system administration
           </p>
         </div>
         <div className="flex gap-2">
@@ -132,9 +132,11 @@ export default function SuperAdmin() {
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh Data
           </Button>
-          <Button variant="outline" size="sm">
-            <Settings className="mr-2 h-4 w-4" />
-            System Settings
+          <Button variant="outline" size="sm" asChild>
+            <a href="/org-flows">
+              <Activity className="mr-2 h-4 w-4" />
+              Organization Health
+            </a>
           </Button>
         </div>
       </div>
@@ -188,9 +190,8 @@ export default function SuperAdmin() {
 
       {/* Main Content */}
       <Tabs defaultValue="organizations" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="organizations">Organizations</TabsTrigger>
-          <TabsTrigger value="monitoring">System Monitor</TabsTrigger>
           <TabsTrigger value="billing">Billing & Plans</TabsTrigger>
           <TabsTrigger value="api-keys">API Keys</TabsTrigger>
           <TabsTrigger value="team">Admin Team</TabsTrigger>
@@ -335,85 +336,6 @@ export default function SuperAdmin() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="monitoring" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Server className="h-5 w-5" />
-                  System Performance
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>System Load</span>
-                    <span>{systemMetrics.systemLoad}%</span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div 
-                      className="bg-primary h-2 rounded-full" 
-                      style={{ width: `${systemMetrics.systemLoad}%` }}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>API Requests/min</span>
-                    <span>{systemMetrics.apiRequestsPerMinute.toLocaleString()}</span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div 
-                      className="bg-emerald-500 h-2 rounded-full" 
-                      style={{ width: "75%" }}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Storage Used</span>
-                    <span>{systemMetrics.storageUsed} GB</span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full" 
-                      style={{ width: "45%" }}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Database className="h-5 w-5" />
-                  Database Health
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Connection Pool</span>
-                    <Badge variant="default">Healthy</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Query Performance</span>
-                    <Badge variant="default">Optimal</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Replication Status</span>
-                    <Badge variant="default">Synced</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Backup Status</span>
-                    <Badge variant="default">Current</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
 
         <TabsContent value="billing" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -525,8 +447,9 @@ export default function SuperAdmin() {
                   />
                 </div>
               </div>
-              <div className="pt-4">
+              <div className="pt-4 flex gap-2">
                 <Button>Update API Keys</Button>
+                <Button variant="outline">Test Connections</Button>
               </div>
             </CardContent>
           </Card>
