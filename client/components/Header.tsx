@@ -159,12 +159,30 @@ export function Header() {
                     <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="flex items-center">
-                      <BarChart3 className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
+                  {user?.role !== "SUPER_ADMIN" && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard" className="flex items-center">
+                        <BarChart3 className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  {user?.role === "SUPER_ADMIN" && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link to="/super-admin" className="flex items-center">
+                          <Crown className="mr-2 h-4 w-4" />
+                          Platform Console
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/org-flows" className="flex items-center">
+                          <Activity className="mr-2 h-4 w-4" />
+                          Organization Health
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <PermissionGate module="settings" action="view">
                     <DropdownMenuItem asChild>
                       <Link to="/settings" className="flex items-center">
@@ -229,76 +247,90 @@ export function Header() {
                     </div>
                   </div>
 
-                  {/* Navigation Links */}
-                  <PermissionGate module="dashboard" action="view">
-                    <Link
-                      to="/dashboard"
-                      className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Dashboard
-                    </Link>
-                  </PermissionGate>
-                  
-                  <PermissionGate module="inventory" action="view">
-                    <Link
-                      to="/inventory"
-                      className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Inventory
-                    </Link>
-                  </PermissionGate>
-                  
-                  <PermissionGate module="pos" action="view">
-                    <Link
-                      to="/pos"
-                      className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      POS
-                    </Link>
-                  </PermissionGate>
-                  
-                  <PermissionGate module="vendors" action="view">
-                    <Link
-                      to="/vendors"
-                      className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Vendors
-                    </Link>
-                  </PermissionGate>
-                  
-                  <PermissionGate module="analytics" action="view">
-                    <Link
-                      to="/analytics"
-                      className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Analytics
-                    </Link>
-                  </PermissionGate>
-                  
-                  <PermissionGate module="users" action="view">
-                    <Link
-                      to="/users"
-                      className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Users
-                    </Link>
-                  </PermissionGate>
+                  {/* Navigation Links - Hide for Super Admin */}
+                  {user?.role !== "SUPER_ADMIN" && (
+                    <>
+                      <PermissionGate module="dashboard" action="view">
+                        <Link
+                          to="/dashboard"
+                          className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Dashboard
+                        </Link>
+                      </PermissionGate>
 
-                  <SuperAdminOnly>
-                    <Link
-                      to="/super-admin"
-                      className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      🔥 Super Admin
-                    </Link>
-                  </SuperAdminOnly>
+                      <PermissionGate module="inventory" action="view">
+                        <Link
+                          to="/inventory"
+                          className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Inventory
+                        </Link>
+                      </PermissionGate>
+
+                      <PermissionGate module="pos" action="view">
+                        <Link
+                          to="/pos"
+                          className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          POS
+                        </Link>
+                      </PermissionGate>
+
+                      <PermissionGate module="vendors" action="view">
+                        <Link
+                          to="/vendors"
+                          className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Vendors
+                        </Link>
+                      </PermissionGate>
+
+                      <PermissionGate module="analytics" action="view">
+                        <Link
+                          to="/analytics"
+                          className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Analytics
+                        </Link>
+                      </PermissionGate>
+
+                      <PermissionGate module="users" action="view">
+                        <Link
+                          to="/users"
+                          className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Users
+                        </Link>
+                      </PermissionGate>
+                    </>
+                  )}
+
+                  {/* Super Admin Navigation */}
+                  {user?.role === "SUPER_ADMIN" && (
+                    <>
+                      <Link
+                        to="/super-admin"
+                        className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Platform Console
+                      </Link>
+                      <Link
+                        to="/org-flows"
+                        className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Organization Health
+                      </Link>
+                    </>
+                  )}
 
                   <div className="border-t pt-4 space-y-2">
                     <Button 
