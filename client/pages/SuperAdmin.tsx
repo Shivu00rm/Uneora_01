@@ -45,29 +45,6 @@ export default function SuperAdmin() {
   const [selectedOrg, setSelectedOrg] = useState<any>(null);
   const [isOrgDetailsOpen, setIsOrgDetailsOpen] = useState(false);
 
-  if (!isSuperAdmin) {
-    return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <Card>
-            <CardHeader>
-              <div className="mx-auto mb-6">
-                <div className="h-16 w-16 bg-destructive/10 rounded-lg flex items-center justify-center">
-                  <Shield className="h-8 w-8 text-destructive" />
-                </div>
-              </div>
-              <CardTitle className="text-2xl mb-2">Access Denied</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                This area is restricted to FlowStock super administrators only.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
   const filteredOrganizations = organizations.filter(org => {
     const matchesSearch = org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
