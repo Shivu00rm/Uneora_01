@@ -1,13 +1,14 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { PermissionGate } from "./ProtectedRoute";
 import { useAuth, usePermissions } from "@/contexts/AuthContext";
-import { 
-  Package, 
-  BarChart3, 
-  ShoppingCart, 
+import {
+  Package,
+  BarChart3,
+  ShoppingCart,
   Settings,
   Menu,
   X,
@@ -17,7 +18,6 @@ import {
   Briefcase,
   ChevronDown
 } from "lucide-react";
-import { useState } from "react";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
