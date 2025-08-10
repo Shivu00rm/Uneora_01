@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { PermissionGate } from "./ProtectedRoute";
+import { PermissionGate, SuperAdminOnly } from "./ProtectedRoute";
 import { useAuth, usePermissions } from "@/contexts/AuthContext";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
 import {
@@ -54,8 +54,8 @@ export function Header() {
             <span className="text-xl font-bold text-foreground">FlowStock</span>
           </Link>
 
-          {/* Desktop Navigation - Only show if user is authenticated */}
-          {user && (
+          {/* Desktop Navigation - Only show for non-tenant routes */}
+          {user && !location.pathname.startsWith('/app') && (
             <nav className="hidden md:flex items-center space-x-6">
               <PermissionGate module="dashboard" action="view">
                 <Link
@@ -111,7 +111,7 @@ export function Header() {
                 </Link>
               </PermissionGate>
 
-              {isSuperAdmin && (
+              <SuperAdminOnly>
                 <Link
                   to="/super-admin"
                   className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
@@ -119,7 +119,7 @@ export function Header() {
                   <Crown className="h-4 w-4" />
                   Super Admin
                 </Link>
-              )}
+              </SuperAdminOnly>
             </nav>
           )}
 
@@ -280,7 +280,7 @@ export function Header() {
                     </Link>
                   </PermissionGate>
 
-                  {isSuperAdmin && (
+                  <SuperAdminOnly>
                     <Link
                       to="/super-admin"
                       className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -288,7 +288,7 @@ export function Header() {
                     >
                       🔥 Super Admin
                     </Link>
-                  )}
+                  </SuperAdminOnly>
 
                   <div className="border-t pt-4 space-y-2">
                     <Button 
