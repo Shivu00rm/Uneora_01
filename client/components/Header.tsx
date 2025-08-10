@@ -24,6 +24,7 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const { hasPermission } = usePermissions();
+  const { isSuperAdmin } = useSuperAdmin();
 
   const getRoleIcon = (role: string) => {
     switch (role) {
