@@ -5,6 +5,7 @@ import { Badge } from "./ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { PermissionGate } from "./ProtectedRoute";
 import { useAuth, usePermissions } from "@/contexts/AuthContext";
+import { useSuperAdmin } from "@/contexts/SuperAdminContext";
 import {
   Package,
   BarChart3,
