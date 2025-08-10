@@ -280,6 +280,16 @@ export function Header() {
                     </Link>
                   </PermissionGate>
 
+                  {isSuperAdmin && (
+                    <Link
+                      to="/super-admin"
+                      className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      🔥 Super Admin
+                    </Link>
+                  )}
+
                   <div className="border-t pt-4 space-y-2">
                     <Button 
                       variant="destructive" 
