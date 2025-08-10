@@ -110,6 +110,16 @@ export function Header() {
                   Users
                 </Link>
               </PermissionGate>
+
+              {isSuperAdmin && (
+                <Link
+                  to="/super-admin"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                >
+                  <Crown className="h-4 w-4" />
+                  Super Admin
+                </Link>
+              )}
             </nav>
           )}
 
