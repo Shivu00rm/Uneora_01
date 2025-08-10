@@ -25,6 +25,7 @@ export function Header() {
   const { user, logout } = useAuth();
   const { hasPermission } = usePermissions();
   const { isSuperAdmin } = useSuperAdmin();
+  const location = useLocation();
 
   const getRoleIcon = (role: string) => {
     switch (role) {
