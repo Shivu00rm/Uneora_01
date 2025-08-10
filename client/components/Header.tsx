@@ -55,8 +55,8 @@ export function Header() {
             <span className="text-xl font-bold text-foreground">FlowStock</span>
           </Link>
 
-          {/* Desktop Navigation - Only show for non-tenant routes */}
-          {user && !location.pathname.startsWith('/app') && (
+          {/* Desktop Navigation - Only show for non-tenant and non-super-admin routes */}
+          {user && !location.pathname.startsWith('/app') && !location.pathname.startsWith('/super-admin') && user.role !== "SUPER_ADMIN" && (
             <nav className="hidden md:flex items-center space-x-6">
               <PermissionGate module="dashboard" action="view">
                 <Link
@@ -66,7 +66,7 @@ export function Header() {
                   Dashboard
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="inventory" action="view">
                 <Link
                   to="/inventory"
@@ -75,7 +75,7 @@ export function Header() {
                   Inventory
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="pos" action="view">
                 <Link
                   to="/pos"
@@ -84,7 +84,7 @@ export function Header() {
                   POS
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="vendors" action="view">
                 <Link
                   to="/vendors"
@@ -93,7 +93,7 @@ export function Header() {
                   Vendors
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="analytics" action="view">
                 <Link
                   to="/analytics"
@@ -102,7 +102,7 @@ export function Header() {
                   Analytics
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="users" action="view">
                 <Link
                   to="/users"
@@ -111,16 +111,25 @@ export function Header() {
                   Users
                 </Link>
               </PermissionGate>
+            </nav>
+          )}
 
-              <SuperAdminOnly>
-                <Link
-                  to="/super-admin"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-                >
-                  <Crown className="h-4 w-4" />
-                  Super Admin
-                </Link>
-              </SuperAdminOnly>
+          {/* Super Admin Navigation */}
+          {user && user.role === "SUPER_ADMIN" && (
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link
+                to="/super-admin"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+              >
+                <Crown className="h-4 w-4" />
+                Platform Console
+              </Link>
+              <Link
+                to="/org-flows"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Organization Health
+              </Link>
             </nav>
           )}
 
