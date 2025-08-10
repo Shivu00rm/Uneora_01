@@ -25,6 +25,7 @@ import OrganizationMonitor from "./pages/OrganizationMonitor";
 import AppDashboard from "./pages/app/AppDashboard";
 import TeamManagement from "./pages/app/TeamManagement";
 import { TenantLayout } from "./components/TenantLayout";
+import { SuperAdminLayout } from "./components/SuperAdminLayout";
 import { RoleSelector } from "./components/RoleSelector";
 import { RoleRoute } from "./components/ProtectedRoute";
 import Placeholder from "./pages/Placeholder";
@@ -190,7 +191,9 @@ export default function App() {
                     path="/super-admin"
                     element={
                       <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
-                        <SuperAdmin />
+                        <SuperAdminLayout>
+                          <SuperAdmin />
+                        </SuperAdminLayout>
                       </RoleRoute>
                     }
                   />
@@ -198,7 +201,9 @@ export default function App() {
                     path="/org-flows"
                     element={
                       <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
-                        <OrganizationMonitor />
+                        <SuperAdminLayout>
+                          <OrganizationMonitor />
+                        </SuperAdminLayout>
                       </RoleRoute>
                     }
                   />
