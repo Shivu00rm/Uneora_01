@@ -111,29 +111,6 @@ export default function OrganizationMonitor() {
     }
   ];
 
-  if (!isSuperAdmin) {
-    return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <Card>
-            <CardHeader>
-              <div className="mx-auto mb-6">
-                <div className="h-16 w-16 bg-destructive/10 rounded-lg flex items-center justify-center">
-                  <Shield className="h-8 w-8 text-destructive" />
-                </div>
-              </div>
-              <CardTitle className="text-2xl mb-2">Access Denied</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                This monitoring console is restricted to super administrators only.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -479,7 +456,7 @@ export default function OrganizationMonitor() {
                     <Database className="h-5 w-5 text-blue-600 mt-0.5" />
                     <div className="space-y-1">
                       <div className="font-medium text-blue-800">Slow Query Detected</div>
-                      <div className="text-sm text-blue-600">Tech Corp Solutions • 3 hours ago</div>
+                      <div className="text-sm text-blue-600">Tech Corp Solutions �� 3 hours ago</div>
                       <div className="text-xs text-blue-500">Query execution time: 3.2s</div>
                     </div>
                   </div>
