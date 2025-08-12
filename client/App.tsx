@@ -32,6 +32,13 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Development-only component for role switching
+const DevRoleSelector = React.lazy(() =>
+  import("./components/RoleSelector").then(module => ({
+    default: module.RoleSelector
+  }))
+);
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
