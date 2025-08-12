@@ -97,19 +97,11 @@ export default function AppDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Welcome back, {user?.name}
+              Dashboard
             </h1>
             <p className="text-muted-foreground">
-              {user?.organizationName} Dashboard • {user?.role?.replace('_', ' ')}
+              Inventory management and business insights
             </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-sm">
-              {user?.organizationName}
-            </Badge>
-            <Badge variant="secondary" className="text-sm">
-              {user?.role?.replace('_', ' ')}
-            </Badge>
           </div>
         </div>
       </div>
