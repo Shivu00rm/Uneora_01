@@ -60,6 +60,11 @@ export default function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/email-auth" element={<EmailAuth />} />
 
+                  {/* Solution Pages */}
+                  <Route path="/solutions/manufacturing" element={<Manufacturing />} />
+                  <Route path="/solutions/retail" element={<Retail />} />
+                  <Route path="/solutions/wholesale" element={<Wholesale />} />
+
                   {/* Legacy Protected Routes - Redirect to role-appropriate routes */}
                   <Route
                     path="/dashboard"
