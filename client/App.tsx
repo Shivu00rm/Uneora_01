@@ -26,7 +26,6 @@ import AppDashboard from "./pages/app/AppDashboard";
 import TeamManagement from "./pages/app/TeamManagement";
 import { TenantLayout } from "./components/TenantLayout";
 import { SuperAdminLayout } from "./components/SuperAdminLayout";
-import { RoleSelector } from "./components/RoleSelector";
 import { RoleRoute } from "./components/ProtectedRoute";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
