@@ -87,9 +87,9 @@ export function RoleSelector() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
-      <Card className="w-80">
+      <Card className="w-80 border-orange-200 bg-orange-50">
         <CardHeader>
-          <CardTitle className="text-sm">Login as Different Roles</CardTitle>
+          <CardTitle className="text-sm text-orange-800">DEV: Login as Different Roles</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <Button 
