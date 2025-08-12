@@ -181,6 +181,20 @@ export default function Inventory() {
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [isStockMovementOpen, setIsStockMovementOpen] = useState(false);
 
+  // Add Product Form State
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    sku: "",
+    category: "",
+    unitPrice: "",
+    initialStock: "",
+    reorderLevel: "",
+    maxStock: "",
+    supplier: "",
+    description: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const filteredInventory = mockInventory.filter((item) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -307,79 +321,136 @@ export default function Inventory() {
                   Create a new inventory item with stock details
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
-                <div className="space-y-2">
-                  <Label htmlFor="product-name">Product Name</Label>
-                  <Input id="product-name" placeholder="Enter product name" />
+              <form onSubmit={handleAddProduct}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
+                  <div className="space-y-2">
+                    <Label htmlFor="product-name">Product Name *</Label>
+                    <Input
+                      id="product-name"
+                      placeholder="Enter product name"
+                      value={newProduct.name}
+                      onChange={(e) => setNewProduct(prev => ({...prev, name: e.target.value}))}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-sku">SKU *</Label>
+                    <Input
+                      id="product-sku"
+                      placeholder="Product SKU"
+                      value={newProduct.sku}
+                      onChange={(e) => setNewProduct(prev => ({...prev, sku: e.target.value.toUpperCase()}))}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-category">Category *</Label>
+                    <Select value={newProduct.category} onValueChange={(value) => setNewProduct(prev => ({...prev, category: value}))}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Electronics">Electronics</SelectItem>
+                        <SelectItem value="Clothing">Clothing</SelectItem>
+                        <SelectItem value="Footwear">Footwear</SelectItem>
+                        <SelectItem value="Accessories">Accessories</SelectItem>
+                        <SelectItem value="Home & Garden">Home & Garden</SelectItem>
+                        <SelectItem value="Books">Books</SelectItem>
+                        <SelectItem value="Sports">Sports</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="unit-price">Unit Price (₹) *</Label>
+                    <Input
+                      id="unit-price"
+                      type="number"
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                      value={newProduct.unitPrice}
+                      onChange={(e) => setNewProduct(prev => ({...prev, unitPrice: e.target.value}))}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="initial-stock">Initial Stock *</Label>
+                    <Input
+                      id="initial-stock"
+                      type="number"
+                      placeholder="0"
+                      min="0"
+                      value={newProduct.initialStock}
+                      onChange={(e) => setNewProduct(prev => ({...prev, initialStock: e.target.value}))}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="reorder-level">Reorder Level *</Label>
+                    <Input
+                      id="reorder-level"
+                      type="number"
+                      placeholder="10"
+                      min="0"
+                      value={newProduct.reorderLevel}
+                      onChange={(e) => setNewProduct(prev => ({...prev, reorderLevel: e.target.value}))}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="max-stock">Max Stock *</Label>
+                    <Input
+                      id="max-stock"
+                      type="number"
+                      placeholder="100"
+                      min="1"
+                      value={newProduct.maxStock}
+                      onChange={(e) => setNewProduct(prev => ({...prev, maxStock: e.target.value}))}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="supplier">Supplier *</Label>
+                    <Select value={newProduct.supplier} onValueChange={(value) => setNewProduct(prev => ({...prev, supplier: value}))}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select supplier" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="TechSupply India">TechSupply India</SelectItem>
+                        <SelectItem value="Electronics Hub">Electronics Hub</SelectItem>
+                        <SelectItem value="Fashion Hub">Fashion Hub</SelectItem>
+                        <SelectItem value="Global Suppliers">Global Suppliers</SelectItem>
+                        <SelectItem value="Local Vendor">Local Vendor</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <Label htmlFor="product-description">Description</Label>
+                    <Textarea
+                      id="product-description"
+                      placeholder="Product description (optional)"
+                      value={newProduct.description}
+                      onChange={(e) => setNewProduct(prev => ({...prev, description: e.target.value}))}
+                    />
+                  </div>
+                  <div className="md:col-span-2 flex gap-2 pt-4">
+                    <Button
+                      type="submit"
+                      className="flex-1"
+                      disabled={isSubmitting || !isFormValid()}
+                    >
+                      {isSubmitting ? "Adding..." : "Add Product"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleCancelAdd}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="product-sku">SKU</Label>
-                  <Input id="product-sku" placeholder="Product SKU" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="product-category">Category</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="electronics">Electronics</SelectItem>
-                      <SelectItem value="clothing">Clothing</SelectItem>
-                      <SelectItem value="footwear">Footwear</SelectItem>
-                      <SelectItem value="accessories">Accessories</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="unit-price">Unit Price (₹)</Label>
-                  <Input id="unit-price" type="number" placeholder="0.00" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="initial-stock">Initial Stock</Label>
-                  <Input id="initial-stock" type="number" placeholder="0" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="reorder-level">Reorder Level</Label>
-                  <Input id="reorder-level" type="number" placeholder="10" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="max-stock">Max Stock</Label>
-                  <Input id="max-stock" type="number" placeholder="100" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="supplier">Supplier</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select supplier" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="techsupply">
-                        TechSupply India
-                      </SelectItem>
-                      <SelectItem value="electronics">
-                        Electronics Hub
-                      </SelectItem>
-                      <SelectItem value="fashion">Fashion Hub</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="product-description">Description</Label>
-                  <Textarea
-                    id="product-description"
-                    placeholder="Product description"
-                  />
-                </div>
-                <div className="md:col-span-2 flex gap-2 pt-4">
-                  <Button className="flex-1">Add Product</Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsAddProductOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
+              </form>
             </DialogContent>
           </Dialog>
         </div>
