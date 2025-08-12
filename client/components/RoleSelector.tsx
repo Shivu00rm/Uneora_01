@@ -12,9 +12,9 @@ export function RoleSelector() {
   if (user) {
     return (
       <div className="fixed bottom-4 right-4 z-50">
-        <Card className="w-80">
+        <Card className="w-80 border-orange-200 bg-orange-50">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Current User</CardTitle>
+            <CardTitle className="text-sm text-orange-800">DEV: Current User</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-2">
