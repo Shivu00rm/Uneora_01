@@ -218,6 +218,117 @@ export default function Inventory() {
     0,
   );
 
+  // Form validation
+  const isFormValid = () => {
+    return newProduct.name.trim() !== "" &&
+           newProduct.sku.trim() !== "" &&
+           newProduct.category !== "" &&
+           newProduct.unitPrice !== "" &&
+           newProduct.initialStock !== "" &&
+           newProduct.reorderLevel !== "" &&
+           newProduct.maxStock !== "" &&
+           newProduct.supplier !== "" &&
+           Number(newProduct.unitPrice) > 0 &&
+           Number(newProduct.initialStock) >= 0 &&
+           Number(newProduct.reorderLevel) >= 0 &&
+           Number(newProduct.maxStock) > 0 &&
+           Number(newProduct.maxStock) >= Number(newProduct.reorderLevel);
+  };
+
+  // Handle form submission
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!isFormValid()) {
+      alert("Please fill in all required fields correctly.");
+      return;
+    }
+
+    // Check if SKU already exists
+    const existingSKU = mockInventory.find(item =>
+      item.sku.toLowerCase() === newProduct.sku.toLowerCase()
+    );
+
+    if (existingSKU) {
+      alert("A product with this SKU already exists. Please use a unique SKU.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Create new product object
+      const productToAdd = {
+        id: mockInventory.length + 1,
+        sku: newProduct.sku.toUpperCase(),
+        name: newProduct.name.trim(),
+        category: newProduct.category,
+        currentStock: Number(newProduct.initialStock),
+        reorderLevel: Number(newProduct.reorderLevel),
+        maxStock: Number(newProduct.maxStock),
+        unitPrice: Number(newProduct.unitPrice),
+        supplier: newProduct.supplier,
+        location: "Warehouse A", // Default location
+        lastUpdated: new Date().toISOString().split('T')[0],
+        status: Number(newProduct.initialStock) === 0 ? "out_of_stock" :
+                Number(newProduct.initialStock) <= Number(newProduct.reorderLevel) ? "low_stock" : "in_stock",
+        movements: Number(newProduct.initialStock) > 0 ? [{
+          type: "in" as const,
+          quantity: Number(newProduct.initialStock),
+          date: new Date().toISOString().split('T')[0],
+          reason: "Initial Stock - Product Creation"
+        }] : []
+      };
+
+      // In a real app, this would be an API call
+      // await addProductAPI(productToAdd);
+
+      // For demo purposes, we'll add to the mock array
+      mockInventory.push(productToAdd);
+
+      // Reset form
+      setNewProduct({
+        name: "",
+        sku: "",
+        category: "",
+        unitPrice: "",
+        initialStock: "",
+        reorderLevel: "",
+        maxStock: "",
+        supplier: "",
+        description: ""
+      });
+
+      // Close dialog
+      setIsAddProductOpen(false);
+
+      // Show success message
+      alert(`Product "${newProduct.name}" has been successfully added to inventory!`);
+
+    } catch (error) {
+      console.error("Error adding product:", error);
+      alert("Failed to add product. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Handle cancel
+  const handleCancelAdd = () => {
+    setNewProduct({
+      name: "",
+      sku: "",
+      category: "",
+      unitPrice: "",
+      initialStock: "",
+      reorderLevel: "",
+      maxStock: "",
+      supplier: "",
+      description: ""
+    });
+    setIsAddProductOpen(false);
+  };
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
