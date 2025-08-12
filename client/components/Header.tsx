@@ -134,32 +134,16 @@ export function Header() {
             </nav>
           )}
 
-          {/* Desktop User Menu or Auth Buttons */}
+          {/* Desktop Auth/Menu */}
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      {React.createElement(getRoleIcon(user.role), { 
-                        className: "h-4 w-4 text-primary" 
-                      })}
-                    </div>
-                    <div className="text-left">
-                      <div className="text-sm font-medium">{user.name}</div>
-                      <Badge variant={getRoleBadgeColor(user.role)} className="text-xs">
-                        {user.role}
-                      </Badge>
-                    </div>
-                    <ChevronDown className="h-4 w-4" />
+                  <Button variant="ghost" size="sm">
+                    <Settings className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
-                  </div>
-                  <DropdownMenuSeparator />
                   {user?.role !== "SUPER_ADMIN" && (
                     <DropdownMenuItem asChild>
                       <Link to="/dashboard" className="flex items-center">
@@ -231,22 +215,6 @@ export function Header() {
             <div className="px-2 pt-2 pb-3 space-y-1 border-t">
               {user ? (
                 <>
-                  {/* User Info */}
-                  <div className="px-3 py-2 border-b mb-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        {React.createElement(getRoleIcon(user.role), { 
-                          className: "h-4 w-4 text-primary" 
-                        })}
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium">{user.name}</div>
-                        <Badge variant={getRoleBadgeColor(user.role)} className="text-xs">
-                          {user.role}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
 
                   {/* Navigation Links - Hide for Super Admin */}
                   {user?.role !== "SUPER_ADMIN" && (
