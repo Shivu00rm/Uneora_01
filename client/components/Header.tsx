@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { PermissionGate, SuperAdminOnly } from "./ProtectedRoute";
 import { useAuth, usePermissions } from "@/contexts/AuthContext";
@@ -9,15 +8,11 @@ import { useSuperAdmin } from "@/contexts/SuperAdminContext";
 import {
   Package,
   BarChart3,
-  ShoppingCart,
   Settings,
   Menu,
   X,
-  User,
   LogOut,
   Crown,
-  Briefcase,
-  ChevronDown,
   Activity
 } from "lucide-react";
 
@@ -28,21 +23,6 @@ export function Header() {
   const { isSuperAdmin } = useSuperAdmin();
   const location = useLocation();
 
-  const getRoleIcon = (role: string) => {
-    switch (role) {
-      case "owner": return Crown;
-      case "manager": return Briefcase;
-      default: return User;
-    }
-  };
-
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case "owner": return "default";
-      case "manager": return "secondary";
-      default: return "outline";
-    }
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
