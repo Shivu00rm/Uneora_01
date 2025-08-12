@@ -302,12 +302,8 @@ export default function App() {
                 </Routes>
               </main>
               <Footer />
-              {/* Development-only role selector - remove for production */}
-              {import.meta.env.DEV && (
-                <>
-                  {React.lazy(() => import("./components/RoleSelector").then(m => ({ default: m.RoleSelector })))}
-                </>
-              )}
+              {/* Development-only role selector */}
+              {import.meta.env.DEV && <DevRoleSelector />}
             </div>
           </BrowserRouter>
           </SuperAdminProvider>
