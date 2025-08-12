@@ -44,6 +44,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { ExcelImportExport } from "@/components/ExcelImportExport";
+import { POGenerator } from "@/components/POGenerator";
 
 const mockInventory = [
   {
