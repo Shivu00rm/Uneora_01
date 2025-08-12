@@ -310,7 +310,11 @@ export default function App() {
               </main>
               <Footer />
               {/* Development-only role selector */}
-              {import.meta.env.DEV && <DevRoleSelector />}
+              {import.meta.env.DEV && (
+                <React.Suspense fallback={null}>
+                  <DevRoleSelector />
+                </React.Suspense>
+              )}
             </div>
           </BrowserRouter>
           </SuperAdminProvider>
