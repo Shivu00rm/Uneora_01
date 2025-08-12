@@ -132,32 +132,15 @@ export function TenantLayout({ children }: TenantLayoutProps) {
               </OrgAdminOnly>
             </nav>
 
-            {/* User Menu */}
+            {/* Menu */}
             <div className="hidden md:flex items-center space-x-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      {React.createElement(getRoleIcon(user?.role || ""), { 
-                        className: "h-4 w-4 text-primary" 
-                      })}
-                    </div>
-                    <div className="text-left hidden lg:block">
-                      <div className="text-sm font-medium">{user?.name}</div>
-                      <Badge variant={getRoleBadgeColor(user?.role || "")} className="text-xs">
-                        {user?.role?.replace('_', ' ')}
-                      </Badge>
-                    </div>
-                    <ChevronDown className="h-4 w-4" />
+                  <Button variant="ghost" size="sm">
+                    <Settings className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">{user?.name}</p>
-                    <p className="text-xs text-muted-foreground">{user?.email}</p>
-                    <p className="text-xs text-muted-foreground">{user?.organizationName}</p>
-                  </div>
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/app/dashboard" className="flex items-center">
                       <BarChart3 className="mr-2 h-4 w-4" />
@@ -194,23 +177,6 @@ export function TenantLayout({ children }: TenantLayoutProps) {
           {isMenuOpen && (
             <div className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 border-t">
-                {/* Organization Info */}
-                <div className="px-3 py-2 border-b mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      {React.createElement(getRoleIcon(user?.role || ""), { 
-                        className: "h-4 w-4 text-primary" 
-                      })}
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium">{user?.name}</div>
-                      <div className="text-xs text-muted-foreground">{user?.organizationName}</div>
-                      <Badge variant={getRoleBadgeColor(user?.role || "")} className="text-xs">
-                        {user?.role?.replace('_', ' ')}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Navigation Links */}
                 <Link
