@@ -1,23 +1,18 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { PermissionGate, OrgAdminOnly } from "./ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
-import { 
-  Package, 
-  BarChart3, 
+import {
+  Package,
+  BarChart3,
   ShoppingCart,
   Users,
   Settings,
   Menu,
   X,
-  User,
   LogOut,
-  Crown,
-  Briefcase,
-  ChevronDown,
   Building2,
   FileText,
   Truck,
@@ -33,21 +28,6 @@ export function TenantLayout({ children }: TenantLayoutProps) {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const getRoleIcon = (role: string) => {
-    switch (role) {
-      case "ORG_ADMIN": return Briefcase;
-      case "ORG_USER": return User;
-      default: return User;
-    }
-  };
-
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case "ORG_ADMIN": return "default";
-      case "ORG_USER": return "secondary";
-      default: return "outline";
-    }
-  };
 
   const isActiveRoute = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
