@@ -257,8 +257,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           });
           // Retry loading
           await loadUserProfile(userId);
-        } catch (createError) {
+        } catch (createError: any) {
           console.error('Failed to create basic profile:', createError);
+
+          // Better error handling
+          let errorMessage = 'Failed to create basic profile';
+          if (createError.message) {
+            errorMessage = createError.message;
+          } else if (typeof createError === 'string') {
+            errorMessage = createError;
+          }
+
+          throw new Error(errorMessage);
         }
       }
     } catch (error) {
