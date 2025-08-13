@@ -116,17 +116,27 @@
     color: #334155 !important;
   }
 
-  /* Individual tab background colors */
-  .tab-orders [data-state="active"] {
-    @apply bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200;
+  /* Individual tab background colors with !important */
+  [data-state="active"].tab-orders,
+  button[data-state="active"][value="vendors"],
+  button[data-state="active"][value="orders"],
+  button[data-state="active"][value="inventory"] {
+    background: linear-gradient(to right, #dbeafe, #bfdbfe) !important;
+    border-color: #93c5fd !important;
   }
 
-  .tab-pending [data-state="active"] {
-    @apply bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200;
+  [data-state="active"].tab-pending,
+  button[data-state="active"][value="pending"],
+  button[data-state="active"][value="alerts"] {
+    background: linear-gradient(to right, #fef3c7, #fde68a) !important;
+    border-color: #f59e0b !important;
   }
 
-  .tab-tracking [data-state="active"] {
-    @apply bg-gradient-to-r from-emerald-50 to-emerald-100 border-emerald-200;
+  [data-state="active"].tab-tracking,
+  button[data-state="active"][value="tracking"],
+  button[data-state="active"][value="performance"] {
+    background: linear-gradient(to right, #d1fae5, #a7f3d0) !important;
+    border-color: #10b981 !important;
   }
 
   .tab-overview [data-state="active"] {
