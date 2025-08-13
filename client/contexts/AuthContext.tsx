@@ -125,24 +125,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
           let companyId: string | null = null;
 
-          // Create company if needed (for org admins with company name)
+          // Create organization if needed (for org admins with company name)
           if (role === 'ORG_ADMIN' && companyNameOrId && !companyNameOrId.includes('-')) {
-            console.log('Creating company for org admin:', companyNameOrId);
+            console.log('Creating organization for org admin:', companyNameOrId);
             try {
-              const company = await DatabaseService.createCompany({
+              const organization = await DatabaseService.createOrganization({
                 name: companyNameOrId,
-                industry: 'Technology' // Default industry
+                industry: 'Technology', // Default industry
+                slug: companyNameOrId.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+                subscription_plan: 'starter'
               });
-              companyId = company.id;
-              console.log('Company created with ID:', companyId);
-            } catch (companyError: any) {
-              console.error('Company creation failed:', companyError);
-              throw new Error(`Failed to create company: ${companyError.message}`);
+              companyId = organization.id;
+              console.log('Organization created with ID:', companyId);
+            } catch (orgError: any) {
+              console.error('Organization creation failed:', orgError);
+              throw new Error(`Failed to create organization: ${orgError.message}`);
             }
           } else if (companyNameOrId && companyNameOrId.includes('-')) {
-            // Assume it's a company ID if it contains dashes (UUID format)
+            // Assume it's an organization ID if it contains dashes (UUID format)
             companyId = companyNameOrId;
-            console.log('Using existing company ID:', companyId);
+            console.log('Using existing organization ID:', companyId);
           }
 
           // Create profile with email
