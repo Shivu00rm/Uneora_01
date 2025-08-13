@@ -184,6 +184,17 @@ export default function App() {
                         </ProtectedRoute>
                       }
                     />
+                    <Route
+                      path="/settings"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="settings"
+                          requiredAction="view"
+                        >
+                          <Settings />
+                        </ProtectedRoute>
+                      }
+                    />
 
                     {/* Owner/Manager Only Routes */}
                     <Route
