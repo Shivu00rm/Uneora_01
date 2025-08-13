@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Loader2, AlertCircle, Shield } from 'lucide-react';
-import { Alert, AlertDescription } from './ui/alert';
-import { SuperAdminSetup } from './SuperAdminSetup';
+import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Loader2, AlertCircle, Shield } from "lucide-react";
+import { Alert, AlertDescription } from "./ui/alert";
+import { SuperAdminSetup } from "./SuperAdminSetup";
 
 export function SupabaseLogin() {
   const { login, signUp, loading } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [showSuperAdminSetup, setShowSuperAdminSetup] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-    role: 'ORG_USER' as const,
-    companyName: ''
+    email: "",
+    password: "",
+    name: "",
+    role: "ORG_USER" as const,
+    companyName: "",
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -46,15 +52,15 @@ export function SupabaseLogin() {
     // Client-side validation
     if (isSignUp) {
       if (!formData.name.trim()) {
-        setError('Name is required for sign up');
+        setError("Name is required for sign up");
         return;
       }
       if (formData.password.length < 6) {
-        setError('Password must be at least 6 characters long');
+        setError("Password must be at least 6 characters long");
         return;
       }
-      if (formData.role === 'ORG_ADMIN' && !formData.companyName.trim()) {
-        setError('Company name is required for Organization Admin');
+      if (formData.role === "ORG_ADMIN" && !formData.companyName.trim()) {
+        setError("Company name is required for Organization Admin");
         return;
       }
     }
@@ -62,20 +68,31 @@ export function SupabaseLogin() {
     try {
       if (isSignUp) {
         // For org admins, create company first if provided
-        if (formData.role === 'ORG_ADMIN' && formData.companyName) {
+        if (formData.role === "ORG_ADMIN" && formData.companyName) {
           // Company creation will be handled in the signup process
-          await signUp(formData.email, formData.password, formData.name, formData.role, formData.companyName);
+          await signUp(
+            formData.email,
+            formData.password,
+            formData.name,
+            formData.role,
+            formData.companyName,
+          );
         } else {
-          await signUp(formData.email, formData.password, formData.name, formData.role);
+          await signUp(
+            formData.email,
+            formData.password,
+            formData.name,
+            formData.role,
+          );
         }
       } else {
         await login(formData.email, formData.password);
       }
     } catch (err: any) {
-      console.error('Login error:', err);
+      console.error("Login error:", err);
 
       // Extract proper error message from Supabase error object
-      let errorMessage = 'Authentication failed';
+      let errorMessage = "Authentication failed";
 
       if (err.message) {
         errorMessage = err.message;
@@ -83,41 +100,51 @@ export function SupabaseLogin() {
         errorMessage = err.error_description;
       } else if (err.msg) {
         errorMessage = err.msg;
-      } else if (typeof err === 'string') {
+      } else if (typeof err === "string") {
         errorMessage = err;
-      } else if (err.toString && err.toString() !== '[object Object]') {
+      } else if (err.toString && err.toString() !== "[object Object]") {
         errorMessage = err.toString();
       }
 
       // Handle specific Supabase errors
-      if (errorMessage.includes('Invalid API key')) {
-        errorMessage = 'Database configuration error. Please check Supabase setup.';
-      } else if (errorMessage.includes('Invalid login credentials')) {
-        errorMessage = 'Invalid email or password. Please try again or create an account.';
-      } else if (errorMessage.includes('Email not confirmed')) {
-        errorMessage = 'Please check your email and confirm your account.';
-      } else if (errorMessage.includes('User already registered')) {
-        errorMessage = 'An account with this email already exists. Try signing in instead.';
-      } else if (errorMessage.includes('infinite recursion')) {
-        errorMessage = 'Database configuration issue. Please try again.';
-      } else if (errorMessage.includes('Password should be at least 6 characters')) {
-        errorMessage = 'Password must be at least 6 characters long.';
-      } else if (errorMessage.includes('Email not confirmed')) {
-        errorMessage = 'Please wait a moment and try again. If the issue persists, contact support.';
-      } else if (errorMessage.includes('row-level security')) {
-        errorMessage = 'Account creation is temporarily disabled. Please contact support.';
-      } else if (errorMessage.includes('Permission error')) {
-        errorMessage = 'Account creation failed. Please try again or contact support.';
+      if (errorMessage.includes("Invalid API key")) {
+        errorMessage =
+          "Database configuration error. Please check Supabase setup.";
+      } else if (errorMessage.includes("Invalid login credentials")) {
+        errorMessage =
+          "Invalid email or password. Please try again or create an account.";
+      } else if (errorMessage.includes("Email not confirmed")) {
+        errorMessage = "Please check your email and confirm your account.";
+      } else if (errorMessage.includes("User already registered")) {
+        errorMessage =
+          "An account with this email already exists. Try signing in instead.";
+      } else if (errorMessage.includes("infinite recursion")) {
+        errorMessage = "Database configuration issue. Please try again.";
+      } else if (
+        errorMessage.includes("Password should be at least 6 characters")
+      ) {
+        errorMessage = "Password must be at least 6 characters long.";
+      } else if (errorMessage.includes("Email not confirmed")) {
+        errorMessage =
+          "Please wait a moment and try again. If the issue persists, contact support.";
+      } else if (errorMessage.includes("row-level security")) {
+        errorMessage =
+          "Account creation is temporarily disabled. Please contact support.";
+      } else if (errorMessage.includes("Permission error")) {
+        errorMessage =
+          "Account creation failed. Please try again or contact support.";
       }
 
       setError(errorMessage);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -126,13 +153,12 @@ export function SupabaseLogin() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>
-            {isSignUp ? 'Create Account' : 'Sign In'} - FlowStock
+            {isSignUp ? "Create Account" : "Sign In"} - FlowStock
           </CardTitle>
           <CardDescription>
-            {isSignUp 
-              ? 'Create your FlowStock account to get started'
-              : 'Sign in to your FlowStock account'
-            }
+            {isSignUp
+              ? "Create your FlowStock account to get started"
+              : "Sign in to your FlowStock account"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -161,7 +187,12 @@ export function SupabaseLogin() {
 
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium">
-                Password {isSignUp && <span className="text-xs text-gray-500">(min 6 characters)</span>}
+                Password{" "}
+                {isSignUp && (
+                  <span className="text-xs text-gray-500">
+                    (min 6 characters)
+                  </span>
+                )}
               </label>
               <Input
                 id="password"
@@ -169,7 +200,11 @@ export function SupabaseLogin() {
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder={isSignUp ? "Enter password (min 6 characters)" : "Enter your password"}
+                placeholder={
+                  isSignUp
+                    ? "Enter password (min 6 characters)"
+                    : "Enter your password"
+                }
                 required
                 minLength={isSignUp ? 6 : undefined}
               />
@@ -208,10 +243,17 @@ export function SupabaseLogin() {
                   </select>
                 </div>
 
-                {(formData.role === 'ORG_ADMIN' || formData.role === 'SUPER_ADMIN') && (
+                {(formData.role === "ORG_ADMIN" ||
+                  formData.role === "SUPER_ADMIN") && (
                   <div className="space-y-2">
-                    <label htmlFor="companyName" className="text-sm font-medium">
-                      Company Name {formData.role === 'ORG_ADMIN' ? '(Required)' : '(Optional)'}
+                    <label
+                      htmlFor="companyName"
+                      className="text-sm font-medium"
+                    >
+                      Company Name{" "}
+                      {formData.role === "ORG_ADMIN"
+                        ? "(Required)"
+                        : "(Optional)"}
                     </label>
                     <Input
                       id="companyName"
@@ -220,7 +262,7 @@ export function SupabaseLogin() {
                       value={formData.companyName}
                       onChange={handleChange}
                       placeholder="Enter company name"
-                      required={formData.role === 'ORG_ADMIN'}
+                      required={formData.role === "ORG_ADMIN"}
                     />
                   </div>
                 )}
@@ -231,10 +273,12 @@ export function SupabaseLogin() {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isSignUp ? 'Creating Account...' : 'Signing In...'}
+                  {isSignUp ? "Creating Account..." : "Signing In..."}
                 </>
+              ) : isSignUp ? (
+                "Create Account"
               ) : (
-                isSignUp ? 'Create Account' : 'Sign In'
+                "Sign In"
               )}
             </Button>
 
@@ -246,9 +290,8 @@ export function SupabaseLogin() {
                 className="text-sm"
               >
                 {isSignUp
-                  ? 'Already have an account? Sign in'
-                  : "Don't have an account? Sign up"
-                }
+                  ? "Already have an account? Sign in"
+                  : "Don't have an account? Sign up"}
               </Button>
 
               {!isSignUp && (
@@ -269,18 +312,25 @@ export function SupabaseLogin() {
 
             {isSignUp && (
               <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-sm text-blue-800 font-medium mb-2">💡 Quick Start Examples:</p>
+                <p className="text-sm text-blue-800 font-medium mb-2">
+                  💡 Quick Start Examples:
+                </p>
                 <div className="text-xs text-blue-700 space-y-1">
-                  <div><strong>Org Admin:</strong> manager@acme.com / password123 + "ACME Corp"</div>
-                  <div><strong>Org User:</strong> user@acme.com / password123</div>
+                  <div>
+                    <strong>Org Admin:</strong> manager@acme.com / password123 +
+                    "ACME Corp"
+                  </div>
+                  <div>
+                    <strong>Org User:</strong> user@acme.com / password123
+                  </div>
                 </div>
                 <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
-                  <strong>✅ Super Admin Ready:</strong> superadmin@flowstock.com / SuperAdmin123!
+                  <strong>✅ Super Admin Ready:</strong>{" "}
+                  superadmin@flowstock.com / SuperAdmin123!
                 </div>
               </div>
             )}
           </form>
-
         </CardContent>
       </Card>
     </div>

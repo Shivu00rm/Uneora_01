@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { RefreshCw, User, Mail, Building2, Calendar, Shield } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { DatabaseService } from '../lib/database';
-import { supabase } from '../lib/supabase';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import {
+  RefreshCw,
+  User,
+  Mail,
+  Building2,
+  Calendar,
+  Shield,
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { DatabaseService } from "../lib/database";
+import { supabase } from "../lib/supabase";
 
 interface UserData {
   id: string;
@@ -31,19 +38,21 @@ export function UserDataViewer() {
 
     try {
       setLoading(true);
-      
+
       // Get all users from auth and profiles
       const { data: authUsers, error: authError } = await supabase
-        .from('profiles')
-        .select(`
+        .from("profiles")
+        .select(
+          `
           id,
           name,
           email,
           role,
           company_id,
           created_at
-        `)
-        .order('created_at', { ascending: false });
+        `,
+        )
+        .order("created_at", { ascending: false });
 
       if (authError) throw authError;
 
@@ -56,24 +65,26 @@ export function UserDataViewer() {
               const company = await DatabaseService.getCompany(user.company_id);
               company_name = company?.name;
             } catch (error) {
-              console.warn('Failed to load company for user:', user.id);
+              console.warn("Failed to load company for user:", user.id);
             }
           }
 
           // Get email confirmation status from auth.users
-          const { data: authUser } = await supabase.auth.admin.getUserById(user.id);
-          
+          const { data: authUser } = await supabase.auth.admin.getUserById(
+            user.id,
+          );
+
           return {
             ...user,
             company_name,
-            email_confirmed: !!authUser.user?.email_confirmed_at
+            email_confirmed: !!authUser.user?.email_confirmed_at,
           };
-        })
+        }),
       );
 
       setUsers(usersWithCompanies);
     } catch (error) {
-      console.error('Failed to load user data:', error);
+      console.error("Failed to load user data:", error);
     } finally {
       setLoading(false);
     }
@@ -107,7 +118,9 @@ export function UserDataViewer() {
             size="sm"
             variant="outline"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
         </div>
@@ -135,28 +148,32 @@ export function UserDataViewer() {
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-gray-500" />
                       <span className="font-medium">
-                        {userData.name || 'No name provided'}
+                        {userData.name || "No name provided"}
                       </span>
                       <Badge
                         variant={
-                          userData.role === 'SUPER_ADMIN'
-                            ? 'default'
-                            : userData.role === 'ORG_ADMIN'
-                            ? 'secondary'
-                            : 'outline'
+                          userData.role === "SUPER_ADMIN"
+                            ? "default"
+                            : userData.role === "ORG_ADMIN"
+                              ? "secondary"
+                              : "outline"
                         }
                       >
-                        {userData.role?.replace('_', ' ') || 'No role'}
+                        {userData.role?.replace("_", " ") || "No role"}
                       </Badge>
                     </div>
-                    
+
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Mail className="h-4 w-4" />
-                      <span>{userData.email || 'No email'}</span>
+                      <span>{userData.email || "No email"}</span>
                       {userData.email_confirmed ? (
-                        <Badge variant="default" className="text-xs">Confirmed</Badge>
+                        <Badge variant="default" className="text-xs">
+                          Confirmed
+                        </Badge>
                       ) : (
-                        <Badge variant="destructive" className="text-xs">Unconfirmed</Badge>
+                        <Badge variant="destructive" className="text-xs">
+                          Unconfirmed
+                        </Badge>
                       )}
                     </div>
 
@@ -170,7 +187,8 @@ export function UserDataViewer() {
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Calendar className="h-4 w-4" />
                       <span>
-                        Created: {new Date(userData.created_at).toLocaleDateString()}
+                        Created:{" "}
+                        {new Date(userData.created_at).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
@@ -194,19 +212,19 @@ export function UserDataViewer() {
             <div>
               <span className="text-blue-700">Super Admins:</span>
               <div className="font-bold text-blue-900">
-                {users.filter(u => u.role === 'SUPER_ADMIN').length}
+                {users.filter((u) => u.role === "SUPER_ADMIN").length}
               </div>
             </div>
             <div>
               <span className="text-blue-700">Org Admins:</span>
               <div className="font-bold text-blue-900">
-                {users.filter(u => u.role === 'ORG_ADMIN').length}
+                {users.filter((u) => u.role === "ORG_ADMIN").length}
               </div>
             </div>
             <div>
               <span className="text-blue-700">Org Users:</span>
               <div className="font-bold text-blue-900">
-                {users.filter(u => u.role === 'ORG_USER').length}
+                {users.filter((u) => u.role === "ORG_USER").length}
               </div>
             </div>
           </div>

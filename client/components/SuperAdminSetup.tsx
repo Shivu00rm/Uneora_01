@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Shield, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { DatabaseService } from '../lib/database';
+import React, { useState } from "react";
+import { Button } from "./ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Shield, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { supabase } from "../lib/supabase";
+import { DatabaseService } from "../lib/database";
 
 export function SuperAdminSetup() {
   const [isCreating, setIsCreating] = useState(false);
@@ -20,10 +26,10 @@ export function SuperAdminSetup() {
     try {
       // Try to find super admin profile
       const { data, error } = await supabase
-        .from('profiles')
-        .select('id, role')
-        .eq('email', 'superadmin@flowstock.com')
-        .eq('role', 'super_admin')
+        .from("profiles")
+        .select("id, role")
+        .eq("email", "superadmin@flowstock.com")
+        .eq("role", "super_admin")
         .single();
 
       if (data) {
@@ -31,7 +37,7 @@ export function SuperAdminSetup() {
       }
     } catch (err) {
       // Super admin doesn't exist yet
-      console.log('Super admin not found, can create new one');
+      console.log("Super admin not found, can create new one");
     } finally {
       setIsChecking(false);
     }
@@ -44,33 +50,39 @@ export function SuperAdminSetup() {
     try {
       // Create the super admin account through Supabase Auth
       const { data, error: signUpError } = await supabase.auth.signUp({
-        email: 'superadmin@flowstock.com',
-        password: 'SuperAdmin123!'
+        email: "superadmin@flowstock.com",
+        password: "SuperAdmin123!",
       });
 
       if (signUpError) {
-        console.error('Signup error details:', signUpError);
+        console.error("Signup error details:", signUpError);
 
-        if (signUpError.message.includes('already been registered') || signUpError.message.includes('already registered')) {
-          console.log('Super admin user already exists, will set up profile...');
+        if (
+          signUpError.message.includes("already been registered") ||
+          signUpError.message.includes("already registered")
+        ) {
+          console.log(
+            "Super admin user already exists, will set up profile...",
+          );
 
           // Try to get the user through auth and create/update profile
           try {
             // Try to sign in to get the user ID
-            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-              email: 'superadmin@flowstock.com',
-              password: 'SuperAdmin123!'
-            });
+            const { data: signInData, error: signInError } =
+              await supabase.auth.signInWithPassword({
+                email: "superadmin@flowstock.com",
+                password: "SuperAdmin123!",
+              });
 
             if (signInData.user) {
-              console.log('Found existing user, updating profile...');
+              console.log("Found existing user, updating profile...");
 
               await DatabaseService.upsertProfile({
                 id: signInData.user.id,
                 organization_id: null,
-                email: 'superadmin@flowstock.com',
-                name: 'FlowStock Super Admin',
-                role: 'super_admin'
+                email: "superadmin@flowstock.com",
+                name: "FlowStock Super Admin",
+                role: "super_admin",
               });
 
               // Sign out after profile update
@@ -80,13 +92,13 @@ export function SuperAdminSetup() {
               return;
             }
           } catch (profileError) {
-            console.error('Profile update error:', profileError);
+            console.error("Profile update error:", profileError);
             // Continue to create new user if profile update fails
           }
         }
 
         // If it's not a duplicate user error, throw it
-        if (!signUpError.message.includes('already')) {
+        if (!signUpError.message.includes("already")) {
           throw new Error(`Signup failed: ${signUpError.message}`);
         }
       }
@@ -96,26 +108,26 @@ export function SuperAdminSetup() {
         await DatabaseService.upsertProfile({
           id: data.user.id,
           organization_id: null,
-          email: 'superadmin@flowstock.com',
-          name: 'FlowStock Super Admin',
-          role: 'super_admin'
+          email: "superadmin@flowstock.com",
+          name: "FlowStock Super Admin",
+          role: "super_admin",
         });
 
-        console.log('Super admin created successfully');
+        console.log("Super admin created successfully");
         setIsComplete(true);
       }
     } catch (err: any) {
-      console.error('Super admin creation error:', err);
+      console.error("Super admin creation error:", err);
 
       // Extract meaningful error message
-      let errorMessage = 'Failed to create super admin';
+      let errorMessage = "Failed to create super admin";
       if (err.message) {
         errorMessage = err.message;
       } else if (err.error_description) {
         errorMessage = err.error_description;
-      } else if (typeof err === 'string') {
+      } else if (typeof err === "string") {
         errorMessage = err;
-      } else if (err.toString && err.toString() !== '[object Object]') {
+      } else if (err.toString && err.toString() !== "[object Object]") {
         errorMessage = err.toString();
       }
 
@@ -154,12 +166,14 @@ export function SuperAdminSetup() {
           <div className="space-y-3">
             <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
               <p className="text-sm text-green-800">
-                <strong>Email:</strong> superadmin@flowstock.com<br />
+                <strong>Email:</strong> superadmin@flowstock.com
+                <br />
                 <strong>Password:</strong> SuperAdmin123!
               </p>
             </div>
             <p className="text-sm text-gray-600">
-              You can now login with these credentials to access the super admin interface.
+              You can now login with these credentials to access the super admin
+              interface.
             </p>
           </div>
         </CardContent>
@@ -204,7 +218,9 @@ export function SuperAdminSetup() {
             disabled={isCreating}
             className="w-full"
           >
-            {isCreating ? 'Creating Super Admin...' : 'Create Super Admin Account'}
+            {isCreating
+              ? "Creating Super Admin..."
+              : "Create Super Admin Account"}
           </Button>
         </div>
       </CardContent>

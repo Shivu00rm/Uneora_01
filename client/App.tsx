@@ -3,7 +3,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { SupabaseLogin } from "./components/SupabaseLogin";
 import { Loader2 } from "lucide-react";
@@ -70,7 +76,12 @@ function AppContent() {
   }
 
   // Show login if not authenticated and not on public routes
-  const publicRoutes = ['/', '/solutions/manufacturing', '/solutions/retail', '/solutions/wholesale'];
+  const publicRoutes = [
+    "/",
+    "/solutions/manufacturing",
+    "/solutions/retail",
+    "/solutions/wholesale",
+  ];
   if (!user && !publicRoutes.includes(location.pathname)) {
     return <SupabaseLogin />;
   }
@@ -81,28 +92,35 @@ function AppContent() {
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/login" element={user ? <Navigate to={user.role === 'SUPER_ADMIN' ? '/super-admin' : '/app/dashboard'} replace /> : <SupabaseLogin />} />
+          <Route
+            path="/login"
+            element={
+              user ? (
+                <Navigate
+                  to={
+                    user.role === "SUPER_ADMIN"
+                      ? "/super-admin"
+                      : "/app/dashboard"
+                  }
+                  replace
+                />
+              ) : (
+                <SupabaseLogin />
+              )
+            }
+          />
           <Route path="/email-auth" element={<EmailAuth />} />
 
           {/* Solution Pages */}
-          <Route
-            path="/solutions/manufacturing"
-            element={<Manufacturing />}
-          />
+          <Route path="/solutions/manufacturing" element={<Manufacturing />} />
           <Route path="/solutions/retail" element={<Retail />} />
-          <Route
-            path="/solutions/wholesale"
-            element={<Wholesale />}
-          />
+          <Route path="/solutions/wholesale" element={<Wholesale />} />
 
           {/* Legacy Protected Routes - Redirect to role-appropriate routes */}
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute
-                requiredModule="dashboard"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="dashboard" requiredAction="view">
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -110,10 +128,7 @@ function AppContent() {
           <Route
             path="/users"
             element={
-              <ProtectedRoute
-                requiredModule="users"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="users" requiredAction="view">
                 <Users />
               </ProtectedRoute>
             }
@@ -121,10 +136,7 @@ function AppContent() {
           <Route
             path="/inventory"
             element={
-              <ProtectedRoute
-                requiredModule="inventory"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="inventory" requiredAction="view">
                 <Inventory />
               </ProtectedRoute>
             }
@@ -143,10 +155,7 @@ function AppContent() {
           <Route
             path="/pos"
             element={
-              <ProtectedRoute
-                requiredModule="pos"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="pos" requiredAction="view">
                 <POS />
               </ProtectedRoute>
             }
@@ -154,10 +163,7 @@ function AppContent() {
           <Route
             path="/vendors"
             element={
-              <ProtectedRoute
-                requiredModule="vendors"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="vendors" requiredAction="view">
                 <Vendors />
               </ProtectedRoute>
             }
@@ -176,10 +182,7 @@ function AppContent() {
           <Route
             path="/analytics"
             element={
-              <ProtectedRoute
-                requiredModule="analytics"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="analytics" requiredAction="view">
                 <Analytics />
               </ProtectedRoute>
             }
@@ -187,10 +190,7 @@ function AppContent() {
           <Route
             path="/files"
             element={
-              <ProtectedRoute
-                requiredModule="files"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="files" requiredAction="view">
                 <Files />
               </ProtectedRoute>
             }
@@ -198,10 +198,7 @@ function AppContent() {
           <Route
             path="/settings"
             element={
-              <ProtectedRoute
-                requiredModule="settings"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="settings" requiredAction="view">
                 <Settings />
               </ProtectedRoute>
             }
@@ -259,10 +256,7 @@ function AppContent() {
           <Route
             path="/alerts"
             element={
-              <ProtectedRoute
-                requiredModule="settings"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="settings" requiredAction="view">
                 <Placeholder
                   title="WhatsApp Alerts"
                   description="Automated WhatsApp notifications for stock alerts, orders, and business updates."
@@ -301,10 +295,7 @@ function AppContent() {
               <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER"]}>
                 <TenantLayout>
                   <Routes>
-                    <Route
-                      path="dashboard"
-                      element={<AppDashboard />}
-                    />
+                    <Route path="dashboard" element={<AppDashboard />} />
                     <Route
                       path="inventory"
                       element={

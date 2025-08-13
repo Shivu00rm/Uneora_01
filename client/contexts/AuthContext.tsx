@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { supabase } from '../lib/supabase';
-import { DatabaseService } from '../lib/database';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { supabase } from "../lib/supabase";
+import { DatabaseService } from "../lib/database";
 
 export type UserRole = "SUPER_ADMIN" | "ORG_ADMIN" | "ORG_USER";
 
@@ -21,7 +27,13 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  signUp: (email: string, password: string, name: string, role: UserRole, companyNameOrId?: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    name: string,
+    role: UserRole,
+    companyNameOrId?: string,
+  ) => Promise<void>;
   hasPermission: (module: string, action?: string) => boolean;
   isSuperAdmin: () => boolean;
   isOrgAdmin: () => boolean;
@@ -43,7 +55,7 @@ const getRolePermissions = (role: UserRole) => {
         billing: ["view", "edit", "manage"],
         api_keys: ["view", "edit", "manage"],
         admin_team: ["view", "create", "edit", "delete"],
-        impersonation: ["use"]
+        impersonation: ["use"],
       };
     case "ORG_ADMIN":
       return {
@@ -56,7 +68,7 @@ const getRolePermissions = (role: UserRole) => {
         analytics: ["view", "export"],
         users: ["view", "create", "edit", "delete"],
         files: ["view", "upload", "delete"],
-        settings: ["view", "edit"]
+        settings: ["view", "edit"],
       };
     case "ORG_USER":
       return {
@@ -67,7 +79,7 @@ const getRolePermissions = (role: UserRole) => {
         vendors: ["view"],
         purchase_orders: ["view", "create"],
         analytics: ["view"],
-        files: ["view", "upload"]
+        files: ["view", "upload"],
       };
     default:
       return {};
@@ -81,17 +93,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       if (error) {
-        console.error('Supabase auth error:', error);
-        throw new Error(error.message || 'Login failed');
+        console.error("Supabase auth error:", error);
+        throw new Error(error.message || "Login failed");
       }
 
       if (data.user) {
         await loadUserProfile(data.user.id);
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -104,56 +119,75 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await supabase.auth.signOut();
       setUser(null);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, role: UserRole, companyNameOrId?: string) => {
+  const signUp = async (
+    email: string,
+    password: string,
+    name: string,
+    role: UserRole,
+    companyNameOrId?: string,
+  ) => {
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) {
-        console.error('Supabase signup error:', error);
-        throw new Error(error.message || 'Signup failed');
+        console.error("Supabase signup error:", error);
+        throw new Error(error.message || "Signup failed");
       }
 
       if (data.user) {
-        console.log('User created successfully:', data.user.id);
+        console.log("User created successfully:", data.user.id);
 
         try {
           let companyId: string | null = null;
 
           // Create organization if needed (for org admins with company name)
-          if (role === 'ORG_ADMIN' && companyNameOrId && !companyNameOrId.includes('-')) {
-            console.log('Creating organization for org admin:', companyNameOrId);
+          if (
+            role === "ORG_ADMIN" &&
+            companyNameOrId &&
+            !companyNameOrId.includes("-")
+          ) {
+            console.log(
+              "Creating organization for org admin:",
+              companyNameOrId,
+            );
             try {
-              const slug = companyNameOrId.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+              const slug = companyNameOrId
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/(^-|-$)/g, "");
               const organization = await DatabaseService.createOrganization({
                 name: companyNameOrId,
-                industry: 'Technology',
+                industry: "Technology",
                 slug: slug,
-                subscription_plan: 'starter'
+                subscription_plan: "starter",
               });
               companyId = organization.id;
-              console.log('Organization created successfully with ID:', companyId);
+              console.log(
+                "Organization created successfully with ID:",
+                companyId,
+              );
             } catch (orgError: any) {
-              console.error('Organization creation failed:', orgError);
+              console.error("Organization creation failed:", orgError);
 
-              let errorMessage = 'Failed to create organization';
+              let errorMessage = "Failed to create organization";
               if (orgError.message) {
                 errorMessage = orgError.message;
-              } else if (typeof orgError === 'string') {
+              } else if (typeof orgError === "string") {
                 errorMessage = orgError;
               }
 
               throw new Error(errorMessage);
             }
-          } else if (companyNameOrId && companyNameOrId.includes('-')) {
+          } else if (companyNameOrId && companyNameOrId.includes("-")) {
             // Assume it's an organization ID if it contains dashes (UUID format)
             companyId = companyNameOrId;
-            console.log('Using existing organization ID:', companyId);
+            console.log("Using existing organization ID:", companyId);
           }
 
           // Create profile with email
@@ -162,35 +196,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             name,
             email: data.user.email || email,
             role,
-            organization_id: companyId
+            organization_id: companyId,
           };
 
-          console.log('Creating profile with data:', profileData);
+          console.log("Creating profile with data:", profileData);
           try {
             await DatabaseService.createProfile(profileData);
-            console.log('Profile created successfully');
+            console.log("Profile created successfully");
           } catch (profileError: any) {
-            console.error('Profile creation failed:', profileError);
-            throw new Error(`Failed to create profile: ${profileError.message}`);
+            console.error("Profile creation failed:", profileError);
+            throw new Error(
+              `Failed to create profile: ${profileError.message}`,
+            );
           }
 
           // Load the profile to set user state
-          console.log('Loading user profile...');
+          console.log("Loading user profile...");
           await loadUserProfile(data.user.id);
-          console.log('Signup process completed successfully');
-
+          console.log("Signup process completed successfully");
         } catch (setupError: any) {
-          console.error('Setup error during signup:', setupError);
+          console.error("Setup error during signup:", setupError);
 
           // Extract meaningful error message
-          let errorMessage = 'Account created but setup failed.';
+          let errorMessage = "Account created but setup failed.";
           if (setupError.message) {
-            if (setupError.message.includes('duplicate key')) {
-              errorMessage = 'Profile already exists. Try signing in instead.';
-            } else if (setupError.message.includes('row-level security')) {
-              errorMessage = 'Permission error during setup. Please contact support.';
-            } else if (setupError.message.includes('violates')) {
-              errorMessage = 'Database constraint violation. Please contact support.';
+            if (setupError.message.includes("duplicate key")) {
+              errorMessage = "Profile already exists. Try signing in instead.";
+            } else if (setupError.message.includes("row-level security")) {
+              errorMessage =
+                "Permission error during setup. Please contact support.";
+            } else if (setupError.message.includes("violates")) {
+              errorMessage =
+                "Database constraint violation. Please contact support.";
             } else {
               errorMessage = setupError.message;
             }
@@ -200,7 +237,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
     } catch (error) {
-      console.error('Sign up error:', error);
+      console.error("Sign up error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -214,10 +251,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         let organizationName = undefined;
         if (profile.organization_id) {
           try {
-            const organization = await DatabaseService.getOrganization(profile.organization_id);
+            const organization = await DatabaseService.getOrganization(
+              profile.organization_id,
+            );
             organizationName = organization?.name;
           } catch (orgError) {
-            console.warn('Failed to load organization data:', orgError);
+            console.warn("Failed to load organization data:", orgError);
           }
         }
 
@@ -225,55 +264,61 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         let userEmail = profile.email;
         if (!userEmail) {
           try {
-            const { data: { user } } = await supabase.auth.getUser();
-            userEmail = user?.email || '';
+            const {
+              data: { user },
+            } = await supabase.auth.getUser();
+            userEmail = user?.email || "";
           } catch (emailError) {
-            console.warn('Failed to get user email from auth');
-            userEmail = '';
+            console.warn("Failed to get user email from auth");
+            userEmail = "";
           }
         }
 
         const userData: User = {
           id: profile.id,
-          name: profile.name || 'Unknown User',
-          email: userEmail || '',
-          role: (profile.role as UserRole) || 'ORG_USER',
-          status: 'active',
+          name: profile.name || "Unknown User",
+          email: userEmail || "",
+          role: (profile.role as UserRole) || "ORG_USER",
+          status: "active",
           organizationId: profile.organization_id || null,
           organizationName,
-          permissions: getRolePermissions((profile.role as UserRole) || 'ORG_USER')
+          permissions: getRolePermissions(
+            (profile.role as UserRole) || "ORG_USER",
+          ),
         };
 
         setUser(userData);
       } else {
-        console.warn('No profile found for user:', userId);
+        console.warn("No profile found for user:", userId);
         // Get email from auth for new profile
-        let userEmail = '';
+        let userEmail = "";
         try {
-          const { data: { user } } = await supabase.auth.getUser();
-          userEmail = user?.email || '';
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          userEmail = user?.email || "";
         } catch (emailError) {
-          console.warn('Failed to get user email from auth');
+          console.warn("Failed to get user email from auth");
         }
 
         // Create a basic profile if none exists
         try {
           await DatabaseService.upsertProfile({
             id: userId,
-            name: 'New User',
+            name: "New User",
             email: userEmail,
-            role: 'ORG_USER'
+            role: "ORG_USER",
           });
           // Retry loading
           await loadUserProfile(userId);
         } catch (createError: any) {
-          console.error('Failed to create basic profile:', createError);
+          console.error("Failed to create basic profile:", createError);
 
           // Better error handling
-          let errorMessage = 'Failed to create basic profile';
+          let errorMessage = "Failed to create basic profile";
           if (createError.message) {
             errorMessage = createError.message;
-          } else if (typeof createError === 'string') {
+          } else if (typeof createError === "string") {
             errorMessage = createError;
           }
 
@@ -281,22 +326,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
     } catch (error) {
-      console.error('Failed to load user profile:', error);
-      throw new Error('Failed to load user profile. Please try again.');
+      console.error("Failed to load user profile:", error);
+      throw new Error("Failed to load user profile. Please try again.");
     }
   };
 
   const hasPermission = (module: string, action?: string): boolean => {
     if (!user) return false;
-    
+
     // Super admin has all permissions
     if (user.role === "SUPER_ADMIN") return true;
-    
+
     const modulePermissions = user.permissions[module] || [];
-    
+
     // If no specific action is required, check if user has any permission for the module
     if (!action) return modulePermissions.length > 0;
-    
+
     // Check for specific action permission
     return modulePermissions.includes(action);
   };
@@ -319,17 +364,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const canAccessOrganizationData = (orgId: string): boolean => {
     if (!user) return false;
-    
+
     // Super admin can access all organization data
     if (user.role === "SUPER_ADMIN") return true;
-    
+
     // Organization users can only access their own organization's data
     return user.organizationId === orgId;
   };
 
   const getDefaultRoute = (): string => {
     if (!user) return "/login";
-    
+
     switch (user.role) {
       case "SUPER_ADMIN":
         return "/super-admin";
@@ -343,19 +388,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Get initial session from Supabase
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        loadUserProfile(session.user.id);
-      } else {
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        if (session?.user) {
+          loadUserProfile(session.user.id);
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Supabase session error:", error);
         setLoading(false);
-      }
-    }).catch((error) => {
-      console.error('Supabase session error:', error);
-      setLoading(false);
-    });
+      });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         await loadUserProfile(session.user.id);
       } else {
@@ -379,14 +429,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isOrgUser,
     canManageUsers,
     canAccessOrganizationData,
-    getDefaultRoute
+    getDefaultRoute,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
@@ -399,12 +445,19 @@ export function useAuth() {
 
 // Permission checking hook for components with organization context
 export function usePermissions() {
-  const { hasPermission, isSuperAdmin, isOrgAdmin, isOrgUser, canManageUsers, canAccessOrganizationData } = useAuth();
-  
+  const {
+    hasPermission,
+    isSuperAdmin,
+    isOrgAdmin,
+    isOrgUser,
+    canManageUsers,
+    canAccessOrganizationData,
+  } = useAuth();
+
   return {
     hasPermission,
     isSuperAdmin,
-    isOrgAdmin, 
+    isOrgAdmin,
     isOrgUser,
     canManageUsers,
     canAccessOrganizationData,
@@ -417,7 +470,9 @@ export function usePermissions() {
     canManageVendors: () => hasPermission("vendors", "edit"),
     canApprovePOs: () => hasPermission("purchase_orders", "approve"),
     canViewAnalytics: () => hasPermission("analytics", "view"),
-    canExportData: () => hasPermission("analytics", "export") || hasPermission("inventory", "export"),
+    canExportData: () =>
+      hasPermission("analytics", "export") ||
+      hasPermission("inventory", "export"),
     canManageFiles: () => hasPermission("files", "upload"),
     canManageOrgSettings: () => hasPermission("settings", "edit"),
     // Super admin specific permissions
@@ -425,6 +480,6 @@ export function usePermissions() {
     canManageOrganizations: () => hasPermission("organizations", "manage"),
     canManageBilling: () => hasPermission("billing", "manage"),
     canManageAPIKeys: () => hasPermission("api_keys", "manage"),
-    canImpersonate: () => hasPermission("impersonation", "use")
+    canImpersonate: () => hasPermission("impersonation", "use"),
   };
 }
