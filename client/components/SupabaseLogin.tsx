@@ -233,9 +233,11 @@ export function SupabaseLogin() {
               <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-blue-800 font-medium mb-2">💡 Quick Start Examples:</p>
                 <div className="text-xs text-blue-700 space-y-1">
-                  <div><strong>Super Admin:</strong> admin@company.com / password123</div>
                   <div><strong>Org Admin:</strong> manager@acme.com / password123 + "ACME Corp"</div>
                   <div><strong>Org User:</strong> user@acme.com / password123</div>
+                </div>
+                <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
+                  <strong>Super Admin Access:</strong> Use superadmin@flowstock.com / SuperAdmin123!
                 </div>
               </div>
             )}
