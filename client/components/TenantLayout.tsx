@@ -128,16 +128,14 @@ export function TenantLayout({ children }: TenantLayoutProps) {
               </OrgAdminOnly>
             </nav>
 
-            {/* Right Side - Search, Notifications, Organization & Menu */}
-            <div className="hidden md:flex items-center space-x-4">
+            {/* Right Side - Simplified */}
+            <div className="hidden md:flex items-center space-x-3">
               <GlobalSearch />
               <NotificationCenter />
-              <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium text-muted-foreground">
-                  {user?.organizationName}
-                </span>
-              </div>
+              <div className="h-4 w-px bg-border" />
+              <span className="text-sm text-muted-foreground">
+                {user?.organizationName}
+              </span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm">
