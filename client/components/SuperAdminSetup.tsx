@@ -22,30 +22,45 @@ export function SuperAdminSetup() {
       });
 
       if (signUpError) {
-        if (signUpError.message.includes('already been registered')) {
-          // User already exists, just update the profile
-          console.log('Super admin user already exists, updating profile...');
-          
-          // Get the existing user
-          const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
-          if (listError) throw listError;
-          
-          const superAdminUser = users.find(u => u.email === 'superadmin@flowstock.com');
-          if (!superAdminUser) throw new Error('Could not find super admin user');
+        console.error('Signup error details:', signUpError);
 
-          // Update the profile to ensure it's set to super_admin
-          await DatabaseService.upsertProfile({
-            id: superAdminUser.id,
-            organization_id: null,
-            email: 'superadmin@flowstock.com',
-            name: 'FlowStock Super Admin',
-            role: 'super_admin'
-          });
+        if (signUpError.message.includes('already been registered') || signUpError.message.includes('already registered')) {
+          console.log('Super admin user already exists, will set up profile...');
 
-          setIsComplete(true);
-          return;
-        } else {
-          throw signUpError;
+          // Try to get the user through auth and create/update profile
+          try {
+            // Try to sign in to get the user ID
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+              email: 'superadmin@flowstock.com',
+              password: 'SuperAdmin123!'
+            });
+
+            if (signInData.user) {
+              console.log('Found existing user, updating profile...');
+
+              await DatabaseService.upsertProfile({
+                id: signInData.user.id,
+                organization_id: null,
+                email: 'superadmin@flowstock.com',
+                name: 'FlowStock Super Admin',
+                role: 'super_admin'
+              });
+
+              // Sign out after profile update
+              await supabase.auth.signOut();
+
+              setIsComplete(true);
+              return;
+            }
+          } catch (profileError) {
+            console.error('Profile update error:', profileError);
+            // Continue to create new user if profile update fails
+          }
+        }
+
+        // If it's not a duplicate user error, throw it
+        if (!signUpError.message.includes('already')) {
+          throw new Error(`Signup failed: ${signUpError.message}`);
         }
       }
 
