@@ -1,0 +1,193 @@
+import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Loader2, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from './ui/alert';
+
+export function SupabaseLogin() {
+  const { login, signUp, loading } = useAuth();
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: '',
+    role: 'ORG_USER' as const
+  });
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      if (isSignUp) {
+        await signUp(formData.email, formData.password, formData.name, formData.role);
+      } else {
+        await login(formData.email, formData.password);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Authentication failed');
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>
+            {isSignUp ? 'Create Account' : 'Sign In'} - FlowStock
+          </CardTitle>
+          <CardDescription>
+            {isSignUp 
+              ? 'Create your FlowStock account to get started'
+              : 'Sign in to your FlowStock account'
+            }
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            {isSignUp && (
+              <>
+                <div className="space-y-2">
+                  <label htmlFor="name" className="text-sm font-medium">
+                    Full Name
+                  </label>
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="role" className="text-sm font-medium">
+                    Role
+                  </label>
+                  <select
+                    id="role"
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="ORG_USER">Organization User</option>
+                    <option value="ORG_ADMIN">Organization Admin</option>
+                    <option value="SUPER_ADMIN">Super Admin</option>
+                  </select>
+                </div>
+              </>
+            )}
+
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {isSignUp ? 'Creating Account...' : 'Signing In...'}
+                </>
+              ) : (
+                isSignUp ? 'Create Account' : 'Sign In'
+              )}
+            </Button>
+
+            <div className="text-center">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="text-sm"
+              >
+                {isSignUp 
+                  ? 'Already have an account? Sign in'
+                  : "Don't have an account? Sign up"
+                }
+              </Button>
+            </div>
+          </form>
+
+          {/* Quick login buttons for testing */}
+          <div className="mt-6 pt-6 border-t">
+            <p className="text-sm text-gray-600 mb-3">Quick Test Login:</p>
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => setFormData({
+                  email: 'admin@flowstock.com',
+                  password: 'password',
+                  name: '',
+                  role: 'SUPER_ADMIN'
+                })}
+              >
+                Super Admin Test
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => setFormData({
+                  email: 'orgadmin@company.com',
+                  password: 'password',
+                  name: '',
+                  role: 'ORG_ADMIN'
+                })}
+              >
+                Org Admin Test
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
