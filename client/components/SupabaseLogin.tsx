@@ -151,7 +151,11 @@ export function SupabaseLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
+      <div className="w-full max-w-md space-y-4">
+        {/* Connection Test */}
+        <SupabaseTest />
+
+        <Card className="w-full">
         <CardHeader>
           <CardTitle>
             {isSignUp ? "Create Account" : "Sign In"} - FlowStock
@@ -333,7 +337,8 @@ export function SupabaseLogin() {
             )}
           </form>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }
