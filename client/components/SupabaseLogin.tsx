@@ -29,11 +29,34 @@ export function SupabaseLogin() {
       }
     } catch (err: any) {
       console.error('Login error:', err);
-      if (err.message?.includes('Invalid API key')) {
-        setError('Database configuration error. Please check Supabase setup.');
-      } else {
-        setError(err.message || 'Authentication failed');
+
+      // Extract proper error message from Supabase error object
+      let errorMessage = 'Authentication failed';
+
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.error_description) {
+        errorMessage = err.error_description;
+      } else if (err.msg) {
+        errorMessage = err.msg;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      } else if (err.toString && err.toString() !== '[object Object]') {
+        errorMessage = err.toString();
       }
+
+      // Handle specific Supabase errors
+      if (errorMessage.includes('Invalid API key')) {
+        errorMessage = 'Database configuration error. Please check Supabase setup.';
+      } else if (errorMessage.includes('Invalid login credentials')) {
+        errorMessage = 'Invalid email or password. Please try again.';
+      } else if (errorMessage.includes('Email not confirmed')) {
+        errorMessage = 'Please check your email and confirm your account.';
+      } else if (errorMessage.includes('User already registered')) {
+        errorMessage = 'An account with this email already exists. Try signing in instead.';
+      }
+
+      setError(errorMessage);
     }
   };
 
