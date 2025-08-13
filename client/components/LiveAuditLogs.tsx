@@ -102,18 +102,18 @@ export function LiveAuditLogs() {
   }, [isLive]);
 
   const getActionIcon = (action: string, entity: string) => {
-    if (action === "created") return <UserPlus className="h-3 w-3" />;
-    if (action === "deleted") return <Trash2 className="h-3 w-3" />;
-    if (action === "updated") return <Edit className="h-3 w-3" />;
-    if (action === "exported") return <Download className="h-3 w-3" />;
-    if (action === "imported") return <Upload className="h-3 w-3" />;
-    if (action === "processed") return <CheckCircle className="h-3 w-3" />;
-    if (action === "logged_in") return <User className="h-3 w-3" />;
-    if (action === "failed_login") return <AlertTriangle className="h-3 w-3" />;
-    if (entity === "product") return <Package className="h-3 w-3" />;
-    if (entity === "sale") return <ShoppingCart className="h-3 w-3" />;
-    if (entity === "settings") return <Settings className="h-3 w-3" />;
-    return <Activity className="h-3 w-3" />;
+    if (action === "created") return UserPlus;
+    if (action === "deleted") return Trash2;
+    if (action === "updated") return Edit;
+    if (action === "exported") return Download;
+    if (action === "imported") return Upload;
+    if (action === "processed") return CheckCircle;
+    if (action === "logged_in") return User;
+    if (action === "failed_login") return AlertTriangle;
+    if (entity === "product") return Package;
+    if (entity === "sale") return ShoppingCart;
+    if (entity === "settings") return Settings;
+    return Activity;
   };
 
   const getSeverityColor = (severity: string) => {
