@@ -98,6 +98,12 @@ export default function TeamManagement() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
+  const [sortField, setSortField] = useState<string>("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [filterRole, setFilterRole] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [isLoading, setIsLoading] = useState(false);
 
   const filteredMembers = mockTeamMembers.filter(member => 
     member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
