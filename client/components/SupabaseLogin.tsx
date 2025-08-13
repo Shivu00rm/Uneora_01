@@ -272,8 +272,8 @@ export function SupabaseLogin() {
                   <div><strong>Org Admin:</strong> manager@acme.com / password123 + "ACME Corp"</div>
                   <div><strong>Org User:</strong> user@acme.com / password123</div>
                 </div>
-                <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
-                  <strong>Super Admin Access:</strong> Use superadmin@flowstock.com / SuperAdmin123!
+                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
+                  <strong>✅ Super Admin Ready:</strong> superadmin@flowstock.com / SuperAdmin123!
                 </div>
               </div>
             )}
