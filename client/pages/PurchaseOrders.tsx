@@ -342,7 +342,7 @@ export default function PurchaseOrders() {
           <TabsTrigger value="tracking" className="tab-tracking text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Delivery Tracking</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="orders" className="space-y-6">
+        <TabsContent value="orders" className="space-y-6 tab-content-watermark flowstock-watermark">
           {/* Filters */}
           <Card>
             <CardContent className="pt-6">
