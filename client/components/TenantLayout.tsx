@@ -46,63 +46,53 @@ export function TenantLayout({ children }: TenantLayoutProps) {
       {/* Tenant Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo & Organization */}
-            <div className="flex items-center space-x-4">
+          <div className="flex h-16 items-center">
+            {/* Logo */}
+            <div className="flex items-center">
               <Link to="/app/dashboard" className="flex items-center space-x-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                   <Package className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <span className="text-xl font-bold text-foreground">FlowStock</span>
               </Link>
-              
-              <div className="hidden sm:flex items-center space-x-2">
-                <div className="h-4 w-px bg-border" />
-                <div className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium text-muted-foreground">
-                    {user?.organizationName}
-                  </span>
-                </div>
-              </div>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
+            {/* Centered Desktop Navigation */}
+            <nav className="hidden md:flex items-center justify-center flex-1 space-x-6">
               <Link to="/app/dashboard" className={navLinkClass("/app/dashboard")}>
                 Dashboard
               </Link>
-              
+
               <PermissionGate module="inventory" action="view">
                 <Link to="/app/inventory" className={navLinkClass("/app/inventory")}>
                   Inventory
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="pos" action="view">
                 <Link to="/app/pos" className={navLinkClass("/app/pos")}>
                   POS
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="vendors" action="view">
                 <Link to="/app/vendors" className={navLinkClass("/app/vendors")}>
                   Vendors
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="purchase_orders" action="view">
                 <Link to="/app/purchase-orders" className={navLinkClass("/app/purchase-orders")}>
                   Orders
                 </Link>
               </PermissionGate>
-              
+
               <PermissionGate module="analytics" action="view">
                 <Link to="/app/analytics" className={navLinkClass("/app/analytics")}>
                   Analytics
                 </Link>
               </PermissionGate>
-              
+
               <OrgAdminOnly>
                 <PermissionGate module="users" action="view">
                   <Link to="/app/team" className={navLinkClass("/app/team")}>
@@ -112,8 +102,14 @@ export function TenantLayout({ children }: TenantLayoutProps) {
               </OrgAdminOnly>
             </nav>
 
-            {/* Menu */}
+            {/* Right Side - Organization & Menu */}
             <div className="hidden md:flex items-center space-x-4">
+              <div className="flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium text-muted-foreground">
+                  {user?.organizationName}
+                </span>
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm">
