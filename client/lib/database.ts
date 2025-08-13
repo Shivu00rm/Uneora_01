@@ -47,6 +47,17 @@ export class DatabaseService {
     return data
   }
 
+  static async createProfile(profile: Profile): Promise<Profile> {
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert(profile)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
   static async updateProfile(userId: string, updates: Partial<Profile>): Promise<Profile> {
     const { data, error } = await supabase
       .from('profiles')
@@ -54,7 +65,18 @@ export class DatabaseService {
       .eq('id', userId)
       .select()
       .single()
-    
+
+    if (error) throw error
+    return data
+  }
+
+  static async upsertProfile(profile: Profile): Promise<Profile> {
+    const { data, error } = await supabase
+      .from('profiles')
+      .upsert(profile)
+      .select()
+      .single()
+
     if (error) throw error
     return data
   }
