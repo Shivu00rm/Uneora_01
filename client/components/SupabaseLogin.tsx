@@ -10,6 +10,7 @@ import { SuperAdminSetup } from './SuperAdminSetup';
 export function SupabaseLogin() {
   const { login, signUp, loading } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showSuperAdminSetup, setShowSuperAdminSetup] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,6 +19,25 @@ export function SupabaseLogin() {
     companyName: ''
   });
   const [error, setError] = useState<string | null>(null);
+
+  if (showSuperAdminSetup) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-full max-w-md">
+          <SuperAdminSetup />
+          <div className="mt-4 text-center">
+            <Button
+              variant="ghost"
+              onClick={() => setShowSuperAdminSetup(false)}
+              className="text-sm"
+            >
+              ← Back to Login
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
