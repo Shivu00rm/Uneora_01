@@ -3,7 +3,13 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Badge } from "./ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { usePermissions, useAuditLog } from "@/hooks/usePermissions";
 import { Permission } from "@/lib/permissions";
 import {
@@ -40,7 +46,7 @@ export function SecurityConfirmation({
   targetResource,
   requiresMFA = true,
   requiresPassword = true,
-  confirmationPhrase = "CONFIRM"
+  confirmationPhrase = "CONFIRM",
 }: SecurityConfirmationProps) {
   const { user, needsSecondaryAuth } = usePermissions();
   const { logAction } = useAuditLog();
@@ -52,7 +58,7 @@ export function SecurityConfirmation({
   const [error, setError] = useState("");
 
   const isHighImpact = needsSecondaryAuth(permission);
-  
+
   const handleConfirm = async () => {
     setError("");
     setIsVerifying(true);
@@ -74,40 +80,33 @@ export function SecurityConfirmation({
       }
 
       // Simulate authentication delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Log the security event
-      await logAction(
-        "security_confirmation_passed",
-        "authorization",
-        {
-          action,
-          permission,
-          targetResource,
-          requiresMFA,
-          requiresPassword,
-          timestamp: new Date().toISOString()
-        }
-      );
+      await logAction("security_confirmation_passed", "authorization", {
+        action,
+        permission,
+        targetResource,
+        requiresMFA,
+        requiresPassword,
+        timestamp: new Date().toISOString(),
+      });
 
       onConfirm();
       handleClose();
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Security verification failed");
-      
-      // Log failed attempt
-      await logAction(
-        "security_confirmation_failed",
-        "authorization",
-        {
-          action,
-          permission,
-          targetResource,
-          error: err instanceof Error ? err.message : "Unknown error",
-          timestamp: new Date().toISOString()
-        }
+      setError(
+        err instanceof Error ? err.message : "Security verification failed",
       );
+
+      // Log failed attempt
+      await logAction("security_confirmation_failed", "authorization", {
+        action,
+        permission,
+        targetResource,
+        error: err instanceof Error ? err.message : "Unknown error",
+        timestamp: new Date().toISOString(),
+      });
     } finally {
       setIsVerifying(false);
     }
@@ -122,7 +121,7 @@ export function SecurityConfirmation({
     onClose();
   };
 
-  const isFormValid = 
+  const isFormValid =
     confirmPhrase.toUpperCase() === confirmationPhrase.toUpperCase() &&
     (!requiresPassword || password.length >= 8) &&
     (!requiresMFA || mfaCode.length === 6);
@@ -136,7 +135,8 @@ export function SecurityConfirmation({
             Security Confirmation Required
           </DialogTitle>
           <DialogDescription>
-            This action requires additional security verification due to its high impact.
+            This action requires additional security verification due to its
+            high impact.
           </DialogDescription>
         </DialogHeader>
 
@@ -174,11 +174,15 @@ export function SecurityConfirmation({
                 value={confirmPhrase}
                 onChange={(e) => setConfirmPhrase(e.target.value)}
                 placeholder={`Type ${confirmationPhrase}`}
-                className={confirmPhrase && confirmPhrase.toUpperCase() !== confirmationPhrase.toUpperCase() 
-                  ? "border-red-300" 
-                  : confirmPhrase.toUpperCase() === confirmationPhrase.toUpperCase() && confirmPhrase
-                    ? "border-green-300"
-                    : ""
+                className={
+                  confirmPhrase &&
+                  confirmPhrase.toUpperCase() !==
+                    confirmationPhrase.toUpperCase()
+                    ? "border-red-300"
+                    : confirmPhrase.toUpperCase() ===
+                          confirmationPhrase.toUpperCase() && confirmPhrase
+                      ? "border-green-300"
+                      : ""
                 }
               />
             </div>
@@ -194,11 +198,12 @@ export function SecurityConfirmation({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className={password && password.length < 8 
-                      ? "border-red-300" 
-                      : password.length >= 8
-                        ? "border-green-300"
-                        : ""
+                    className={
+                      password && password.length < 8
+                        ? "border-red-300"
+                        : password.length >= 8
+                          ? "border-green-300"
+                          : ""
                     }
                   />
                   <Button
@@ -208,7 +213,11 @@ export function SecurityConfirmation({
                     className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -221,11 +230,13 @@ export function SecurityConfirmation({
                 <Input
                   id="mfa-code"
                   value={mfaCode}
-                  onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  onChange={(e) =>
+                    setMfaCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
                   placeholder="000000"
                   className={`font-mono text-center ${
-                    mfaCode && mfaCode.length !== 6 
-                      ? "border-red-300" 
+                    mfaCode && mfaCode.length !== 6
+                      ? "border-red-300"
                       : mfaCode.length === 6
                         ? "border-green-300"
                         : ""
@@ -243,11 +254,13 @@ export function SecurityConfirmation({
           <div className="p-3 bg-muted rounded-lg text-sm">
             <div className="flex items-center gap-2 mb-2">
               <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-xs font-medium">{user?.name?.charAt(0)}</span>
+                <span className="text-xs font-medium">
+                  {user?.name?.charAt(0)}
+                </span>
               </div>
               <span className="font-medium">{user?.name}</span>
               <Badge variant="outline" className="text-xs">
-                {user?.role?.replace('_', ' ')}
+                {user?.role?.replace("_", " ")}
               </Badge>
             </div>
             <div className="text-xs text-muted-foreground">
@@ -290,8 +303,8 @@ export function SecurityConfirmation({
                 </>
               )}
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleClose}
               disabled={isVerifying}
             >
@@ -324,7 +337,7 @@ export const useSecurityConfirmation = () => {
   }) => {
     setConfirmation({
       isOpen: true,
-      ...params
+      ...params,
     });
   };
 
@@ -346,6 +359,6 @@ export const useSecurityConfirmation = () => {
 
   return {
     showConfirmation,
-    ConfirmationDialog
+    ConfirmationDialog,
   };
 };

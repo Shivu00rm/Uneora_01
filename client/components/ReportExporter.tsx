@@ -64,7 +64,14 @@ export function ReportExporter() {
       name: "Inventory Report",
       description: "Products, stock levels, and valuations",
       icon: Package,
-      fields: ["product_name", "sku", "current_stock", "unit_price", "total_value", "low_stock_threshold"],
+      fields: [
+        "product_name",
+        "sku",
+        "current_stock",
+        "unit_price",
+        "total_value",
+        "low_stock_threshold",
+      ],
       formats: ["csv", "pdf", "excel"],
     },
     {
@@ -72,7 +79,15 @@ export function ReportExporter() {
       name: "Sales Report",
       description: "Transaction history and revenue analysis",
       icon: DollarSign,
-      fields: ["date", "transaction_id", "product", "quantity", "unit_price", "total_amount", "customer"],
+      fields: [
+        "date",
+        "transaction_id",
+        "product",
+        "quantity",
+        "unit_price",
+        "total_amount",
+        "customer",
+      ],
       formats: ["csv", "pdf", "excel"],
     },
     {
@@ -80,7 +95,14 @@ export function ReportExporter() {
       name: "Purchase Orders",
       description: "PO history and vendor analysis",
       icon: BarChart3,
-      fields: ["po_number", "vendor", "date_created", "total_amount", "status", "delivery_date"],
+      fields: [
+        "po_number",
+        "vendor",
+        "date_created",
+        "total_amount",
+        "status",
+        "delivery_date",
+      ],
       formats: ["csv", "pdf"],
     },
     {
@@ -88,7 +110,13 @@ export function ReportExporter() {
       name: "Business Analytics",
       description: "KPIs and performance metrics",
       icon: TrendingUp,
-      fields: ["metric", "current_value", "previous_value", "change_percent", "trend"],
+      fields: [
+        "metric",
+        "current_value",
+        "previous_value",
+        "change_percent",
+        "trend",
+      ],
       formats: ["pdf", "excel"],
     },
   ];
@@ -109,7 +137,14 @@ export function ReportExporter() {
       name: "Audit Trail",
       description: "Security and access logs",
       icon: FileText,
-      fields: ["timestamp", "user", "action", "ip_address", "user_agent", "resource"],
+      fields: [
+        "timestamp",
+        "user",
+        "action",
+        "ip_address",
+        "user_agent",
+        "resource",
+      ],
       formats: ["csv", "pdf"],
       roleRequired: ["ORG_ADMIN"],
     },
@@ -121,7 +156,14 @@ export function ReportExporter() {
       name: "Organization Overview",
       description: "All organizations and their metrics",
       icon: Building2,
-      fields: ["organization", "plan", "users", "monthly_revenue", "status", "health"],
+      fields: [
+        "organization",
+        "plan",
+        "users",
+        "monthly_revenue",
+        "status",
+        "health",
+      ],
       formats: ["csv", "pdf", "excel"],
       roleRequired: ["SUPER_ADMIN"],
     },
@@ -130,7 +172,14 @@ export function ReportExporter() {
       name: "Platform Revenue",
       description: "Cross-organization revenue analysis",
       icon: DollarSign,
-      fields: ["organization", "plan", "monthly_fee", "annual_value", "payment_status", "last_payment"],
+      fields: [
+        "organization",
+        "plan",
+        "monthly_fee",
+        "annual_value",
+        "payment_status",
+        "last_payment",
+      ],
       formats: ["csv", "pdf", "excel"],
       roleRequired: ["SUPER_ADMIN"],
     },
@@ -156,18 +205,19 @@ export function ReportExporter() {
       reports = [...reports, ...superAdminReports];
     }
 
-    return reports.filter(report => 
-      !report.roleRequired || report.roleRequired.includes(user?.role || "")
+    return reports.filter(
+      (report) =>
+        !report.roleRequired || report.roleRequired.includes(user?.role || ""),
     );
   };
 
-  const selectedReportConfig = getAvailableReports().find(r => r.type === selectedReport);
+  const selectedReportConfig = getAvailableReports().find(
+    (r) => r.type === selectedReport,
+  );
 
   const handleFieldToggle = (field: string) => {
-    setSelectedFields(prev =>
-      prev.includes(field)
-        ? prev.filter(f => f !== field)
-        : [...prev, field]
+    setSelectedFields((prev) =>
+      prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field],
     );
   };
 
@@ -178,17 +228,23 @@ export function ReportExporter() {
 
     // Simulate report generation
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // In a real app, this would make an API call
       const mockData = generateMockData(selectedReport, selectedFields);
-      
+
       if (selectedFormat === "csv") {
-        downloadCSV(mockData, `${selectedReportConfig.name}_${new Date().toISOString().split('T')[0]}`);
+        downloadCSV(
+          mockData,
+          `${selectedReportConfig.name}_${new Date().toISOString().split("T")[0]}`,
+        );
       } else if (selectedFormat === "pdf") {
         downloadPDF(selectedReportConfig.name, mockData);
       } else if (selectedFormat === "excel") {
-        downloadExcel(mockData, `${selectedReportConfig.name}_${new Date().toISOString().split('T')[0]}`);
+        downloadExcel(
+          mockData,
+          `${selectedReportConfig.name}_${new Date().toISOString().split("T")[0]}`,
+        );
       }
 
       setIsDialogOpen(false);
@@ -203,12 +259,42 @@ export function ReportExporter() {
     // Mock data generation based on report type
     const mockDataMap: Record<string, any[]> = {
       inventory: [
-        { product_name: "iPhone 14 Pro", sku: "IP14P-128", current_stock: 25, unit_price: 79999, total_value: 1999975, low_stock_threshold: 10 },
-        { product_name: "Samsung Galaxy S23", sku: "SGS23-256", current_stock: 15, unit_price: 69999, total_value: 1049985, low_stock_threshold: 5 },
+        {
+          product_name: "iPhone 14 Pro",
+          sku: "IP14P-128",
+          current_stock: 25,
+          unit_price: 79999,
+          total_value: 1999975,
+          low_stock_threshold: 10,
+        },
+        {
+          product_name: "Samsung Galaxy S23",
+          sku: "SGS23-256",
+          current_stock: 15,
+          unit_price: 69999,
+          total_value: 1049985,
+          low_stock_threshold: 5,
+        },
       ],
       sales: [
-        { date: "2024-01-15", transaction_id: "TXN-001", product: "iPhone 14 Pro", quantity: 2, unit_price: 79999, total_amount: 159998, customer: "John Doe" },
-        { date: "2024-01-14", transaction_id: "TXN-002", product: "Samsung Galaxy S23", quantity: 1, unit_price: 69999, total_amount: 69999, customer: "Jane Smith" },
+        {
+          date: "2024-01-15",
+          transaction_id: "TXN-001",
+          product: "iPhone 14 Pro",
+          quantity: 2,
+          unit_price: 79999,
+          total_amount: 159998,
+          customer: "John Doe",
+        },
+        {
+          date: "2024-01-14",
+          transaction_id: "TXN-002",
+          product: "Samsung Galaxy S23",
+          quantity: 1,
+          unit_price: 69999,
+          total_amount: 69999,
+          customer: "Jane Smith",
+        },
       ],
     };
 
@@ -218,10 +304,11 @@ export function ReportExporter() {
   const downloadCSV = (data: any[], filename: string) => {
     if (data.length === 0) return;
 
-    const headers = selectedFields.length > 0 ? selectedFields : Object.keys(data[0]);
+    const headers =
+      selectedFields.length > 0 ? selectedFields : Object.keys(data[0]);
     const csv = [
       headers.join(","),
-      ...data.map(row => headers.map(field => row[field] || "").join(","))
+      ...data.map((row) => headers.map((field) => row[field] || "").join(",")),
     ].join("\n");
 
     const blob = new Blob([csv], { type: "text/csv" });
@@ -235,7 +322,9 @@ export function ReportExporter() {
 
   const downloadPDF = (reportName: string, data: any[]) => {
     // In a real app, this would generate a proper PDF
-    alert(`PDF generation for ${reportName} would be implemented with a library like jsPDF or server-side generation`);
+    alert(
+      `PDF generation for ${reportName} would be implemented with a library like jsPDF or server-side generation`,
+    );
   };
 
   const downloadExcel = (data: any[], filename: string) => {
@@ -281,7 +370,9 @@ export function ReportExporter() {
                   <Card
                     key={report.type}
                     className={`cursor-pointer transition-all hover:shadow-md ${
-                      selectedReport === report.type ? "ring-2 ring-primary" : ""
+                      selectedReport === report.type
+                        ? "ring-2 ring-primary"
+                        : ""
                     }`}
                     onClick={() => {
                       setSelectedReport(report.type);
@@ -294,13 +385,17 @@ export function ReportExporter() {
                           <ReportIcon className="h-4 w-4 text-primary" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm">{report.name}</div>
+                          <div className="font-medium text-sm">
+                            {report.name}
+                          </div>
                           <div className="text-xs text-muted-foreground mt-1">
                             {report.description}
                           </div>
                           {report.roleRequired && (
                             <Badge variant="outline" className="text-xs mt-2">
-                              {report.roleRequired.join(", ").replace(/_/g, " ")}
+                              {report.roleRequired
+                                .join(", ")
+                                .replace(/_/g, " ")}
                             </Badge>
                           )}
                         </div>
@@ -318,7 +413,10 @@ export function ReportExporter() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Export Format</Label>
-                  <Select value={selectedFormat} onValueChange={setSelectedFormat}>
+                  <Select
+                    value={selectedFormat}
+                    onValueChange={setSelectedFormat}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -387,7 +485,9 @@ export function ReportExporter() {
                         onCheckedChange={() => handleFieldToggle(field)}
                       />
                       <Label htmlFor={field} className="text-sm">
-                        {field.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
+                        {field
+                          .replace(/_/g, " ")
+                          .replace(/\b\w/g, (l) => l.toUpperCase())}
                       </Label>
                     </div>
                   ))}
@@ -413,7 +513,10 @@ export function ReportExporter() {
                     </>
                   )}
                 </Button>
-                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
                   Cancel
                 </Button>
               </div>

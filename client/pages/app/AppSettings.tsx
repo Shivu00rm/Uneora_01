@@ -6,7 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { APIIntegrations } from "@/components/APIIntegrations";
 import { useAuth } from "@/contexts/AuthContext";
@@ -51,7 +57,7 @@ export default function AppSettings() {
     timezone: "Asia/Kolkata",
     currency: "INR",
     taxId: "GST123456789",
-    plan: "Pro"
+    plan: "Pro",
   });
 
   // Notification settings
@@ -63,7 +69,7 @@ export default function AppSettings() {
     weeklyReports: true,
     emailNotifications: true,
     smsNotifications: false,
-    pushNotifications: true
+    pushNotifications: true,
   });
 
   // Security settings
@@ -72,21 +78,20 @@ export default function AppSettings() {
     sessionTimeout: "8",
     passwordRequirement: "strong",
     apiAccess: true,
-    webhookUrl: "https://api.techcorp.com/webhooks/flowstock"
+    webhookUrl: "https://api.techcorp.com/webhooks/flowstock",
   });
 
   const handleSaveSettings = async (section: string) => {
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      await logAction(
-        "organization_settings_updated",
-        "org_management",
-        { section, organizationId: user?.organizationId }
-      );
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      await logAction("organization_settings_updated", "org_management", {
+        section,
+        organizationId: user?.organizationId,
+      });
 
       console.log(`${section} settings saved successfully`);
     } catch (error) {
@@ -97,11 +102,11 @@ export default function AppSettings() {
   };
 
   const handleNotificationToggle = (key: string, value: boolean) => {
-    setNotifications(prev => ({ ...prev, [key]: value }));
+    setNotifications((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSecurityToggle = (key: string, value: boolean) => {
-    setSecurity(prev => ({ ...prev, [key]: value }));
+    setSecurity((prev) => ({ ...prev, [key]: value }));
   };
 
   if (!can("org.settings")) {
@@ -139,7 +144,7 @@ export default function AppSettings() {
           </Badge>
           <Badge variant="outline" className="gap-2">
             <User className="h-4 w-4" />
-            {user?.role?.replace('_', ' ')}
+            {user?.role?.replace("_", " ")}
           </Badge>
         </div>
       </div>
@@ -169,7 +174,12 @@ export default function AppSettings() {
                   <Input
                     id="org-name"
                     value={orgSettings.name}
-                    onChange={(e) => setOrgSettings(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setOrgSettings((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -178,7 +188,12 @@ export default function AppSettings() {
                     id="org-email"
                     type="email"
                     value={orgSettings.email}
-                    onChange={(e) => setOrgSettings(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setOrgSettings((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -186,7 +201,12 @@ export default function AppSettings() {
                   <Input
                     id="org-phone"
                     value={orgSettings.phone}
-                    onChange={(e) => setOrgSettings(prev => ({ ...prev, phone: e.target.value }))}
+                    onChange={(e) =>
+                      setOrgSettings((prev) => ({
+                        ...prev,
+                        phone: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -194,17 +214,27 @@ export default function AppSettings() {
                   <Input
                     id="org-website"
                     value={orgSettings.website}
-                    onChange={(e) => setOrgSettings(prev => ({ ...prev, website: e.target.value }))}
+                    onChange={(e) =>
+                      setOrgSettings((prev) => ({
+                        ...prev,
+                        website: e.target.value,
+                      }))
+                    }
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="org-description">Description</Label>
                 <Textarea
                   id="org-description"
                   value={orgSettings.description}
-                  onChange={(e) => setOrgSettings(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) =>
+                    setOrgSettings((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
                   placeholder="Brief description of your organization"
                 />
               </div>
@@ -214,7 +244,12 @@ export default function AppSettings() {
                 <Textarea
                   id="org-address"
                   value={orgSettings.address}
-                  onChange={(e) => setOrgSettings(prev => ({ ...prev, address: e.target.value }))}
+                  onChange={(e) =>
+                    setOrgSettings((prev) => ({
+                      ...prev,
+                      address: e.target.value,
+                    }))
+                  }
                   placeholder="Complete business address"
                 />
               </div>
@@ -222,20 +257,34 @@ export default function AppSettings() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="timezone">Timezone</Label>
-                  <Select value={orgSettings.timezone} onValueChange={(value) => setOrgSettings(prev => ({ ...prev, timezone: value }))}>
+                  <Select
+                    value={orgSettings.timezone}
+                    onValueChange={(value) =>
+                      setOrgSettings((prev) => ({ ...prev, timezone: value }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Asia/Kolkata">Asia/Kolkata (IST)</SelectItem>
+                      <SelectItem value="Asia/Kolkata">
+                        Asia/Kolkata (IST)
+                      </SelectItem>
                       <SelectItem value="UTC">UTC</SelectItem>
-                      <SelectItem value="America/New_York">America/New_York (EST)</SelectItem>
+                      <SelectItem value="America/New_York">
+                        America/New_York (EST)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="currency">Currency</Label>
-                  <Select value={orgSettings.currency} onValueChange={(value) => setOrgSettings(prev => ({ ...prev, currency: value }))}>
+                  <Select
+                    value={orgSettings.currency}
+                    onValueChange={(value) =>
+                      setOrgSettings((prev) => ({ ...prev, currency: value }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -251,14 +300,22 @@ export default function AppSettings() {
                   <Input
                     id="tax-id"
                     value={orgSettings.taxId}
-                    onChange={(e) => setOrgSettings(prev => ({ ...prev, taxId: e.target.value }))}
+                    onChange={(e) =>
+                      setOrgSettings((prev) => ({
+                        ...prev,
+                        taxId: e.target.value,
+                      }))
+                    }
                     placeholder="GST123456789"
                   />
                 </div>
               </div>
 
               <div className="pt-4 border-t">
-                <Button onClick={() => handleSaveSettings("general")} disabled={isLoading}>
+                <Button
+                  onClick={() => handleSaveSettings("general")}
+                  disabled={isLoading}
+                >
                   {isLoading ? (
                     <>
                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -292,41 +349,57 @@ export default function AppSettings() {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium">Low Stock Alerts</div>
-                      <div className="text-sm text-muted-foreground">Get notified when inventory is running low</div>
+                      <div className="text-sm text-muted-foreground">
+                        Get notified when inventory is running low
+                      </div>
                     </div>
-                    <Switch 
-                      checked={notifications.lowStock} 
-                      onCheckedChange={(checked) => handleNotificationToggle("lowStock", checked)}
+                    <Switch
+                      checked={notifications.lowStock}
+                      onCheckedChange={(checked) =>
+                        handleNotificationToggle("lowStock", checked)
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium">New Orders</div>
-                      <div className="text-sm text-muted-foreground">Notifications for new customer orders</div>
+                      <div className="text-sm text-muted-foreground">
+                        Notifications for new customer orders
+                      </div>
                     </div>
-                    <Switch 
-                      checked={notifications.newOrders} 
-                      onCheckedChange={(checked) => handleNotificationToggle("newOrders", checked)}
+                    <Switch
+                      checked={notifications.newOrders}
+                      onCheckedChange={(checked) =>
+                        handleNotificationToggle("newOrders", checked)
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium">Payment Updates</div>
-                      <div className="text-sm text-muted-foreground">Payment status and transaction alerts</div>
+                      <div className="text-sm text-muted-foreground">
+                        Payment status and transaction alerts
+                      </div>
                     </div>
-                    <Switch 
-                      checked={notifications.paymentUpdates} 
-                      onCheckedChange={(checked) => handleNotificationToggle("paymentUpdates", checked)}
+                    <Switch
+                      checked={notifications.paymentUpdates}
+                      onCheckedChange={(checked) =>
+                        handleNotificationToggle("paymentUpdates", checked)
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium">Weekly Reports</div>
-                      <div className="text-sm text-muted-foreground">Weekly business summary reports</div>
+                      <div className="text-sm text-muted-foreground">
+                        Weekly business summary reports
+                      </div>
                     </div>
-                    <Switch 
-                      checked={notifications.weeklyReports} 
-                      onCheckedChange={(checked) => handleNotificationToggle("weeklyReports", checked)}
+                    <Switch
+                      checked={notifications.weeklyReports}
+                      onCheckedChange={(checked) =>
+                        handleNotificationToggle("weeklyReports", checked)
+                      }
                     />
                   </div>
                 </div>
@@ -340,12 +413,16 @@ export default function AppSettings() {
                       <Mail className="h-4 w-4" />
                       <div>
                         <div className="font-medium">Email Notifications</div>
-                        <div className="text-sm text-muted-foreground">Receive notifications via email</div>
+                        <div className="text-sm text-muted-foreground">
+                          Receive notifications via email
+                        </div>
                       </div>
                     </div>
-                    <Switch 
-                      checked={notifications.emailNotifications} 
-                      onCheckedChange={(checked) => handleNotificationToggle("emailNotifications", checked)}
+                    <Switch
+                      checked={notifications.emailNotifications}
+                      onCheckedChange={(checked) =>
+                        handleNotificationToggle("emailNotifications", checked)
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -353,12 +430,16 @@ export default function AppSettings() {
                       <Phone className="h-4 w-4" />
                       <div>
                         <div className="font-medium">SMS Notifications</div>
-                        <div className="text-sm text-muted-foreground">Receive critical alerts via SMS</div>
+                        <div className="text-sm text-muted-foreground">
+                          Receive critical alerts via SMS
+                        </div>
                       </div>
                     </div>
-                    <Switch 
-                      checked={notifications.smsNotifications} 
-                      onCheckedChange={(checked) => handleNotificationToggle("smsNotifications", checked)}
+                    <Switch
+                      checked={notifications.smsNotifications}
+                      onCheckedChange={(checked) =>
+                        handleNotificationToggle("smsNotifications", checked)
+                      }
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -366,19 +447,26 @@ export default function AppSettings() {
                       <Bell className="h-4 w-4" />
                       <div>
                         <div className="font-medium">Push Notifications</div>
-                        <div className="text-sm text-muted-foreground">Browser push notifications</div>
+                        <div className="text-sm text-muted-foreground">
+                          Browser push notifications
+                        </div>
                       </div>
                     </div>
-                    <Switch 
-                      checked={notifications.pushNotifications} 
-                      onCheckedChange={(checked) => handleNotificationToggle("pushNotifications", checked)}
+                    <Switch
+                      checked={notifications.pushNotifications}
+                      onCheckedChange={(checked) =>
+                        handleNotificationToggle("pushNotifications", checked)
+                      }
                     />
                   </div>
                 </div>
               </div>
 
               <div className="pt-4 border-t">
-                <Button onClick={() => handleSaveSettings("notifications")} disabled={isLoading}>
+                <Button
+                  onClick={() => handleSaveSettings("notifications")}
+                  disabled={isLoading}
+                >
                   {isLoading ? (
                     <>
                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -398,17 +486,22 @@ export default function AppSettings() {
 
         {/* Security */}
         <TabsContent value="security" className="space-y-6">
-          <OrgAdminOnly fallback={
-            <Card>
-              <CardContent className="p-6 text-center">
-                <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">Admin Access Required</h3>
-                <p className="text-muted-foreground">
-                  Only organization administrators can access security settings.
-                </p>
-              </CardContent>
-            </Card>
-          }>
+          <OrgAdminOnly
+            fallback={
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">
+                    Admin Access Required
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Only organization administrators can access security
+                    settings.
+                  </p>
+                </CardContent>
+              </Card>
+            }
+          >
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -420,20 +513,31 @@ export default function AppSettings() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium">Two-Factor Authentication</div>
-                      <div className="text-sm text-muted-foreground">Require 2FA for all admin accounts</div>
+                      <div className="font-medium">
+                        Two-Factor Authentication
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Require 2FA for all admin accounts
+                      </div>
                     </div>
-                    <Switch 
-                      checked={security.twoFactorAuth} 
-                      onCheckedChange={(checked) => handleSecurityToggle("twoFactorAuth", checked)}
+                    <Switch
+                      checked={security.twoFactorAuth}
+                      onCheckedChange={(checked) =>
+                        handleSecurityToggle("twoFactorAuth", checked)
+                      }
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label>Session Timeout</Label>
-                    <Select 
-                      value={security.sessionTimeout} 
-                      onValueChange={(value) => setSecurity(prev => ({ ...prev, sessionTimeout: value }))}
+                    <Select
+                      value={security.sessionTimeout}
+                      onValueChange={(value) =>
+                        setSecurity((prev) => ({
+                          ...prev,
+                          sessionTimeout: value,
+                        }))
+                      }
                     >
                       <SelectTrigger className="w-48">
                         <SelectValue />
@@ -450,11 +554,15 @@ export default function AppSettings() {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium">API Access</div>
-                      <div className="text-sm text-muted-foreground">Allow third-party API integrations</div>
+                      <div className="text-sm text-muted-foreground">
+                        Allow third-party API integrations
+                      </div>
                     </div>
-                    <Switch 
-                      checked={security.apiAccess} 
-                      onCheckedChange={(checked) => handleSecurityToggle("apiAccess", checked)}
+                    <Switch
+                      checked={security.apiAccess}
+                      onCheckedChange={(checked) =>
+                        handleSecurityToggle("apiAccess", checked)
+                      }
                     />
                   </div>
 
@@ -464,16 +572,26 @@ export default function AppSettings() {
                       <Input
                         id="webhook-url"
                         value={security.webhookUrl}
-                        onChange={(e) => setSecurity(prev => ({ ...prev, webhookUrl: e.target.value }))}
+                        onChange={(e) =>
+                          setSecurity((prev) => ({
+                            ...prev,
+                            webhookUrl: e.target.value,
+                          }))
+                        }
                         placeholder="https://your-domain.com/webhooks/flowstock"
                       />
-                      <Button variant="outline" size="sm">Test</Button>
+                      <Button variant="outline" size="sm">
+                        Test
+                      </Button>
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t">
-                  <Button onClick={() => handleSaveSettings("security")} disabled={isLoading}>
+                  <Button
+                    onClick={() => handleSaveSettings("security")}
+                    disabled={isLoading}
+                  >
                     {isLoading ? (
                       <>
                         <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -511,8 +629,12 @@ export default function AppSettings() {
                 <Card>
                   <CardContent className="p-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-primary">{orgSettings.plan}</div>
-                      <div className="text-sm text-muted-foreground">Current Plan</div>
+                      <div className="text-2xl font-bold text-primary">
+                        {orgSettings.plan}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Current Plan
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -520,7 +642,9 @@ export default function AppSettings() {
                   <CardContent className="p-4">
                     <div className="text-center">
                       <div className="text-2xl font-bold">₹9,999</div>
-                      <div className="text-sm text-muted-foreground">Monthly</div>
+                      <div className="text-sm text-muted-foreground">
+                        Monthly
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -528,7 +652,9 @@ export default function AppSettings() {
                   <CardContent className="p-4">
                     <div className="text-center">
                       <div className="text-2xl font-bold">28</div>
-                      <div className="text-sm text-muted-foreground">Days left</div>
+                      <div className="text-sm text-muted-foreground">
+                        Days left
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

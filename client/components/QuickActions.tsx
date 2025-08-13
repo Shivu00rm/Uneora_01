@@ -47,7 +47,7 @@ export function QuickActions() {
         icon: Package,
         url: "/app/inventory",
         color: "bg-blue-500",
-        badge: "Inventory"
+        badge: "Inventory",
       },
       {
         id: "create-po",
@@ -56,7 +56,7 @@ export function QuickActions() {
         icon: ShoppingCart,
         url: "/app/purchase-orders",
         color: "bg-emerald-500",
-        badge: "Orders"
+        badge: "Orders",
       },
       {
         id: "view-analytics",
@@ -65,7 +65,7 @@ export function QuickActions() {
         icon: BarChart3,
         url: "/app/analytics",
         color: "bg-purple-500",
-        badge: "Analytics"
+        badge: "Analytics",
       },
     ];
 
@@ -80,7 +80,7 @@ export function QuickActions() {
           icon: UserPlus,
           url: "/app/team",
           color: "bg-orange-500",
-          badge: "Team"
+          badge: "Team",
         },
         {
           id: "org-settings",
@@ -89,7 +89,7 @@ export function QuickActions() {
           icon: Settings,
           url: "/app/settings",
           color: "bg-gray-500",
-          badge: "Settings"
+          badge: "Settings",
         },
         {
           id: "export-data",
@@ -98,8 +98,8 @@ export function QuickActions() {
           icon: Download,
           url: "/app/analytics",
           color: "bg-indigo-500",
-          badge: "Export"
-        }
+          badge: "Export",
+        },
       ];
     }
 
@@ -112,7 +112,7 @@ export function QuickActions() {
           icon: TrendingUp,
           url: "/org-flows",
           color: "bg-emerald-500",
-          badge: "Platform"
+          badge: "Platform",
         },
         {
           id: "manage-orgs",
@@ -121,7 +121,7 @@ export function QuickActions() {
           icon: Building2,
           url: "/super-admin",
           color: "bg-blue-500",
-          badge: "Admin"
+          badge: "Admin",
         },
         {
           id: "billing-overview",
@@ -130,7 +130,7 @@ export function QuickActions() {
           icon: BarChart3,
           url: "/super-admin",
           color: "bg-purple-500",
-          badge: "Billing"
+          badge: "Billing",
         },
         {
           id: "platform-settings",
@@ -139,7 +139,7 @@ export function QuickActions() {
           icon: Settings,
           url: "/super-admin",
           color: "bg-gray-500",
-          badge: "System"
+          badge: "System",
         },
         {
           id: "api-management",
@@ -148,7 +148,7 @@ export function QuickActions() {
           icon: Zap,
           url: "/super-admin",
           color: "bg-yellow-500",
-          badge: "API"
+          badge: "API",
         },
         {
           id: "audit-logs",
@@ -157,8 +157,8 @@ export function QuickActions() {
           icon: FileText,
           url: "/super-admin",
           color: "bg-red-500",
-          badge: "Security"
-        }
+          badge: "Security",
+        },
       ];
     }
 
@@ -172,8 +172,8 @@ export function QuickActions() {
         icon: Target,
         url: "/app/dashboard",
         color: "bg-green-500",
-        badge: "Overview"
-      }
+        badge: "Overview",
+      },
     ];
   };
 
@@ -186,7 +186,7 @@ export function QuickActions() {
           <Zap className="h-5 w-5" />
           Quick Actions
           <Badge variant="outline" className="text-xs">
-            {user?.role?.replace('_', ' ')}
+            {user?.role?.replace("_", " ")}
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -201,7 +201,9 @@ export function QuickActions() {
                   className="h-auto p-4 flex flex-col items-start gap-3 w-full hover:shadow-md transition-all group"
                 >
                   <div className="flex items-center justify-between w-full">
-                    <div className={`h-8 w-8 rounded-lg ${action.color} flex items-center justify-center flex-shrink-0`}>
+                    <div
+                      className={`h-8 w-8 rounded-lg ${action.color} flex items-center justify-center flex-shrink-0`}
+                    >
                       <ActionIcon className="h-4 w-4 text-white" />
                     </div>
                     <div className="flex items-center gap-1">
@@ -224,7 +226,7 @@ export function QuickActions() {
             );
           })}
         </div>
-        
+
         {/* Additional Context Actions */}
         <div className="mt-4 pt-4 border-t">
           <div className="text-xs text-muted-foreground mb-2">Need Help?</div>

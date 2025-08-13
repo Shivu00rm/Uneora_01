@@ -7,7 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { APIIntegrations } from "@/components/APIIntegrations";
 import { SuperAdminAPIKeys } from "@/components/SuperAdminAPIKeys";
-import { PermissionGate, SuperAdminOnly, OrgAdminOnly } from "@/components/PermissionGates";
+import {
+  PermissionGate,
+  SuperAdminOnly,
+  OrgAdminOnly,
+} from "@/components/PermissionGates";
 import {
   Settings as SettingsIcon,
   User,
@@ -96,7 +100,9 @@ export default function Settings() {
                         <Globe className="h-6 w-6 text-primary" />
                         <div>
                           <div className="text-lg font-semibold">127</div>
-                          <div className="text-sm text-muted-foreground">Total Organizations</div>
+                          <div className="text-sm text-muted-foreground">
+                            Total Organizations
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -107,7 +113,9 @@ export default function Settings() {
                         <Users className="h-6 w-6 text-green-500" />
                         <div>
                           <div className="text-lg font-semibold">2,847</div>
-                          <div className="text-sm text-muted-foreground">Total Users</div>
+                          <div className="text-sm text-muted-foreground">
+                            Total Users
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -118,7 +126,9 @@ export default function Settings() {
                         <CreditCard className="h-6 w-6 text-blue-500" />
                         <div>
                           <div className="text-lg font-semibold">₹4.9L</div>
-                          <div className="text-sm text-muted-foreground">Monthly Revenue</div>
+                          <div className="text-sm text-muted-foreground">
+                            Monthly Revenue
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -195,7 +205,9 @@ export default function Settings() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium">Two-Factor Authentication</div>
+                      <div className="font-medium">
+                        Two-Factor Authentication
+                      </div>
                       <div className="text-sm text-muted-foreground">
                         Require 2FA for all admin accounts
                       </div>

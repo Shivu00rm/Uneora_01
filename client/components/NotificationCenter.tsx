@@ -74,7 +74,7 @@ export function NotificationCenter() {
       timestamp: "2 minutes ago",
       read: false,
       actionUrl: "/app/inventory",
-      urgent: true
+      urgent: true,
     },
     {
       id: "2",
@@ -84,7 +84,7 @@ export function NotificationCenter() {
       category: "Team",
       timestamp: "1 hour ago",
       read: false,
-      actionUrl: "/app/team"
+      actionUrl: "/app/team",
     },
     {
       id: "3",
@@ -94,7 +94,7 @@ export function NotificationCenter() {
       category: "Orders",
       timestamp: "3 hours ago",
       read: true,
-      actionUrl: "/app/purchase-orders"
+      actionUrl: "/app/purchase-orders",
     },
   ]);
 
@@ -109,26 +109,20 @@ export function NotificationCenter() {
     securityAlerts: true,
   });
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const markAsRead = (notificationId: string) => {
-    setNotifications(prev =>
-      prev.map(n =>
-        n.id === notificationId ? { ...n, read: true } : n
-      )
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n)),
     );
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev =>
-      prev.map(n => ({ ...n, read: true }))
-    );
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
 
   const removeNotification = (notificationId: string) => {
-    setNotifications(prev =>
-      prev.filter(n => n.id !== notificationId)
-    );
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
   };
 
   const getNotificationIcon = (type: string) => {
@@ -164,30 +158,62 @@ export function NotificationCenter() {
   };
 
   const updateSetting = (key: keyof NotificationSettings, value: boolean) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   // Role-specific notification settings
   const getAvailableSettings = () => {
     const baseSettings = [
-      { key: "lowStock" as keyof NotificationSettings, label: "Low Stock Alerts", description: "Get notified when inventory is running low" },
-      { key: "orderUpdates" as keyof NotificationSettings, label: "Order Updates", description: "Purchase order status changes" },
+      {
+        key: "lowStock" as keyof NotificationSettings,
+        label: "Low Stock Alerts",
+        description: "Get notified when inventory is running low",
+      },
+      {
+        key: "orderUpdates" as keyof NotificationSettings,
+        label: "Order Updates",
+        description: "Purchase order status changes",
+      },
     ];
 
     if (user?.role === "ORG_ADMIN") {
       return [
         ...baseSettings,
-        { key: "teamChanges" as keyof NotificationSettings, label: "Team Changes", description: "New members, role changes" },
-        { key: "billingUpdates" as keyof NotificationSettings, label: "Billing Updates", description: "Payment and subscription alerts" },
-        { key: "securityAlerts" as keyof NotificationSettings, label: "Security Alerts", description: "Login attempts, security events" },
+        {
+          key: "teamChanges" as keyof NotificationSettings,
+          label: "Team Changes",
+          description: "New members, role changes",
+        },
+        {
+          key: "billingUpdates" as keyof NotificationSettings,
+          label: "Billing Updates",
+          description: "Payment and subscription alerts",
+        },
+        {
+          key: "securityAlerts" as keyof NotificationSettings,
+          label: "Security Alerts",
+          description: "Login attempts, security events",
+        },
       ];
     }
 
     if (user?.role === "SUPER_ADMIN") {
       return [
-        { key: "systemAlerts" as keyof NotificationSettings, label: "System Alerts", description: "Platform-wide issues and updates" },
-        { key: "billingUpdates" as keyof NotificationSettings, label: "Billing Updates", description: "Revenue, payment failures" },
-        { key: "securityAlerts" as keyof NotificationSettings, label: "Security Alerts", description: "System security events" },
+        {
+          key: "systemAlerts" as keyof NotificationSettings,
+          label: "System Alerts",
+          description: "Platform-wide issues and updates",
+        },
+        {
+          key: "billingUpdates" as keyof NotificationSettings,
+          label: "Billing Updates",
+          description: "Revenue, payment failures",
+        },
+        {
+          key: "securityAlerts" as keyof NotificationSettings,
+          label: "Security Alerts",
+          description: "System security events",
+        },
       ];
     }
 
@@ -236,28 +262,38 @@ export function NotificationCenter() {
                 <div className="space-y-6">
                   {/* Delivery Methods */}
                   <div className="space-y-3">
-                    <Label className="text-sm font-medium">Delivery Methods</Label>
+                    <Label className="text-sm font-medium">
+                      Delivery Methods
+                    </Label>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Mail className="h-4 w-4 text-muted-foreground" />
-                          <Label htmlFor="email" className="text-sm">Email Notifications</Label>
+                          <Label htmlFor="email" className="text-sm">
+                            Email Notifications
+                          </Label>
                         </div>
                         <Switch
                           id="email"
                           checked={settings.email}
-                          onCheckedChange={(checked) => updateSetting("email", checked)}
+                          onCheckedChange={(checked) =>
+                            updateSetting("email", checked)
+                          }
                         />
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Smartphone className="h-4 w-4 text-muted-foreground" />
-                          <Label htmlFor="push" className="text-sm">Push Notifications</Label>
+                          <Label htmlFor="push" className="text-sm">
+                            Push Notifications
+                          </Label>
                         </div>
                         <Switch
                           id="push"
                           checked={settings.push}
-                          onCheckedChange={(checked) => updateSetting("push", checked)}
+                          onCheckedChange={(checked) =>
+                            updateSetting("push", checked)
+                          }
                         />
                       </div>
                     </div>
@@ -265,7 +301,9 @@ export function NotificationCenter() {
 
                   {/* Notification Types */}
                   <div className="space-y-3">
-                    <Label className="text-sm font-medium">Notification Types</Label>
+                    <Label className="text-sm font-medium">
+                      Notification Types
+                    </Label>
                     <div className="space-y-3">
                       {getAvailableSettings().map((setting) => (
                         <div key={setting.key} className="space-y-1">
@@ -276,7 +314,9 @@ export function NotificationCenter() {
                             <Switch
                               id={setting.key}
                               checked={settings[setting.key]}
-                              onCheckedChange={(checked) => updateSetting(setting.key, checked)}
+                              onCheckedChange={(checked) =>
+                                updateSetting(setting.key, checked)
+                              }
                             />
                           </div>
                           <p className="text-xs text-muted-foreground">
@@ -292,12 +332,14 @@ export function NotificationCenter() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         {notifications.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-6">
             <Bell className="h-8 w-8 text-muted-foreground" />
             <div className="text-sm font-medium">No notifications</div>
-            <div className="text-xs text-muted-foreground">You're all caught up!</div>
+            <div className="text-xs text-muted-foreground">
+              You're all caught up!
+            </div>
           </div>
         ) : (
           <div className="max-h-80 overflow-y-auto">
@@ -319,7 +361,9 @@ export function NotificationCenter() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <div className={`text-sm font-medium ${!notification.read ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      <div
+                        className={`text-sm font-medium ${!notification.read ? "text-foreground" : "text-muted-foreground"}`}
+                      >
                         {notification.title}
                       </div>
                       {notification.urgent && (

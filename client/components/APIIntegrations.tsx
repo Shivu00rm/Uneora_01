@@ -4,10 +4,23 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Switch } from "./ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 import { ScrollArea } from "./ui/scroll-area";
 import { Progress } from "./ui/progress";
 import { usePermissions, useAuditLog } from "@/hooks/usePermissions";
@@ -73,8 +86,11 @@ export function APIIntegrations() {
   const [integrations, setIntegrations] = useState<APIIntegration[]>([]);
   const [syncLogs, setSyncLogs] = useState<SyncLog[]>([]);
   const [isConnecting, setIsConnecting] = useState<string | null>(null);
-  const [selectedIntegration, setSelectedIntegration] = useState<APIIntegration | null>(null);
-  const [showCredentials, setShowCredentials] = useState<Set<string>>(new Set());
+  const [selectedIntegration, setSelectedIntegration] =
+    useState<APIIntegration | null>(null);
+  const [showCredentials, setShowCredentials] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Mock data initialization
   useEffect(() => {
@@ -90,25 +106,25 @@ export function APIIntegrations() {
         syncInterval: "hourly",
         credentials: {
           apiKey: "sk_****_****_****_1234",
-          webhook: "https://api.flowstock.io/webhooks/shopify"
+          webhook: "https://api.flowstock.io/webhooks/shopify",
         },
-        permissions: ["read_orders", "read_products", "read_customers"]
+        permissions: ["read_orders", "read_products", "read_customers"],
       },
       {
         id: "woocommerce-1",
-        name: "WooCommerce Store", 
+        name: "WooCommerce Store",
         type: "sales",
         platform: "WooCommerce",
         status: "error",
         lastSync: new Date(Date.now() - 7200000), // 2 hours ago
         dataVolume: { orders: 0, products: 0, customers: 0 },
         syncInterval: "daily",
-        errorMessage: "Authentication failed - API key expired"
+        errorMessage: "Authentication failed - API key expired",
       },
       {
         id: "stripe-1",
         name: "Stripe Payments",
-        type: "payment", 
+        type: "payment",
         platform: "Stripe",
         status: "connected",
         lastSync: new Date(Date.now() - 600000), // 10 mins ago
@@ -116,10 +132,10 @@ export function APIIntegrations() {
         syncInterval: "realtime",
         credentials: {
           clientId: "ca_****_****_****_5678",
-          clientSecret: "sk_****_****_****_abcd"
+          clientSecret: "sk_****_****_****_abcd",
         },
-        permissions: ["read_payments", "read_customers"]
-      }
+        permissions: ["read_payments", "read_customers"],
+      },
     ];
 
     const mockLogs: SyncLog[] = [
@@ -128,23 +144,23 @@ export function APIIntegrations() {
         integrationId: "shopify-1",
         timestamp: new Date(Date.now() - 300000),
         status: "success",
-        recordsProcessed: 15
+        recordsProcessed: 15,
       },
       {
-        id: "log-2", 
+        id: "log-2",
         integrationId: "woocommerce-1",
         timestamp: new Date(Date.now() - 7200000),
         status: "error",
         recordsProcessed: 0,
-        errorDetails: "API key expired"
+        errorDetails: "API key expired",
       },
       {
         id: "log-3",
-        integrationId: "stripe-1", 
+        integrationId: "stripe-1",
         timestamp: new Date(Date.now() - 600000),
         status: "success",
-        recordsProcessed: 23
-      }
+        recordsProcessed: 23,
+      },
     ];
 
     setIntegrations(mockIntegrations);
@@ -153,16 +169,15 @@ export function APIIntegrations() {
 
   const handleConnect = async (platform: string, credentials: any) => {
     setIsConnecting(platform);
-    
-    await logAction(
-      "api_integration_connect",
-      "api_access",
-      { platform, timestamp: new Date().toISOString() }
-    );
+
+    await logAction("api_integration_connect", "api_access", {
+      platform,
+      timestamp: new Date().toISOString(),
+    });
 
     // Simulate connection process
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     const newIntegration: APIIntegration = {
       id: `${platform.toLowerCase()}-${Date.now()}`,
       name: `${platform} Integration`,
@@ -173,43 +188,43 @@ export function APIIntegrations() {
       dataVolume: { orders: 0, products: 0, customers: 0 },
       syncInterval: "hourly",
       credentials,
-      permissions: ["read_orders", "read_products"]
+      permissions: ["read_orders", "read_products"],
     };
 
-    setIntegrations(prev => [...prev, newIntegration]);
+    setIntegrations((prev) => [...prev, newIntegration]);
     setIsConnecting(null);
   };
 
   const handleDisconnect = async (integrationId: string) => {
-    const integration = integrations.find(i => i.id === integrationId);
+    const integration = integrations.find((i) => i.id === integrationId);
     if (!integration) return;
 
-    await logAction(
-      "api_integration_disconnect", 
-      "api_access",
-      { platform: integration.platform, integrationId }
-    );
+    await logAction("api_integration_disconnect", "api_access", {
+      platform: integration.platform,
+      integrationId,
+    });
 
-    setIntegrations(prev => prev.filter(i => i.id !== integrationId));
+    setIntegrations((prev) => prev.filter((i) => i.id !== integrationId));
   };
 
   const handleSync = async (integrationId: string) => {
-    const integration = integrations.find(i => i.id === integrationId);
+    const integration = integrations.find((i) => i.id === integrationId);
     if (!integration) return;
 
     // Update status to syncing
-    setIntegrations(prev => prev.map(i => 
-      i.id === integrationId ? { ...i, status: "syncing" as const } : i
-    ));
-
-    await logAction(
-      "api_integration_sync",
-      "api_access", 
-      { platform: integration.platform, integrationId }
+    setIntegrations((prev) =>
+      prev.map((i) =>
+        i.id === integrationId ? { ...i, status: "syncing" as const } : i,
+      ),
     );
 
+    await logAction("api_integration_sync", "api_access", {
+      platform: integration.platform,
+      integrationId,
+    });
+
     // Simulate sync process
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Update with sync results
     const recordsProcessed = Math.floor(Math.random() * 50) + 10;
@@ -218,34 +233,40 @@ export function APIIntegrations() {
       integrationId,
       timestamp: new Date(),
       status: "success",
-      recordsProcessed
+      recordsProcessed,
     };
 
-    setSyncLogs(prev => [newLog, ...prev]);
-    
-    setIntegrations(prev => prev.map(i => 
-      i.id === integrationId ? { 
-        ...i, 
-        status: "connected" as const,
-        lastSync: new Date(),
-        dataVolume: {
-          orders: i.dataVolume.orders + Math.floor(recordsProcessed * 0.6),
-          products: i.dataVolume.products + Math.floor(recordsProcessed * 0.3),
-          customers: i.dataVolume.customers + Math.floor(recordsProcessed * 0.1)
-        }
-      } : i
-    ));
+    setSyncLogs((prev) => [newLog, ...prev]);
+
+    setIntegrations((prev) =>
+      prev.map((i) =>
+        i.id === integrationId
+          ? {
+              ...i,
+              status: "connected" as const,
+              lastSync: new Date(),
+              dataVolume: {
+                orders:
+                  i.dataVolume.orders + Math.floor(recordsProcessed * 0.6),
+                products:
+                  i.dataVolume.products + Math.floor(recordsProcessed * 0.3),
+                customers:
+                  i.dataVolume.customers + Math.floor(recordsProcessed * 0.1),
+              },
+            }
+          : i,
+      ),
+    );
   };
 
   const handleExportData = async (integrationId: string) => {
-    const integration = integrations.find(i => i.id === integrationId);
+    const integration = integrations.find((i) => i.id === integrationId);
     if (!integration) return;
 
-    await logAction(
-      "data_export",
-      "data_access",
-      { platform: integration.platform, integrationId }
-    );
+    await logAction("data_export", "data_access", {
+      platform: integration.platform,
+      integrationId,
+    });
 
     // Simulate CSV export
     const csvData = `Order ID,Product,Customer,Amount,Date\n1,Product A,John Doe,100,2024-01-15\n2,Product B,Jane Smith,150,2024-01-16`;
@@ -253,31 +274,39 @@ export function APIIntegrations() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${integration.platform}-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `${integration.platform}-export-${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "connected": return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "syncing": return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
-      case "error": return <XCircle className="h-4 w-4 text-red-500" />;
-      default: return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+      case "connected":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "syncing":
+        return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
+      case "error":
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      default:
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "connected": return "default";
-      case "syncing": return "secondary";
-      case "error": return "destructive";
-      default: return "outline";
+      case "connected":
+        return "default";
+      case "syncing":
+        return "secondary";
+      case "error":
+        return "destructive";
+      default:
+        return "outline";
     }
   };
 
   const toggleCredentialVisibility = (integrationId: string) => {
-    setShowCredentials(prev => {
+    setShowCredentials((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(integrationId)) {
         newSet.delete(integrationId);
@@ -333,12 +362,21 @@ export function APIIntegrations() {
               </DialogHeader>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
-                  {["Shopify", "WooCommerce", "Amazon", "Flipkart", "BigCommerce", "Magento"].map((platform) => (
+                  {[
+                    "Shopify",
+                    "WooCommerce",
+                    "Amazon",
+                    "Flipkart",
+                    "BigCommerce",
+                    "Magento",
+                  ].map((platform) => (
                     <Button
                       key={platform}
                       variant="outline"
                       className="h-20 flex flex-col gap-2"
-                      onClick={() => handleConnect(platform, { apiKey: "demo_key" })}
+                      onClick={() =>
+                        handleConnect(platform, { apiKey: "demo_key" })
+                      }
                       disabled={isConnecting === platform}
                     >
                       {isConnecting === platform ? (
@@ -375,7 +413,7 @@ export function APIIntegrations() {
               <Activity className="h-8 w-8 text-green-500" />
               <div>
                 <div className="text-2xl font-bold">
-                  {integrations.filter(i => i.status === "connected").length}
+                  {integrations.filter((i) => i.status === "connected").length}
                 </div>
                 <div className="text-sm text-muted-foreground">Active</div>
               </div>
@@ -388,9 +426,14 @@ export function APIIntegrations() {
               <Package className="h-8 w-8 text-blue-500" />
               <div>
                 <div className="text-2xl font-bold">
-                  {integrations.reduce((sum, i) => sum + i.dataVolume.orders, 0)}
+                  {integrations.reduce(
+                    (sum, i) => sum + i.dataVolume.orders,
+                    0,
+                  )}
                 </div>
-                <div className="text-sm text-muted-foreground">Orders Synced</div>
+                <div className="text-sm text-muted-foreground">
+                  Orders Synced
+                </div>
               </div>
             </div>
           </CardContent>
@@ -401,9 +444,15 @@ export function APIIntegrations() {
               <Clock className="h-8 w-8 text-purple-500" />
               <div>
                 <div className="text-2xl font-bold">
-                  {syncLogs.filter(l => l.timestamp > new Date(Date.now() - 86400000)).length}
+                  {
+                    syncLogs.filter(
+                      (l) => l.timestamp > new Date(Date.now() - 86400000),
+                    ).length
+                  }
                 </div>
-                <div className="text-sm text-muted-foreground">Last 24h Syncs</div>
+                <div className="text-sm text-muted-foreground">
+                  Last 24h Syncs
+                </div>
               </div>
             </div>
           </CardContent>
@@ -435,61 +484,74 @@ export function APIIntegrations() {
                             {getStatusIcon(integration.status)}
                             {integration.status}
                           </Badge>
-                          <Badge variant="outline">{integration.platform}</Badge>
+                          <Badge variant="outline">
+                            {integration.platform}
+                          </Badge>
                         </div>
-                        
+
                         {integration.errorMessage && (
                           <div className="text-sm text-red-600 mb-2">
                             {integration.errorMessage}
                           </div>
                         )}
-                        
+
                         <div className="grid grid-cols-3 gap-4 text-sm text-muted-foreground mb-3">
                           <div>
-                            <span className="font-medium">{integration.dataVolume.orders}</span> orders
+                            <span className="font-medium">
+                              {integration.dataVolume.orders}
+                            </span>{" "}
+                            orders
                           </div>
                           <div>
-                            <span className="font-medium">{integration.dataVolume.products}</span> products
+                            <span className="font-medium">
+                              {integration.dataVolume.products}
+                            </span>{" "}
+                            products
                           </div>
                           <div>
-                            <span className="font-medium">{integration.dataVolume.customers}</span> customers
+                            <span className="font-medium">
+                              {integration.dataVolume.customers}
+                            </span>{" "}
+                            customers
                           </div>
                         </div>
-                        
+
                         <div className="text-xs text-muted-foreground">
-                          Last sync: {integration.lastSync.toLocaleString()} • 
+                          Last sync: {integration.lastSync.toLocaleString()} •
                           Interval: {integration.syncInterval}
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => handleSync(integration.id)}
                         disabled={integration.status === "syncing"}
                       >
-                        <RefreshCw className={`h-4 w-4 mr-2 ${integration.status === "syncing" ? "animate-spin" : ""}`} />
+                        <RefreshCw
+                          className={`h-4 w-4 mr-2 ${integration.status === "syncing" ? "animate-spin" : ""}`}
+                        />
                         Sync Now
                       </Button>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => handleExportData(integration.id)}
                       >
                         <Download className="h-4 w-4 mr-2" />
                         Export
                       </Button>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => setSelectedIntegration(integration)}
                       >
                         <Settings className="h-4 w-4" />
                       </Button>
-                      <Button 
-                        variant="destructive" 
+                      <Button
+                        variant="destructive"
                         size="sm"
                         onClick={() => handleDisconnect(integration.id)}
                       >
@@ -512,9 +574,14 @@ export function APIIntegrations() {
               <ScrollArea className="h-80">
                 <div className="space-y-3">
                   {syncLogs.map((log) => {
-                    const integration = integrations.find(i => i.id === log.integrationId);
+                    const integration = integrations.find(
+                      (i) => i.id === log.integrationId,
+                    );
                     return (
-                      <div key={log.id} className="flex items-center justify-between p-3 border rounded">
+                      <div
+                        key={log.id}
+                        className="flex items-center justify-between p-3 border rounded"
+                      >
                         <div className="flex items-center gap-3">
                           {log.status === "success" ? (
                             <CheckCircle className="h-4 w-4 text-green-500" />
@@ -522,16 +589,25 @@ export function APIIntegrations() {
                             <XCircle className="h-4 w-4 text-red-500" />
                           )}
                           <div>
-                            <div className="font-medium">{integration?.platform}</div>
+                            <div className="font-medium">
+                              {integration?.platform}
+                            </div>
                             <div className="text-sm text-muted-foreground">
-                              {log.recordsProcessed} records • {log.timestamp.toLocaleString()}
+                              {log.recordsProcessed} records •{" "}
+                              {log.timestamp.toLocaleString()}
                             </div>
                             {log.errorDetails && (
-                              <div className="text-sm text-red-600">{log.errorDetails}</div>
+                              <div className="text-sm text-red-600">
+                                {log.errorDetails}
+                              </div>
                             )}
                           </div>
                         </div>
-                        <Badge variant={log.status === "success" ? "default" : "destructive"}>
+                        <Badge
+                          variant={
+                            log.status === "success" ? "default" : "destructive"
+                          }
+                        >
                           {log.status}
                         </Badge>
                       </div>
@@ -588,7 +664,10 @@ export function APIIntegrations() {
 
       {/* Integration Details Modal */}
       {selectedIntegration && (
-        <Dialog open={!!selectedIntegration} onOpenChange={() => setSelectedIntegration(null)}>
+        <Dialog
+          open={!!selectedIntegration}
+          onOpenChange={() => setSelectedIntegration(null)}
+        >
           <DialogContent className="sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle>{selectedIntegration.name} Settings</DialogTitle>
@@ -616,7 +695,9 @@ export function APIIntegrations() {
                   <Label>Status</Label>
                   <div className="flex items-center gap-2 mt-2">
                     {getStatusIcon(selectedIntegration.status)}
-                    <span className="capitalize">{selectedIntegration.status}</span>
+                    <span className="capitalize">
+                      {selectedIntegration.status}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -624,43 +705,52 @@ export function APIIntegrations() {
               {selectedIntegration.credentials && (
                 <div className="space-y-3">
                   <Label>Credentials</Label>
-                  {Object.entries(selectedIntegration.credentials).map(([key, value]) => (
-                    <div key={key} className="flex items-center gap-2">
-                      <Label className="w-24 capitalize">{key}:</Label>
-                      <div className="flex-1 flex items-center gap-2">
-                        <Input
-                          type={showCredentials.has(selectedIntegration.id) ? "text" : "password"}
-                          value={value}
-                          readOnly
-                          className="font-mono text-sm"
-                        />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => toggleCredentialVisibility(selectedIntegration.id)}
-                        >
-                          {showCredentials.has(selectedIntegration.id) ? 
-                            <EyeOff className="h-4 w-4" /> : 
-                            <Eye className="h-4 w-4" />
-                          }
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => navigator.clipboard.writeText(value)}
-                        >
-                          <Copy className="h-4 w-4" />
-                        </Button>
+                  {Object.entries(selectedIntegration.credentials).map(
+                    ([key, value]) => (
+                      <div key={key} className="flex items-center gap-2">
+                        <Label className="w-24 capitalize">{key}:</Label>
+                        <div className="flex-1 flex items-center gap-2">
+                          <Input
+                            type={
+                              showCredentials.has(selectedIntegration.id)
+                                ? "text"
+                                : "password"
+                            }
+                            value={value}
+                            readOnly
+                            className="font-mono text-sm"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              toggleCredentialVisibility(selectedIntegration.id)
+                            }
+                          >
+                            {showCredentials.has(selectedIntegration.id) ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => navigator.clipboard.writeText(value)}
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               )}
 
               <div className="flex gap-2 pt-4 border-t">
                 <Button>Save Changes</Button>
                 <Button variant="outline">Test Connection</Button>
-                <Button 
+                <Button
                   variant="destructive"
                   onClick={() => handleDisconnect(selectedIntegration.id)}
                 >

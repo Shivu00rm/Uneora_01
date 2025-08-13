@@ -54,16 +54,76 @@ export function LiveAuditLogs() {
     ];
 
     const actions = [
-      { action: "created", entity: "product", details: "iPhone 14 Pro added to inventory", module: "inventory", severity: "low" as const },
-      { action: "updated", entity: "stock", details: "Stock quantity changed from 25 to 20", module: "inventory", severity: "low" as const },
-      { action: "deleted", entity: "product", details: "Outdated product removed", module: "inventory", severity: "medium" as const },
-      { action: "processed", entity: "sale", details: "Sale transaction completed - ₹25,000", module: "pos", severity: "low" as const },
-      { action: "created", entity: "purchase_order", details: "PO #PO-2024-005 created", module: "orders", severity: "low" as const },
-      { action: "logged_in", entity: "user", details: "User authenticated successfully", module: "auth", severity: "low" as const },
-      { action: "failed_login", entity: "user", details: "Invalid login attempt", module: "auth", severity: "high" as const },
-      { action: "updated", entity: "settings", details: "Organization settings modified", module: "settings", severity: "medium" as const },
-      { action: "invited", entity: "user", details: "New team member invitation sent", module: "users", severity: "low" as const },
-      { action: "exported", entity: "report", details: "Sales report exported", module: "analytics", severity: "low" as const },
+      {
+        action: "created",
+        entity: "product",
+        details: "iPhone 14 Pro added to inventory",
+        module: "inventory",
+        severity: "low" as const,
+      },
+      {
+        action: "updated",
+        entity: "stock",
+        details: "Stock quantity changed from 25 to 20",
+        module: "inventory",
+        severity: "low" as const,
+      },
+      {
+        action: "deleted",
+        entity: "product",
+        details: "Outdated product removed",
+        module: "inventory",
+        severity: "medium" as const,
+      },
+      {
+        action: "processed",
+        entity: "sale",
+        details: "Sale transaction completed - ₹25,000",
+        module: "pos",
+        severity: "low" as const,
+      },
+      {
+        action: "created",
+        entity: "purchase_order",
+        details: "PO #PO-2024-005 created",
+        module: "orders",
+        severity: "low" as const,
+      },
+      {
+        action: "logged_in",
+        entity: "user",
+        details: "User authenticated successfully",
+        module: "auth",
+        severity: "low" as const,
+      },
+      {
+        action: "failed_login",
+        entity: "user",
+        details: "Invalid login attempt",
+        module: "auth",
+        severity: "high" as const,
+      },
+      {
+        action: "updated",
+        entity: "settings",
+        details: "Organization settings modified",
+        module: "settings",
+        severity: "medium" as const,
+      },
+      {
+        action: "invited",
+        entity: "user",
+        details: "New team member invitation sent",
+        module: "users",
+        severity: "low" as const,
+      },
+      {
+        action: "exported",
+        entity: "report",
+        details: "Sales report exported",
+        module: "analytics",
+        severity: "low" as const,
+      },
     ];
 
     const randomUser = users[Math.floor(Math.random() * users.length)];
@@ -86,17 +146,22 @@ export function LiveAuditLogs() {
   // Initialize with some logs
   useEffect(() => {
     const initialLogs = Array.from({ length: 8 }, generateMockLog);
-    setLogs(initialLogs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()));
+    setLogs(
+      initialLogs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()),
+    );
   }, []);
 
   // Simulate live updates
   useEffect(() => {
     if (!isLive) return;
 
-    const interval = setInterval(() => {
-      const newLog = generateMockLog();
-      setLogs(prev => [newLog, ...prev.slice(0, 49)]); // Keep latest 50 logs
-    }, Math.random() * 5000 + 2000); // Random interval between 2-7 seconds
+    const interval = setInterval(
+      () => {
+        const newLog = generateMockLog();
+        setLogs((prev) => [newLog, ...prev.slice(0, 49)]); // Keep latest 50 logs
+      },
+      Math.random() * 5000 + 2000,
+    ); // Random interval between 2-7 seconds
 
     return () => clearInterval(interval);
   }, [isLive]);
@@ -118,22 +183,27 @@ export function LiveAuditLogs() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "high": return "destructive";
-      case "medium": return "secondary";
-      default: return "outline";
+      case "high":
+        return "destructive";
+      case "medium":
+        return "secondary";
+      default:
+        return "outline";
     }
   };
 
   const formatTimeAgo = (timestamp: Date) => {
-    const seconds = Math.floor((new Date().getTime() - timestamp.getTime()) / 1000);
-    
+    const seconds = Math.floor(
+      (new Date().getTime() - timestamp.getTime()) / 1000,
+    );
+
     if (seconds < 60) return `${seconds}s ago`;
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
     return `${Math.floor(seconds / 86400)}d ago`;
   };
 
-  const filteredLogs = logs.filter(log => {
+  const filteredLogs = logs.filter((log) => {
     if (filter === "all") return true;
     return log.module === filter;
   });
@@ -156,7 +226,11 @@ export function LiveAuditLogs() {
               onClick={() => setIsLive(!isLive)}
               className={isLive ? "text-green-600" : "text-muted-foreground"}
             >
-              {isLive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              {isLive ? (
+                <Pause className="h-4 w-4" />
+              ) : (
+                <Play className="h-4 w-4" />
+              )}
               {isLive ? "Live" : "Paused"}
             </Button>
           </div>
@@ -177,11 +251,16 @@ export function LiveAuditLogs() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-medium truncate">{log.user}</span>
+                      <span className="text-sm font-medium truncate">
+                        {log.user}
+                      </span>
                       <Badge variant="outline" className="text-xs">
-                        {log.userRole.replace('_', ' ')}
+                        {log.userRole.replace("_", " ")}
                       </Badge>
-                      <Badge variant={getSeverityColor(log.severity)} className="text-xs">
+                      <Badge
+                        variant={getSeverityColor(log.severity)}
+                        className="text-xs"
+                      >
                         {log.action}
                       </Badge>
                     </div>
@@ -207,7 +286,7 @@ export function LiveAuditLogs() {
             })}
           </div>
         </ScrollArea>
-        
+
         {/* Footer with stats */}
         <div className="border-t p-3">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -215,15 +294,21 @@ export function LiveAuditLogs() {
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-red-500" />
-                <span>{logs.filter(l => l.severity === "high").length} high</span>
+                <span>
+                  {logs.filter((l) => l.severity === "high").length} high
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-yellow-500" />
-                <span>{logs.filter(l => l.severity === "medium").length} medium</span>
+                <span>
+                  {logs.filter((l) => l.severity === "medium").length} medium
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-green-500" />
-                <span>{logs.filter(l => l.severity === "low").length} low</span>
+                <span>
+                  {logs.filter((l) => l.severity === "low").length} low
+                </span>
               </div>
             </div>
           </div>

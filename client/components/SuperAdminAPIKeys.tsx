@@ -4,13 +4,33 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Switch } from "./ui/switch";
 import { Textarea } from "./ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 import { ScrollArea } from "./ui/scroll-area";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
 import { usePermissions, useAuditLog } from "@/hooks/usePermissions";
 import { SuperAdminOnly } from "./PermissionGates";
 import {
@@ -41,7 +61,15 @@ interface APIKey {
   id: string;
   name: string;
   service: string;
-  type: "database" | "ai" | "payment" | "email" | "analytics" | "storage" | "accounting" | "other";
+  type:
+    | "database"
+    | "ai"
+    | "payment"
+    | "email"
+    | "analytics"
+    | "storage"
+    | "accounting"
+    | "other";
   key: string;
   scope: "global" | "organization";
   organizationIds?: string[];
@@ -80,7 +108,9 @@ export function SuperAdminAPIKeys() {
   const { logAction } = useAuditLog();
   const [apiKeys, setApiKeys] = useState<APIKey[]>([]);
   const [usageLogs, setUsageLogs] = useState<APIUsageLog[]>([]);
-  const [orgIntegrations, setOrgIntegrations] = useState<OrganizationIntegration[]>([]);
+  const [orgIntegrations, setOrgIntegrations] = useState<
+    OrganizationIntegration[]
+  >([]);
   const [isAddKeyOpen, setIsAddKeyOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState<APIKey | null>(null);
   const [showKeys, setShowKeys] = useState<Set<string>>(new Set());
@@ -91,7 +121,7 @@ export function SuperAdminAPIKeys() {
     key: "",
     scope: "global" as APIKey["scope"],
     description: "",
-    permissions: [] as string[]
+    permissions: [] as string[],
   });
 
   // Mock data initialization
@@ -112,7 +142,7 @@ export function SuperAdminAPIKeys() {
         createdAt: new Date(Date.now() - 86400000 * 30),
         createdBy: "System Owner",
         description: "AI integration for sales forecasting and insights",
-        permissions: ["read", "write"]
+        permissions: ["read", "write"],
       },
       {
         id: "key-2",
@@ -128,7 +158,7 @@ export function SuperAdminAPIKeys() {
         createdAt: new Date(Date.now() - 86400000 * 60),
         createdBy: "System Owner",
         description: "Global payment processing for all organizations",
-        permissions: ["payments", "customers", "subscriptions"]
+        permissions: ["payments", "customers", "subscriptions"],
       },
       {
         id: "key-3",
@@ -145,7 +175,7 @@ export function SuperAdminAPIKeys() {
         createdAt: new Date(Date.now() - 86400000 * 45),
         createdBy: "System Owner",
         description: "Email delivery for selected organizations",
-        permissions: ["send_email", "templates"]
+        permissions: ["send_email", "templates"],
       },
       {
         id: "key-4",
@@ -162,8 +192,8 @@ export function SuperAdminAPIKeys() {
         createdAt: new Date(Date.now() - 86400000 * 120),
         createdBy: "System Owner",
         description: "Analytics integration - EXPIRED",
-        permissions: ["read_analytics"]
-      }
+        permissions: ["read_analytics"],
+      },
     ];
 
     const mockUsageLogs: APIUsageLog[] = [
@@ -174,7 +204,7 @@ export function SuperAdminAPIKeys() {
         endpoint: "/api/ai/forecast",
         status: "success",
         responseTime: 1240,
-        organizationId: "org-1"
+        organizationId: "org-1",
       },
       {
         id: "log-2",
@@ -183,7 +213,7 @@ export function SuperAdminAPIKeys() {
         endpoint: "/api/payments/process",
         status: "success",
         responseTime: 890,
-        organizationId: "org-2"
+        organizationId: "org-2",
       },
       {
         id: "log-3",
@@ -193,8 +223,8 @@ export function SuperAdminAPIKeys() {
         status: "error",
         responseTime: 0,
         organizationId: "org-3",
-        errorMessage: "Invalid payment method"
-      }
+        errorMessage: "Invalid payment method",
+      },
     ];
 
     const mockOrgIntegrations: OrganizationIntegration[] = [
@@ -203,22 +233,22 @@ export function SuperAdminAPIKeys() {
         organizationName: "TechCorp",
         enabledServices: ["OpenAI", "Stripe", "SendGrid"],
         lastActivity: new Date(Date.now() - 300000),
-        totalCalls: 1247
+        totalCalls: 1247,
       },
       {
-        organizationId: "org-2", 
+        organizationId: "org-2",
         organizationName: "Fashion Boutique",
         enabledServices: ["Stripe", "SendGrid"],
         lastActivity: new Date(Date.now() - 600000),
-        totalCalls: 892
+        totalCalls: 892,
       },
       {
         organizationId: "org-3",
         organizationName: "StartupXYZ",
         enabledServices: ["SendGrid"],
         lastActivity: new Date(Date.now() - 1800000),
-        totalCalls: 234
-      }
+        totalCalls: 234,
+      },
     ];
 
     setApiKeys(mockAPIKeys);
@@ -237,16 +267,15 @@ export function SuperAdminAPIKeys() {
       usageCount: 0,
       errorCount: 0,
       createdAt: new Date(),
-      createdBy: "System Owner"
+      createdBy: "System Owner",
     };
 
-    await logAction(
-      "api_key_created",
-      "system_config",
-      { service: newKey.service, scope: newKey.scope }
-    );
+    await logAction("api_key_created", "system_config", {
+      service: newKey.service,
+      scope: newKey.scope,
+    });
 
-    setApiKeys(prev => [...prev, apiKey]);
+    setApiKeys((prev) => [...prev, apiKey]);
     setNewKey({
       name: "",
       service: "",
@@ -254,43 +283,43 @@ export function SuperAdminAPIKeys() {
       key: "",
       scope: "global",
       description: "",
-      permissions: []
+      permissions: [],
     });
     setIsAddKeyOpen(false);
   };
 
   const handleDeleteKey = async (keyId: string) => {
-    const key = apiKeys.find(k => k.id === keyId);
+    const key = apiKeys.find((k) => k.id === keyId);
     if (!key) return;
 
-    await logAction(
-      "api_key_deleted",
-      "system_config",
-      { service: key.service, keyId }
-    );
+    await logAction("api_key_deleted", "system_config", {
+      service: key.service,
+      keyId,
+    });
 
-    setApiKeys(prev => prev.filter(k => k.id !== keyId));
+    setApiKeys((prev) => prev.filter((k) => k.id !== keyId));
   };
 
   const handleToggleKeyStatus = async (keyId: string) => {
-    const key = apiKeys.find(k => k.id === keyId);
+    const key = apiKeys.find((k) => k.id === keyId);
     if (!key) return;
 
     const newStatus = key.status === "active" ? "disabled" : "active";
-    
-    await logAction(
-      "api_key_status_changed",
-      "system_config",
-      { service: key.service, keyId, oldStatus: key.status, newStatus }
-    );
 
-    setApiKeys(prev => prev.map(k => 
-      k.id === keyId ? { ...k, status: newStatus } : k
-    ));
+    await logAction("api_key_status_changed", "system_config", {
+      service: key.service,
+      keyId,
+      oldStatus: key.status,
+      newStatus,
+    });
+
+    setApiKeys((prev) =>
+      prev.map((k) => (k.id === keyId ? { ...k, status: newStatus } : k)),
+    );
   };
 
   const toggleKeyVisibility = (keyId: string) => {
-    setShowKeys(prev => {
+    setShowKeys((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(keyId)) {
         newSet.delete(keyId);
@@ -307,23 +336,35 @@ export function SuperAdminAPIKeys() {
 
   const getTypeIcon = (type: APIKey["type"]) => {
     switch (type) {
-      case "database": return <Database className="h-4 w-4" />;
-      case "ai": return <BarChart3 className="h-4 w-4" />;
-      case "payment": return <CreditCard className="h-4 w-4" />;
-      case "email": return <Mail className="h-4 w-4" />;
-      case "analytics": return <BarChart3 className="h-4 w-4" />;
-      case "storage": return <Cloud className="h-4 w-4" />;
-      case "accounting": return <FileText className="h-4 w-4" />;
-      default: return <Key className="h-4 w-4" />;
+      case "database":
+        return <Database className="h-4 w-4" />;
+      case "ai":
+        return <BarChart3 className="h-4 w-4" />;
+      case "payment":
+        return <CreditCard className="h-4 w-4" />;
+      case "email":
+        return <Mail className="h-4 w-4" />;
+      case "analytics":
+        return <BarChart3 className="h-4 w-4" />;
+      case "storage":
+        return <Cloud className="h-4 w-4" />;
+      case "accounting":
+        return <FileText className="h-4 w-4" />;
+      default:
+        return <Key className="h-4 w-4" />;
     }
   };
 
   const getStatusColor = (status: APIKey["status"]) => {
     switch (status) {
-      case "active": return "default";
-      case "expired": return "destructive";
-      case "disabled": return "secondary";
-      default: return "outline";
+      case "active":
+        return "default";
+      case "expired":
+        return "destructive";
+      case "disabled":
+        return "secondary";
+      default:
+        return "outline";
     }
   };
 
@@ -371,7 +412,9 @@ export function SuperAdminAPIKeys() {
                   <Label>Name</Label>
                   <Input
                     value={newKey.name}
-                    onChange={(e) => setNewKey(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setNewKey((prev) => ({ ...prev, name: e.target.value }))
+                    }
                     placeholder="e.g., OpenAI GPT-4"
                   />
                 </div>
@@ -379,15 +422,25 @@ export function SuperAdminAPIKeys() {
                   <Label>Service</Label>
                   <Input
                     value={newKey.service}
-                    onChange={(e) => setNewKey(prev => ({ ...prev, service: e.target.value }))}
+                    onChange={(e) =>
+                      setNewKey((prev) => ({
+                        ...prev,
+                        service: e.target.value,
+                      }))
+                    }
                     placeholder="e.g., OpenAI, Stripe, SendGrid"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label>Type</Label>
-                  <Select 
-                    value={newKey.type} 
-                    onValueChange={(value) => setNewKey(prev => ({ ...prev, type: value as APIKey["type"] }))}
+                  <Select
+                    value={newKey.type}
+                    onValueChange={(value) =>
+                      setNewKey((prev) => ({
+                        ...prev,
+                        type: value as APIKey["type"],
+                      }))
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -408,23 +461,34 @@ export function SuperAdminAPIKeys() {
                   <Label>API Key</Label>
                   <Textarea
                     value={newKey.key}
-                    onChange={(e) => setNewKey(prev => ({ ...prev, key: e.target.value }))}
+                    onChange={(e) =>
+                      setNewKey((prev) => ({ ...prev, key: e.target.value }))
+                    }
                     placeholder="Paste your API key here..."
                     className="font-mono text-sm"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label>Scope</Label>
-                  <Select 
-                    value={newKey.scope} 
-                    onValueChange={(value) => setNewKey(prev => ({ ...prev, scope: value as APIKey["scope"] }))}
+                  <Select
+                    value={newKey.scope}
+                    onValueChange={(value) =>
+                      setNewKey((prev) => ({
+                        ...prev,
+                        scope: value as APIKey["scope"],
+                      }))
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="global">Global (All Organizations)</SelectItem>
-                      <SelectItem value="organization">Organization Specific</SelectItem>
+                      <SelectItem value="global">
+                        Global (All Organizations)
+                      </SelectItem>
+                      <SelectItem value="organization">
+                        Organization Specific
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -432,15 +496,26 @@ export function SuperAdminAPIKeys() {
                   <Label>Description</Label>
                   <Textarea
                     value={newKey.description}
-                    onChange={(e) => setNewKey(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={(e) =>
+                      setNewKey((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
                     placeholder="Optional description..."
                   />
                 </div>
                 <div className="flex gap-2 pt-4">
-                  <Button onClick={handleCreateKey} disabled={!newKey.name || !newKey.service || !newKey.key}>
+                  <Button
+                    onClick={handleCreateKey}
+                    disabled={!newKey.name || !newKey.service || !newKey.key}
+                  >
                     Create API Key
                   </Button>
-                  <Button variant="outline" onClick={() => setIsAddKeyOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsAddKeyOpen(false)}
+                  >
                     Cancel
                   </Button>
                 </div>
@@ -457,7 +532,9 @@ export function SuperAdminAPIKeys() {
                 <Key className="h-8 w-8 text-primary" />
                 <div>
                   <div className="text-2xl font-bold">{apiKeys.length}</div>
-                  <div className="text-sm text-muted-foreground">Total Keys</div>
+                  <div className="text-sm text-muted-foreground">
+                    Total Keys
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -468,7 +545,7 @@ export function SuperAdminAPIKeys() {
                 <CheckCircle className="h-8 w-8 text-green-500" />
                 <div>
                   <div className="text-2xl font-bold">
-                    {apiKeys.filter(k => k.status === "active").length}
+                    {apiKeys.filter((k) => k.status === "active").length}
                   </div>
                   <div className="text-sm text-muted-foreground">Active</div>
                 </div>
@@ -483,7 +560,9 @@ export function SuperAdminAPIKeys() {
                   <div className="text-2xl font-bold">
                     {apiKeys.reduce((sum, k) => sum + k.usageCount, 0)}
                   </div>
-                  <div className="text-sm text-muted-foreground">Total Calls</div>
+                  <div className="text-sm text-muted-foreground">
+                    Total Calls
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -494,7 +573,11 @@ export function SuperAdminAPIKeys() {
                 <AlertTriangle className="h-8 w-8 text-yellow-500" />
                 <div>
                   <div className="text-2xl font-bold">
-                    {apiKeys.filter(k => k.status === "expired" || k.errorCount > 10).length}
+                    {
+                      apiKeys.filter(
+                        (k) => k.status === "expired" || k.errorCount > 10,
+                      ).length
+                    }
                   </div>
                   <div className="text-sm text-muted-foreground">Issues</div>
                 </div>
@@ -534,7 +617,9 @@ export function SuperAdminAPIKeys() {
                             {getTypeIcon(key.type)}
                             <div>
                               <div className="font-medium">{key.name}</div>
-                              <div className="text-sm text-muted-foreground">{key.service}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {key.service}
+                              </div>
                             </div>
                           </div>
                         </TableCell>
@@ -562,7 +647,9 @@ export function SuperAdminAPIKeys() {
                           <div className="text-sm">
                             <div>{key.usageCount.toLocaleString()} calls</div>
                             {key.errorCount > 0 && (
-                              <div className="text-red-500">{key.errorCount} errors</div>
+                              <div className="text-red-500">
+                                {key.errorCount} errors
+                              </div>
                             )}
                           </div>
                         </TableCell>
@@ -578,10 +665,11 @@ export function SuperAdminAPIKeys() {
                               size="sm"
                               onClick={() => toggleKeyVisibility(key.id)}
                             >
-                              {showKeys.has(key.id) ? 
-                                <EyeOff className="h-4 w-4" /> : 
+                              {showKeys.has(key.id) ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
                                 <Eye className="h-4 w-4" />
-                              }
+                              )}
                             </Button>
                             <Button
                               variant="ghost"
@@ -622,30 +710,37 @@ export function SuperAdminAPIKeys() {
             {showKeys.size > 0 && (
               <div className="space-y-4">
                 {apiKeys
-                  .filter(key => showKeys.has(key.id))
-                  .map(key => (
+                  .filter((key) => showKeys.has(key.id))
+                  .map((key) => (
                     <Card key={key.id} className="border-blue-200">
                       <CardHeader className="pb-3">
-                        <CardTitle className="text-lg">{key.name} - API Key</CardTitle>
+                        <CardTitle className="text-lg">
+                          {key.name} - API Key
+                        </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-3">
                         <div className="font-mono text-sm p-3 bg-muted rounded break-all">
                           {key.key}
                         </div>
                         {key.description && (
-                          <p className="text-sm text-muted-foreground">{key.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {key.description}
+                          </p>
                         )}
                         <div className="flex gap-4 text-sm">
-                          <div>Created: {key.createdAt.toLocaleDateString()}</div>
+                          <div>
+                            Created: {key.createdAt.toLocaleDateString()}
+                          </div>
                           <div>By: {key.createdBy}</div>
                           {key.expiresAt && (
-                            <div>Expires: {key.expiresAt.toLocaleDateString()}</div>
+                            <div>
+                              Expires: {key.expiresAt.toLocaleDateString()}
+                            </div>
                           )}
                         </div>
                       </CardContent>
                     </Card>
-                  ))
-                }
+                  ))}
               </div>
             )}
           </TabsContent>
@@ -659,9 +754,12 @@ export function SuperAdminAPIKeys() {
                 <ScrollArea className="h-80">
                   <div className="space-y-3">
                     {usageLogs.map((log) => {
-                      const apiKey = apiKeys.find(k => k.id === log.apiKeyId);
+                      const apiKey = apiKeys.find((k) => k.id === log.apiKeyId);
                       return (
-                        <div key={log.id} className="flex items-center justify-between p-3 border rounded">
+                        <div
+                          key={log.id}
+                          className="flex items-center justify-between p-3 border rounded"
+                        >
                           <div className="flex items-center gap-3">
                             {log.status === "success" ? (
                               <CheckCircle className="h-4 w-4 text-green-500" />
@@ -669,12 +767,16 @@ export function SuperAdminAPIKeys() {
                               <XCircle className="h-4 w-4 text-red-500" />
                             )}
                             <div>
-                              <div className="font-medium">{apiKey?.service}</div>
+                              <div className="font-medium">
+                                {apiKey?.service}
+                              </div>
                               <div className="text-sm text-muted-foreground">
                                 {log.endpoint} • {log.responseTime}ms
                               </div>
                               {log.errorMessage && (
-                                <div className="text-sm text-red-600">{log.errorMessage}</div>
+                                <div className="text-sm text-red-600">
+                                  {log.errorMessage}
+                                </div>
                               )}
                             </div>
                           </div>
@@ -701,14 +803,20 @@ export function SuperAdminAPIKeys() {
               <CardContent>
                 <div className="space-y-4">
                   {orgIntegrations.map((org) => (
-                    <div key={org.organizationId} className="flex items-center justify-between p-4 border rounded">
+                    <div
+                      key={org.organizationId}
+                      className="flex items-center justify-between p-4 border rounded"
+                    >
                       <div>
-                        <div className="font-medium">{org.organizationName}</div>
+                        <div className="font-medium">
+                          {org.organizationName}
+                        </div>
                         <div className="text-sm text-muted-foreground">
                           {org.enabledServices.join(", ")}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {org.totalCalls} total calls • Last activity: {org.lastActivity.toLocaleString()}
+                          {org.totalCalls} total calls • Last activity:{" "}
+                          {org.lastActivity.toLocaleString()}
                         </div>
                       </div>
                       <div className="flex items-center gap-2">

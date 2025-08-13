@@ -3,11 +3,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -37,7 +57,7 @@ import {
   UserX,
   CheckCircle,
   ArrowUpDown,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
 
 // Mock team data for the current organization
@@ -50,27 +70,35 @@ const mockTeamMembers = [
     status: "active",
     lastLogin: "2 hours ago",
     joinedDate: "2023-01-15",
-    permissions: ["inventory", "pos", "vendors", "purchase_orders", "analytics", "users", "settings"]
+    permissions: [
+      "inventory",
+      "pos",
+      "vendors",
+      "purchase_orders",
+      "analytics",
+      "users",
+      "settings",
+    ],
   },
   {
     id: 2,
     name: "Priya Patel",
-    email: "priya@techcorp.com", 
+    email: "priya@techcorp.com",
     role: "ORG_USER",
     status: "active",
     lastLogin: "1 day ago",
     joinedDate: "2023-03-20",
-    permissions: ["inventory", "pos", "vendors", "analytics"]
+    permissions: ["inventory", "pos", "vendors", "analytics"],
   },
   {
     id: 3,
     name: "Amit Kumar",
     email: "amit@techcorp.com",
     role: "ORG_USER",
-    status: "active", 
+    status: "active",
     lastLogin: "5 minutes ago",
     joinedDate: "2023-06-10",
-    permissions: ["pos", "inventory"]
+    permissions: ["pos", "inventory"],
   },
   {
     id: 4,
@@ -80,18 +108,18 @@ const mockTeamMembers = [
     status: "inactive",
     lastLogin: "3 days ago",
     joinedDate: "2023-09-05",
-    permissions: ["inventory"]
-  }
+    permissions: ["inventory"],
+  },
 ];
 
 const roleIcons = {
   ORG_ADMIN: Briefcase,
-  ORG_USER: User
+  ORG_USER: User,
 };
 
 const roleColors = {
   ORG_ADMIN: "default",
-  ORG_USER: "secondary"
+  ORG_USER: "secondary",
 } as const;
 
 export default function TeamManagement() {
@@ -106,11 +134,13 @@ export default function TeamManagement() {
   const [isLoading, setIsLoading] = useState(false);
 
   const filteredAndSortedMembers = mockTeamMembers
-    .filter(member => {
-      const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           member.email.toLowerCase().includes(searchQuery.toLowerCase());
+    .filter((member) => {
+      const matchesSearch =
+        member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        member.email.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesRole = filterRole === "all" || member.role === filterRole;
-      const matchesStatus = filterStatus === "all" || member.status === filterStatus;
+      const matchesStatus =
+        filterStatus === "all" || member.status === filterStatus;
 
       return matchesSearch && matchesRole && matchesStatus;
     })
@@ -126,22 +156,24 @@ export default function TeamManagement() {
       return 0;
     });
 
-  const activeMembers = mockTeamMembers.filter(m => m.status === "active").length;
+  const activeMembers = mockTeamMembers.filter(
+    (m) => m.status === "active",
+  ).length;
   const totalMembers = mockTeamMembers.length;
 
   const handleSelectAll = () => {
     if (selectedMembers.length === filteredAndSortedMembers.length) {
       setSelectedMembers([]);
     } else {
-      setSelectedMembers(filteredAndSortedMembers.map(m => m.id));
+      setSelectedMembers(filteredAndSortedMembers.map((m) => m.id));
     }
   };
 
   const handleSelectMember = (memberId: number) => {
-    setSelectedMembers(prev =>
+    setSelectedMembers((prev) =>
       prev.includes(memberId)
-        ? prev.filter(id => id !== memberId)
-        : [...prev, memberId]
+        ? prev.filter((id) => id !== memberId)
+        : [...prev, memberId],
     );
   };
 
@@ -157,7 +189,7 @@ export default function TeamManagement() {
   const handleBulkAction = async (action: string) => {
     setIsLoading(true);
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     switch (action) {
       case "deactivate":
@@ -180,7 +212,11 @@ export default function TeamManagement() {
 
   const getSortIcon = (field: string) => {
     if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
-    return sortDirection === "asc" ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <SortAsc className="h-4 w-4" />
+    ) : (
+      <SortDesc className="h-4 w-4" />
+    );
   };
 
   return (
@@ -188,13 +224,15 @@ export default function TeamManagement() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Team Management</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Team Management
+          </h1>
           <p className="text-muted-foreground flex items-center gap-2">
             <Building2 className="h-4 w-4" />
             Manage team members for {user?.organizationName}
           </p>
         </div>
-        
+
         <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -216,7 +254,11 @@ export default function TeamManagement() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" placeholder="Enter email address" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter email address"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="role">Role</Label>
@@ -240,22 +282,26 @@ export default function TeamManagement() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="p-3 bg-muted/30 rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  <strong>Note:</strong> New team members will be added to your organization 
-                  ({user?.organizationName}) and will only have access to your organization's data.
+                  <strong>Note:</strong> New team members will be added to your
+                  organization ({user?.organizationName}) and will only have
+                  access to your organization's data.
                 </p>
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <Switch id="send-invite" defaultChecked />
                 <Label htmlFor="send-invite">Send invitation email</Label>
               </div>
-              
+
               <div className="flex gap-2 pt-4">
                 <Button className="flex-1">Send Invitation</Button>
-                <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddUserOpen(false)}
+                >
                   Cancel
                 </Button>
               </div>
@@ -268,18 +314,24 @@ export default function TeamManagement() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Team Members</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Team Members
+            </CardTitle>
             <UsersIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalMembers}</div>
-            <p className="text-xs text-muted-foreground">in your organization</p>
+            <p className="text-xs text-muted-foreground">
+              in your organization
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Members</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Members
+            </CardTitle>
             <Shield className="h-4 w-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
@@ -292,12 +344,14 @@ export default function TeamManagement() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Administrators</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Administrators
+            </CardTitle>
             <Briefcase className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockTeamMembers.filter(m => m.role === "ORG_ADMIN").length}
+              {mockTeamMembers.filter((m) => m.role === "ORG_ADMIN").length}
             </div>
             <p className="text-xs text-muted-foreground">Full permissions</p>
           </CardContent>
@@ -310,7 +364,7 @@ export default function TeamManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockTeamMembers.filter(m => m.role === "ORG_USER").length}
+              {mockTeamMembers.filter((m) => m.role === "ORG_USER").length}
             </div>
             <p className="text-xs text-muted-foreground">Limited access</p>
           </CardContent>
@@ -329,25 +383,28 @@ export default function TeamManagement() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label className="text-sm font-medium">Organization Name</Label>
-              <p className="text-sm text-muted-foreground">{user?.organizationName}</p>
+              <p className="text-sm text-muted-foreground">
+                {user?.organizationName}
+              </p>
             </div>
             <div>
               <Label className="text-sm font-medium">Your Role</Label>
               <div className="flex items-center gap-2">
-                <Badge variant="default">
-                  {user?.role?.replace('_', ' ')}
-                </Badge>
+                <Badge variant="default">{user?.role?.replace("_", " ")}</Badge>
               </div>
             </div>
             <div>
               <Label className="text-sm font-medium">Team Size</Label>
-              <p className="text-sm text-muted-foreground">{totalMembers} members</p>
+              <p className="text-sm text-muted-foreground">
+                {totalMembers} members
+              </p>
             </div>
           </div>
           <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
             <p className="text-sm text-blue-800 dark:text-blue-200">
-              <strong>Data Isolation:</strong> All team members you manage here will only have access 
-              to {user?.organizationName}'s data. They cannot see or modify other organizations' information.
+              <strong>Data Isolation:</strong> All team members you manage here
+              will only have access to {user?.organizationName}'s data. They
+              cannot see or modify other organizations' information.
             </p>
           </div>
         </CardContent>
@@ -358,7 +415,9 @@ export default function TeamManagement() {
         <CardHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <CardTitle>Team Members ({filteredAndSortedMembers.length})</CardTitle>
+              <CardTitle>
+                Team Members ({filteredAndSortedMembers.length})
+              </CardTitle>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -369,7 +428,9 @@ export default function TeamManagement() {
                   }}
                   disabled={isLoading}
                 >
-                  <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+                  />
                 </Button>
                 <Button variant="outline" size="sm">
                   <Download className="h-4 w-4 mr-2" />
@@ -415,7 +476,8 @@ export default function TeamManagement() {
             {selectedMembers.length > 0 && (
               <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
                 <span className="text-sm font-medium">
-                  {selectedMembers.length} member{selectedMembers.length > 1 ? 's' : ''} selected
+                  {selectedMembers.length} member
+                  {selectedMembers.length > 1 ? "s" : ""} selected
                 </span>
                 <div className="flex gap-2">
                   <Button
@@ -465,7 +527,11 @@ export default function TeamManagement() {
               <TableRow>
                 <TableHead className="w-12">
                   <Checkbox
-                    checked={selectedMembers.length === filteredAndSortedMembers.length && filteredAndSortedMembers.length > 0}
+                    checked={
+                      selectedMembers.length ===
+                        filteredAndSortedMembers.length &&
+                      filteredAndSortedMembers.length > 0
+                    }
                     onCheckedChange={handleSelectAll}
                   />
                 </TableHead>
@@ -506,9 +572,15 @@ export default function TeamManagement() {
             </TableHeader>
             <TableBody>
               {filteredAndSortedMembers.map((member) => {
-                const RoleIcon = roleIcons[member.role as keyof typeof roleIcons];
+                const RoleIcon =
+                  roleIcons[member.role as keyof typeof roleIcons];
                 return (
-                  <TableRow key={member.id} className={selectedMembers.includes(member.id) ? "bg-muted/50" : ""}>
+                  <TableRow
+                    key={member.id}
+                    className={
+                      selectedMembers.includes(member.id) ? "bg-muted/50" : ""
+                    }
+                  >
                     <TableCell>
                       <Checkbox
                         checked={selectedMembers.includes(member.id)}
@@ -522,17 +594,27 @@ export default function TeamManagement() {
                         </div>
                         <div>
                           <div className="font-medium">{member.name}</div>
-                          <div className="text-sm text-muted-foreground">{member.email}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {member.email}
+                          </div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={roleColors[member.role as keyof typeof roleColors]}>
-                        {member.role.replace('_', ' ')}
+                      <Badge
+                        variant={
+                          roleColors[member.role as keyof typeof roleColors]
+                        }
+                      >
+                        {member.role.replace("_", " ")}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={member.status === "active" ? "default" : "secondary"}>
+                      <Badge
+                        variant={
+                          member.status === "active" ? "default" : "secondary"
+                        }
+                      >
                         {member.status}
                       </Badge>
                     </TableCell>
@@ -542,7 +624,11 @@ export default function TeamManagement() {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {member.permissions.slice(0, 2).map((permission) => (
-                          <Badge key={permission} variant="outline" className="text-xs">
+                          <Badge
+                            key={permission}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {permission}
                           </Badge>
                         ))}
@@ -572,7 +658,9 @@ export default function TeamManagement() {
                           <DropdownMenuSeparator />
                           <DropdownMenuItem>
                             <UserX className="h-4 w-4 mr-2" />
-                            {member.status === "active" ? "Deactivate" : "Activate"}
+                            {member.status === "active"
+                              ? "Deactivate"
+                              : "Activate"}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive"

@@ -39,7 +39,14 @@ interface PlatformAlert {
   actionRequired: boolean;
   resolved: boolean;
   actions?: {
-    type: "restart" | "scale" | "cleanup" | "investigate" | "contact" | "retry" | "suspend";
+    type:
+      | "restart"
+      | "scale"
+      | "cleanup"
+      | "investigate"
+      | "contact"
+      | "retry"
+      | "suspend";
     label: string;
     destructive?: boolean;
   }[];
@@ -63,8 +70,8 @@ export function PlatformAlerts() {
         actionRequired: true,
         actions: [
           { type: "restart" as const, label: "Restart DB Service" },
-          { type: "scale" as const, label: "Scale DB Pool" }
-        ]
+          { type: "scale" as const, label: "Scale DB Pool" },
+        ],
       },
       {
         type: "error" as const,
@@ -76,8 +83,8 @@ export function PlatformAlerts() {
         actionRequired: true,
         actions: [
           { type: "investigate" as const, label: "Investigate Org" },
-          { type: "restart" as const, label: "Restart Services" }
-        ]
+          { type: "restart" as const, label: "Restart Services" },
+        ],
       },
       {
         type: "warning" as const,
@@ -88,8 +95,12 @@ export function PlatformAlerts() {
         actionRequired: true,
         actions: [
           { type: "contact" as const, label: "Contact Org" },
-          { type: "suspend" as const, label: "Suspend Account", destructive: true }
-        ]
+          {
+            type: "suspend" as const,
+            label: "Suspend Account",
+            destructive: true,
+          },
+        ],
       },
       {
         type: "warning" as const,
@@ -100,8 +111,12 @@ export function PlatformAlerts() {
         actionRequired: false,
         actions: [
           { type: "investigate" as const, label: "View Logs" },
-          { type: "suspend" as const, label: "Lock Account", destructive: true }
-        ]
+          {
+            type: "suspend" as const,
+            label: "Lock Account",
+            destructive: true,
+          },
+        ],
       },
       {
         type: "info" as const,
@@ -120,8 +135,8 @@ export function PlatformAlerts() {
         actionRequired: true,
         actions: [
           { type: "cleanup" as const, label: "Cleanup Storage" },
-          { type: "scale" as const, label: "Expand Storage" }
-        ]
+          { type: "scale" as const, label: "Expand Storage" },
+        ],
       },
       {
         type: "warning" as const,
@@ -132,8 +147,8 @@ export function PlatformAlerts() {
         actionRequired: false,
         actions: [
           { type: "restart" as const, label: "Restart Service" },
-          { type: "scale" as const, label: "Scale Memory" }
-        ]
+          { type: "scale" as const, label: "Scale Memory" },
+        ],
       },
       {
         type: "error" as const,
@@ -143,13 +158,14 @@ export function PlatformAlerts() {
         actionRequired: true,
         actions: [
           { type: "retry" as const, label: "Retry Backup" },
-          { type: "investigate" as const, label: "Check Logs" }
-        ]
+          { type: "investigate" as const, label: "Check Logs" },
+        ],
       },
     ];
 
-    const template = alertTemplates[Math.floor(Math.random() * alertTemplates.length)];
-    
+    const template =
+      alertTemplates[Math.floor(Math.random() * alertTemplates.length)];
+
     return {
       id: Math.random().toString(36).substr(2, 9),
       timestamp: new Date(Date.now() - Math.random() * 3600000), // Random time within last hour
@@ -161,27 +177,36 @@ export function PlatformAlerts() {
   // Initialize with alerts
   useEffect(() => {
     const initialAlerts = Array.from({ length: 12 }, generateMockAlert);
-    setAlerts(initialAlerts.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()));
+    setAlerts(
+      initialAlerts.sort(
+        (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
+      ),
+    );
   }, []);
 
   // Simulate live updates
   useEffect(() => {
     if (!isLive) return;
 
-    const interval = setInterval(() => {
-      // Randomly add new alert or resolve existing ones
-      if (Math.random() > 0.7) {
-        const newAlert = generateMockAlert();
-        setAlerts(prev => [newAlert, ...prev.slice(0, 19)]); // Keep latest 20 alerts
-      } else {
-        // Sometimes resolve an existing alert
-        setAlerts(prev => prev.map(alert => 
-          Math.random() > 0.95 && !alert.resolved
-            ? { ...alert, resolved: true }
-            : alert
-        ));
-      }
-    }, Math.random() * 8000 + 5000); // Random interval between 5-13 seconds
+    const interval = setInterval(
+      () => {
+        // Randomly add new alert or resolve existing ones
+        if (Math.random() > 0.7) {
+          const newAlert = generateMockAlert();
+          setAlerts((prev) => [newAlert, ...prev.slice(0, 19)]); // Keep latest 20 alerts
+        } else {
+          // Sometimes resolve an existing alert
+          setAlerts((prev) =>
+            prev.map((alert) =>
+              Math.random() > 0.95 && !alert.resolved
+                ? { ...alert, resolved: true }
+                : alert,
+            ),
+          );
+        }
+      },
+      Math.random() * 8000 + 5000,
+    ); // Random interval between 5-13 seconds
 
     return () => clearInterval(interval);
   }, [isLive]);
@@ -201,48 +226,66 @@ export function PlatformAlerts() {
   const getAlertColor = (type: string, resolved: boolean) => {
     if (resolved) return "outline";
     switch (type) {
-      case "critical": return "destructive";
-      case "error": return "destructive";
-      case "warning": return "secondary";
-      default: return "default";
+      case "critical":
+        return "destructive";
+      case "error":
+        return "destructive";
+      case "warning":
+        return "secondary";
+      default:
+        return "default";
     }
   };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "system": return "bg-red-100 text-red-800";
-      case "security": return "bg-orange-100 text-orange-800";
-      case "performance": return "bg-yellow-100 text-yellow-800";
-      case "billing": return "bg-blue-100 text-blue-800";
-      case "organization": return "bg-green-100 text-green-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "system":
+        return "bg-red-100 text-red-800";
+      case "security":
+        return "bg-orange-100 text-orange-800";
+      case "performance":
+        return "bg-yellow-100 text-yellow-800";
+      case "billing":
+        return "bg-blue-100 text-blue-800";
+      case "organization":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const formatTimeAgo = (timestamp: Date) => {
-    const seconds = Math.floor((new Date().getTime() - timestamp.getTime()) / 1000);
-    
+    const seconds = Math.floor(
+      (new Date().getTime() - timestamp.getTime()) / 1000,
+    );
+
     if (seconds < 60) return `${seconds}s ago`;
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
     return `${Math.floor(seconds / 86400)}d ago`;
   };
 
-  const filteredAlerts = alerts.filter(alert => {
+  const filteredAlerts = alerts.filter((alert) => {
     if (filter === "all") return true;
     if (filter === "unresolved") return !alert.resolved;
     if (filter === "critical") return alert.type === "critical";
     return alert.category === filter;
   });
 
-  const criticalCount = alerts.filter(a => a.type === "critical" && !a.resolved).length;
-  const unresolvedCount = alerts.filter(a => !a.resolved).length;
+  const criticalCount = alerts.filter(
+    (a) => a.type === "critical" && !a.resolved,
+  ).length;
+  const unresolvedCount = alerts.filter((a) => !a.resolved).length;
 
-  const handleAlertAction = async (alertId: string, actionType: string, alertTitle: string) => {
+  const handleAlertAction = async (
+    alertId: string,
+    actionType: string,
+    alertTitle: string,
+  ) => {
     const actionKey = `${alertId}-${actionType}`;
 
     // Set loading state
-    setLoadingActions(prev => new Set(prev).add(actionKey));
+    setLoadingActions((prev) => new Set(prev).add(actionKey));
 
     try {
       console.log(`Executing action: ${actionType} for alert: ${alertTitle}`);
@@ -258,18 +301,20 @@ export function PlatformAlerts() {
         suspend: "Account suspension initiated...",
       };
 
-      const message = actionMessages[actionType as keyof typeof actionMessages] || "Processing action...";
+      const message =
+        actionMessages[actionType as keyof typeof actionMessages] ||
+        "Processing action...";
 
       // In a real app, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Mark alert as resolved for certain actions
       if (["restart", "scale", "cleanup", "retry"].includes(actionType)) {
-        setAlerts(prev => prev.map(alert =>
-          alert.id === alertId
-            ? { ...alert, resolved: true }
-            : alert
-        ));
+        setAlerts((prev) =>
+          prev.map((alert) =>
+            alert.id === alertId ? { ...alert, resolved: true } : alert,
+          ),
+        );
       }
 
       // For contact/investigate actions, just provide feedback
@@ -277,12 +322,14 @@ export function PlatformAlerts() {
         // These actions don't resolve the alert but provide feedback
         console.log(`Action completed: ${message}`);
       }
-
     } catch (error) {
-      console.error(`Action failed: ${actionType} for alert: ${alertTitle}`, error);
+      console.error(
+        `Action failed: ${actionType} for alert: ${alertTitle}`,
+        error,
+      );
     } finally {
       // Remove loading state
-      setLoadingActions(prev => {
+      setLoadingActions((prev) => {
         const newSet = new Set(prev);
         newSet.delete(actionKey);
         return newSet;
@@ -308,7 +355,9 @@ export function PlatformAlerts() {
               onClick={() => setIsLive(!isLive)}
               className={isLive ? "text-green-600" : "text-muted-foreground"}
             >
-              <RefreshCw className={`h-4 w-4 ${isLive ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${isLive ? "animate-spin" : ""}`}
+              />
               {isLive ? "Live" : "Paused"}
             </Button>
           </div>
@@ -323,33 +372,43 @@ export function PlatformAlerts() {
                 <div
                   key={alert.id}
                   className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${
-                    alert.resolved 
-                      ? "bg-muted/30 opacity-60" 
-                      : alert.type === "critical" 
-                        ? "bg-red-50 border-red-200" 
+                    alert.resolved
+                      ? "bg-muted/30 opacity-60"
+                      : alert.type === "critical"
+                        ? "bg-red-50 border-red-200"
                         : "bg-card hover:bg-muted/50"
                   }`}
                 >
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                    alert.resolved 
-                      ? "bg-green-100" 
-                      : alert.type === "critical" 
-                        ? "bg-red-100" 
-                        : "bg-primary/10"
-                  }`}>
+                  <div
+                    className={`h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                      alert.resolved
+                        ? "bg-green-100"
+                        : alert.type === "critical"
+                          ? "bg-red-100"
+                          : "bg-primary/10"
+                    }`}
+                  >
                     {alert.resolved ? (
                       <CheckCircle2 className="h-4 w-4 text-green-600" />
                     ) : (
-                      <AlertIcon className={`h-4 w-4 ${
-                        alert.type === "critical" ? "text-red-600" : "text-primary"
-                      }`} />
+                      <AlertIcon
+                        className={`h-4 w-4 ${
+                          alert.type === "critical"
+                            ? "text-red-600"
+                            : "text-primary"
+                        }`}
+                      />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={`text-sm font-medium truncate ${
-                        alert.resolved ? "line-through text-muted-foreground" : ""
-                      }`}>
+                      <span
+                        className={`text-sm font-medium truncate ${
+                          alert.resolved
+                            ? "line-through text-muted-foreground"
+                            : ""
+                        }`}
+                      >
                         {alert.title}
                       </span>
                       {alert.organization && (
@@ -357,7 +416,10 @@ export function PlatformAlerts() {
                           {alert.organization}
                         </Badge>
                       )}
-                      <Badge variant={getAlertColor(alert.type, alert.resolved)} className="text-xs">
+                      <Badge
+                        variant={getAlertColor(alert.type, alert.resolved)}
+                        className="text-xs"
+                      >
                         {alert.type}
                       </Badge>
                     </div>
@@ -388,7 +450,9 @@ export function PlatformAlerts() {
                         <Clock className="h-3 w-3" />
                         {formatTimeAgo(alert.timestamp)}
                       </div>
-                      <Badge className={`text-xs ${getCategoryColor(alert.category)}`}>
+                      <Badge
+                        className={`text-xs ${getCategoryColor(alert.category)}`}
+                      >
                         {alert.category}
                       </Badge>
                       {alert.actionRequired && !alert.resolved && (
@@ -399,41 +463,51 @@ export function PlatformAlerts() {
                     </div>
 
                     {/* Action Buttons */}
-                    {alert.actions && alert.actions.length > 0 && !alert.resolved && (
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {alert.actions.map((action, actionIndex) => {
-                          const actionKey = `${alert.id}-${action.type}`;
-                          const isLoading = loadingActions.has(actionKey);
+                    {alert.actions &&
+                      alert.actions.length > 0 &&
+                      !alert.resolved && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {alert.actions.map((action, actionIndex) => {
+                            const actionKey = `${alert.id}-${action.type}`;
+                            const isLoading = loadingActions.has(actionKey);
 
-                          return (
-                            <Button
-                              key={actionIndex}
-                              variant={action.destructive ? "destructive" : "outline"}
-                              size="sm"
-                              className="h-6 text-xs px-2"
-                              disabled={isLoading}
-                              onClick={() => handleAlertAction(alert.id, action.type, alert.title)}
-                            >
-                              {isLoading ? (
-                                <>
-                                  <div className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent mr-1" />
-                                  Processing...
-                                </>
-                              ) : (
-                                action.label
-                              )}
-                            </Button>
-                          );
-                        })}
-                      </div>
-                    )}
+                            return (
+                              <Button
+                                key={actionIndex}
+                                variant={
+                                  action.destructive ? "destructive" : "outline"
+                                }
+                                size="sm"
+                                className="h-6 text-xs px-2"
+                                disabled={isLoading}
+                                onClick={() =>
+                                  handleAlertAction(
+                                    alert.id,
+                                    action.type,
+                                    alert.title,
+                                  )
+                                }
+                              >
+                                {isLoading ? (
+                                  <>
+                                    <div className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent mr-1" />
+                                    Processing...
+                                  </>
+                                ) : (
+                                  action.label
+                                )}
+                              </Button>
+                            );
+                          })}
+                        </div>
+                      )}
                   </div>
                 </div>
               );
             })}
           </div>
         </ScrollArea>
-        
+
         {/* Footer with stats */}
         <div className="border-t p-3">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -441,7 +515,13 @@ export function PlatformAlerts() {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-red-500" />
-                <span>{alerts.filter(a => a.type === "critical" && !a.resolved).length} critical</span>
+                <span>
+                  {
+                    alerts.filter((a) => a.type === "critical" && !a.resolved)
+                      .length
+                  }{" "}
+                  critical
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-yellow-500" />
@@ -449,7 +529,7 @@ export function PlatformAlerts() {
               </div>
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-green-500" />
-                <span>{alerts.filter(a => a.resolved).length} resolved</span>
+                <span>{alerts.filter((a) => a.resolved).length} resolved</span>
               </div>
             </div>
           </div>

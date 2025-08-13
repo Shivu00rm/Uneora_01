@@ -153,7 +153,17 @@ export default function Analytics() {
             <PopoverTrigger asChild>
               <Button variant="outline" className="gap-2">
                 <Calendar className="h-4 w-4" />
-                {isCustomDateRange ? "Custom Range" : selectedPeriod.replace(/(\d+)/, "$1 ").replace(/days|months|year/, (match) => match === "days" ? "Days" : match === "months" ? "Months" : "Year")}
+                {isCustomDateRange
+                  ? "Custom Range"
+                  : selectedPeriod
+                      .replace(/(\d+)/, "$1 ")
+                      .replace(/days|months|year/, (match) =>
+                        match === "days"
+                          ? "Days"
+                          : match === "months"
+                            ? "Months"
+                            : "Year",
+                      )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-80" align="end">
@@ -236,7 +246,9 @@ export default function Analytics() {
             }}
             disabled={isRefreshing}
           >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+            />
           </Button>
 
           {/* Export Reports */}
