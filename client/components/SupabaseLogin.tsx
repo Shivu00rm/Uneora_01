@@ -156,6 +156,23 @@ export function SupabaseLogin() {
                     <option value="SUPER_ADMIN">Super Admin</option>
                   </select>
                 </div>
+
+                {(formData.role === 'ORG_ADMIN' || formData.role === 'SUPER_ADMIN') && (
+                  <div className="space-y-2">
+                    <label htmlFor="companyName" className="text-sm font-medium">
+                      Company Name {formData.role === 'ORG_ADMIN' ? '(Required)' : '(Optional)'}
+                    </label>
+                    <Input
+                      id="companyName"
+                      name="companyName"
+                      type="text"
+                      value={formData.companyName}
+                      onChange={handleChange}
+                      placeholder="Enter company name"
+                      required={formData.role === 'ORG_ADMIN'}
+                    />
+                  </div>
+                )}
               </>
             )}
 
