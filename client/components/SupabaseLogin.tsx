@@ -28,7 +28,12 @@ export function SupabaseLogin() {
         await login(formData.email, formData.password);
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+      console.error('Login error:', err);
+      if (err.message?.includes('Invalid API key')) {
+        setError('Database configuration error. Please check Supabase setup.');
+      } else {
+        setError(err.message || 'Authentication failed');
+      }
     }
   };
 
