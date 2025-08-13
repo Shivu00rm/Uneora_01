@@ -136,10 +136,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             companyId = companyNameOrId;
           }
 
-          // Create profile
+          // Create profile with email
           const profileData = {
             id: data.user.id,
             name,
+            email: data.user.email || email,
             role,
             company_id: companyId
           };
