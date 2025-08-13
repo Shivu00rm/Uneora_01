@@ -117,7 +117,7 @@ export function SupabaseLogin() {
 
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium">
-                Password
+                Password {isSignUp && <span className="text-xs text-gray-500">(min 6 characters)</span>}
               </label>
               <Input
                 id="password"
@@ -125,8 +125,9 @@ export function SupabaseLogin() {
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter your password"
+                placeholder={isSignUp ? "Enter password (min 6 characters)" : "Enter your password"}
                 required
+                minLength={isSignUp ? 6 : undefined}
               />
             </div>
 
