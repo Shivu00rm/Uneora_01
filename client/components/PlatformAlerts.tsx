@@ -254,7 +254,7 @@ export function PlatformAlerts() {
                     {alert.resolved ? (
                       <CheckCircle2 className="h-4 w-4 text-green-600" />
                     ) : (
-                      <AlertIcon className={`${
+                      <AlertIcon className={`h-4 w-4 ${
                         alert.type === "critical" ? "text-red-600" : "text-primary"
                       }`} />
                     )}
