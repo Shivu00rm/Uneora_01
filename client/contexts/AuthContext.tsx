@@ -93,6 +93,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
+      console.log('Attempting login for:', email);
+
+      // Test Supabase connection first
+      try {
+        const { data: testData, error: testError } = await supabase.from('profiles').select('count').limit(1);
+        console.log('Supabase connection test:', { success: !testError, error: testError?.message });
+      } catch (connectionError) {
+        console.error('Supabase connection failed:', connectionError);
+        throw new Error('Database connection failed. Please try again.');
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -103,6 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.user) {
+        console.log('Login successful, loading profile...');
         await loadUserProfile(data.user.id);
       }
     } catch (error) {
