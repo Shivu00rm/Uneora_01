@@ -111,15 +111,20 @@ export class DatabaseService {
     return data
   }
 
-  static async getCompanyProfiles(companyId: string): Promise<Profile[]> {
+  static async getOrganizationProfiles(organizationId: string): Promise<Profile[]> {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('company_id', companyId)
+      .eq('organization_id', organizationId)
       .order('created_at', { ascending: false })
-    
+
     if (error) throw error
     return data || []
+  }
+
+  // Legacy method alias
+  static async getCompanyProfiles(companyId: string): Promise<Profile[]> {
+    return this.getOrganizationProfiles(companyId);
   }
 
   // Sales orders operations
