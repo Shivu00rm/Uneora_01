@@ -182,7 +182,6 @@ export function SupabaseLogin() {
                   >
                     <option value="ORG_USER">Organization User</option>
                     <option value="ORG_ADMIN">Organization Admin</option>
-                    <option value="SUPER_ADMIN">Super Admin</option>
                   </select>
                 </div>
 
