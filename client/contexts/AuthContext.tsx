@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { supabase } from '../lib/supabase';
+import { DatabaseService } from '../lib/database';
 
 export type UserRole = "SUPER_ADMIN" | "ORG_ADMIN" | "ORG_USER";
 
 interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: UserRole;
@@ -16,8 +18,10 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  signUp: (email: string, password: string, name: string, role: UserRole, companyId?: string) => Promise<void>;
   hasPermission: (module: string, action?: string) => boolean;
   isSuperAdmin: () => boolean;
   isOrgAdmin: () => boolean;
@@ -29,80 +33,131 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock users for different roles and organizations
-const mockUsers = {
-  superAdmin: {
-    id: 1,
-    name: "System Owner",
-    email: "owner@flowstock.com",
-    role: "SUPER_ADMIN" as UserRole,
-    status: "active" as const,
-    organizationId: null,
-    permissions: {
-      // Super admin has all permissions across all modules
-      system: ["view", "edit", "delete", "manage"],
-      organizations: ["view", "create", "edit", "delete", "manage"],
-      billing: ["view", "edit", "manage"],
-      api_keys: ["view", "edit", "manage"],
-      admin_team: ["view", "create", "edit", "delete"],
-      impersonation: ["use"]
-    }
-  },
-  orgAdmin: {
-    id: 2,
-    name: "Rajesh Sharma",
-    email: "rajesh@techcorp.com",
-    role: "ORG_ADMIN" as UserRole,
-    status: "active" as const,
-    organizationId: "org-1",
-    organizationName: "TechCorp Solutions",
-    permissions: {
-      dashboard: ["view"],
-      inventory: ["view", "create", "edit", "delete", "export"],
-      stock_movements: ["view", "create", "edit"],
-      pos: ["view", "create", "refund"],
-      vendors: ["view", "create", "edit", "delete"],
-      purchase_orders: ["view", "create", "edit", "approve", "delete"],
-      analytics: ["view", "export"],
-      users: ["view", "create", "edit", "delete"], // Can manage users in their org
-      files: ["view", "upload", "delete"],
-      settings: ["view", "edit"] // Org settings only
-    }
-  },
-  orgUser: {
-    id: 3,
-    name: "Priya Patel",
-    email: "priya@techcorp.com",
-    role: "ORG_USER" as UserRole,
-    status: "active" as const,
-    organizationId: "org-1", 
-    organizationName: "TechCorp Solutions",
-    permissions: {
-      dashboard: ["view"],
-      inventory: ["view", "edit"],
-      stock_movements: ["view", "create"],
-      pos: ["view", "create"],
-      vendors: ["view"],
-      purchase_orders: ["view", "create"],
-      analytics: ["view"],
-      files: ["view", "upload"]
-      // No user management or settings access
-    }
+// Role-based permissions mapping
+const getRolePermissions = (role: UserRole) => {
+  switch (role) {
+    case "SUPER_ADMIN":
+      return {
+        system: ["view", "edit", "delete", "manage"],
+        organizations: ["view", "create", "edit", "delete", "manage"],
+        billing: ["view", "edit", "manage"],
+        api_keys: ["view", "edit", "manage"],
+        admin_team: ["view", "create", "edit", "delete"],
+        impersonation: ["use"]
+      };
+    case "ORG_ADMIN":
+      return {
+        dashboard: ["view"],
+        inventory: ["view", "create", "edit", "delete", "export"],
+        stock_movements: ["view", "create", "edit"],
+        pos: ["view", "create", "refund"],
+        vendors: ["view", "create", "edit", "delete"],
+        purchase_orders: ["view", "create", "edit", "approve", "delete"],
+        analytics: ["view", "export"],
+        users: ["view", "create", "edit", "delete"],
+        files: ["view", "upload", "delete"],
+        settings: ["view", "edit"]
+      };
+    case "ORG_USER":
+      return {
+        dashboard: ["view"],
+        inventory: ["view", "edit"],
+        stock_movements: ["view", "create"],
+        pos: ["view", "create"],
+        vendors: ["view"],
+        purchase_orders: ["view", "create"],
+        analytics: ["view"],
+        files: ["view", "upload"]
+      };
+    default:
+      return {};
   }
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // For demo, start with super admin. In real app, this would be null initially
-  const [user, setUser] = useState<User | null>(mockUsers.superAdmin);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem("flowstock_user", JSON.stringify(userData));
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+
+      if (data.user) {
+        await loadUserProfile(data.user.id);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("flowstock_user");
+  const logout = async () => {
+    setLoading(true);
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUp = async (email: string, password: string, name: string, role: UserRole, companyId?: string) => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) throw error;
+
+      if (data.user) {
+        // Create profile
+        await DatabaseService.updateProfile(data.user.id, {
+          id: data.user.id,
+          name,
+          role,
+          company_id: companyId
+        });
+
+        await loadUserProfile(data.user.id);
+      }
+    } catch (error) {
+      console.error('Sign up error:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadUserProfile = async (userId: string) => {
+    try {
+      const profile = await DatabaseService.getProfile(userId);
+      if (profile) {
+        let organizationName = undefined;
+        if (profile.company_id) {
+          const company = await DatabaseService.getCompany(profile.company_id);
+          organizationName = company?.name;
+        }
+
+        const userData: User = {
+          id: profile.id,
+          name: profile.name || 'Unknown User',
+          email: '', // Will be filled from auth
+          role: (profile.role as UserRole) || 'ORG_USER',
+          status: 'active',
+          organizationId: profile.company_id || null,
+          organizationName,
+          permissions: getRolePermissions((profile.role as UserRole) || 'ORG_USER')
+        };
+
+        setUser(userData);
+      }
+    } catch (error) {
+      console.error('Failed to load user profile:', error);
+    }
   };
 
   const hasPermission = (module: string, action?: string): boolean => {
@@ -161,23 +216,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // In real app, this would validate the stored token and fetch user data
-    const storedUser = localStorage.getItem("flowstock_user");
-    if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-      } catch (error) {
-        console.error("Failed to parse stored user data");
-        logout();
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        loadUserProfile(session.user.id);
+      } else {
+        setLoading(false);
       }
-    }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        await loadUserProfile(session.user.id);
+      } else {
+        setUser(null);
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const value = {
     user,
+    loading,
     login,
     logout,
+    signUp,
     hasPermission,
     isSuperAdmin,
     isOrgAdmin,
@@ -234,13 +300,23 @@ export function usePermissions() {
   };
 }
 
-// Mock function to switch between different user types for testing
-export function useMockLogin() {
-  const { login } = useAuth();
-  
+// Helper to create mock data for testing
+export function useTestData() {
   return {
-    loginAsSuperAdmin: () => login(mockUsers.superAdmin),
-    loginAsOrgAdmin: () => login(mockUsers.orgAdmin),
-    loginAsOrgUser: () => login(mockUsers.orgUser)
+    createTestCompany: async () => {
+      return await DatabaseService.createCompany({
+        name: 'TechCorp Solutions',
+        industry: 'Technology'
+      });
+    },
+    createTestOrder: async (companyId: string) => {
+      return await DatabaseService.createSalesOrder({
+        company_id: companyId,
+        customer_name: 'John Doe',
+        platform: 'Shopify',
+        total_amount: 1299.99,
+        status: 'pending'
+      });
+    }
   };
 }
