@@ -178,7 +178,10 @@ export function RoleSelector() {
                 variant="destructive"
                 size="sm"
                 className="w-full"
-                onClick={logout}
+                onClick={() => {
+                  localStorage.removeItem('mock_user');
+                  logout();
+                }}
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
