@@ -332,24 +332,3 @@ export function usePermissions() {
     canImpersonate: () => hasPermission("impersonation", "use")
   };
 }
-
-// Helper to create mock data for testing
-export function useTestData() {
-  return {
-    createTestCompany: async () => {
-      return await DatabaseService.createCompany({
-        name: 'TechCorp Solutions',
-        industry: 'Technology'
-      });
-    },
-    createTestOrder: async (companyId: string) => {
-      return await DatabaseService.createSalesOrder({
-        company_id: companyId,
-        customer_name: 'John Doe',
-        platform: 'Shopify',
-        total_amount: 1299.99,
-        status: 'pending'
-      });
-    }
-  };
-}
