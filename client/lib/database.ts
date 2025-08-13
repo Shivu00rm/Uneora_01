@@ -2,43 +2,61 @@ import { supabase, Organization, Profile, Product, SalesOrder, Integration } fro
 
 // Database service layer for FlowStock
 export class DatabaseService {
-  // Company operations
-  static async getCompanies(): Promise<Company[]> {
+  // Organization operations (renamed from Company)
+  static async getOrganizations(): Promise<Organization[]> {
     const { data, error } = await supabase
-      .from('companies')
+      .from('organizations')
       .select('*')
       .order('created_at', { ascending: false })
-    
+
     if (error) throw error
     return data || []
   }
 
-  static async getCompany(id: string): Promise<Company | null> {
+  static async getOrganization(id: string): Promise<Organization | null> {
     const { data, error } = await supabase
-      .from('companies')
+      .from('organizations')
       .select('*')
       .eq('id', id)
       .single()
-    
+
     if (error) return null
     return data
   }
 
-  static async createCompany(company: Omit<Company, 'id' | 'created_at'>): Promise<Company> {
-    console.log('Creating company:', company);
+  static async createOrganization(org: Omit<Organization, 'id' | 'created_at' | 'updated_at'>): Promise<Organization> {
+    console.log('Creating organization:', org);
+
+    // Generate slug from name if not provided
+    const slug = org.slug || org.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
     const { data, error } = await supabase
-      .from('companies')
-      .insert(company)
+      .from('organizations')
+      .insert({ ...org, slug })
       .select()
       .single()
 
     if (error) {
-      console.error('Company creation error:', error);
-      throw new Error(`Failed to create company: ${error.message}`);
+      console.error('Organization creation error:', error);
+      throw new Error(`Failed to create organization: ${error.message}`);
     }
 
-    console.log('Company created successfully:', data);
+    console.log('Organization created successfully:', data);
     return data
+  }
+
+  // Legacy method alias for backward compatibility
+  static async getCompany(id: string): Promise<Organization | null> {
+    return this.getOrganization(id);
+  }
+
+  static async createCompany(company: { name: string; industry?: string }): Promise<Organization> {
+    return this.createOrganization({
+      name: company.name,
+      industry: company.industry,
+      slug: company.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      subscription_plan: 'starter'
+    });
   }
 
   // Profile operations
