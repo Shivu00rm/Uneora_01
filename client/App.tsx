@@ -388,15 +388,10 @@ export default function App() {
                                 path="settings"
                                 element={
                                   <ProtectedRoute
-                                    allowedRoles={["ORG_ADMIN"]}
                                     requiredModule="settings"
                                     requiredAction="view"
                                   >
-                                    <Placeholder
-                                      title="Organization Settings"
-                                      description="Manage your organization's settings and preferences."
-                                      feature="Settings"
-                                    />
+                                    <AppSettings />
                                   </ProtectedRoute>
                                 }
                               />
