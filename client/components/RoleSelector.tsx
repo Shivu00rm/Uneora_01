@@ -14,8 +14,53 @@ import {
 
 export function RoleSelector() {
   const { user, logout } = useAuth();
-  const { loginAsSuperAdmin, loginAsOrgAdmin, loginAsOrgUser } = useMockLogin();
   const [isMinimized, setIsMinimized] = useState(false);
+
+  // Mock login functions
+  const loginAsSuperAdmin = () => {
+    const mockUser = {
+      id: 'mock-super-admin',
+      name: 'System Admin',
+      email: 'admin@flowstock.com',
+      role: 'SUPER_ADMIN' as const,
+      status: 'active' as const,
+      organizationId: null,
+      organizationName: undefined,
+      permissions: {}
+    };
+    localStorage.setItem('mock_user', JSON.stringify(mockUser));
+    window.location.reload();
+  };
+
+  const loginAsOrgAdmin = () => {
+    const mockUser = {
+      id: 'mock-org-admin',
+      name: 'Organization Admin',
+      email: 'orgadmin@company.com',
+      role: 'ORG_ADMIN' as const,
+      status: 'active' as const,
+      organizationId: 'mock-org-1',
+      organizationName: 'Demo Company',
+      permissions: {}
+    };
+    localStorage.setItem('mock_user', JSON.stringify(mockUser));
+    window.location.reload();
+  };
+
+  const loginAsOrgUser = () => {
+    const mockUser = {
+      id: 'mock-org-user',
+      name: 'Regular User',
+      email: 'user@company.com',
+      role: 'ORG_USER' as const,
+      status: 'active' as const,
+      organizationId: 'mock-org-1',
+      organizationName: 'Demo Company',
+      permissions: {}
+    };
+    localStorage.setItem('mock_user', JSON.stringify(mockUser));
+    window.location.reload();
+  };
 
   if (user) {
     if (isMinimized) {
