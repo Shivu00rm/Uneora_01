@@ -769,7 +769,7 @@ export default function Inventory() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="alerts" className="space-y-6">
+        <TabsContent value="alerts" className="space-y-6 tab-content-watermark flowstock-watermark">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -838,7 +838,7 @@ export default function Inventory() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="movements" className="space-y-6">
+        <TabsContent value="movements" className="space-y-6 tab-content-watermark flowstock-watermark">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
