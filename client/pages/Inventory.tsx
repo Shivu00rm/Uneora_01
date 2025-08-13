@@ -631,14 +631,14 @@ export default function Inventory() {
       </div>
 
       {/* Main Content */}
-      <Tabs defaultValue="inventory" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="inventory">All Inventory</TabsTrigger>
-          <TabsTrigger value="alerts">Stock Alerts</TabsTrigger>
-          <TabsTrigger value="movements">Stock Movements</TabsTrigger>
+      <Tabs defaultValue="inventory" className="space-y-6 enhanced-tabs">
+        <TabsList className="grid w-full grid-cols-3 bg-slate-100">
+          <TabsTrigger value="inventory" className="tab-orders text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">All Inventory</TabsTrigger>
+          <TabsTrigger value="alerts" className="tab-pending text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Stock Alerts</TabsTrigger>
+          <TabsTrigger value="movements" className="tab-movements text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Stock Movements</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="inventory" className="space-y-6">
+        <TabsContent value="inventory" className="space-y-6 tab-content-watermark flowstock-watermark">
           {/* Filters */}
           <Card>
             <CardContent className="pt-6">
