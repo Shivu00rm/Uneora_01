@@ -252,4 +252,25 @@
   .text-muted-foreground {
     color: #6b7280 !important;
   }
+
+  /* Force tab list backgrounds */
+  [role="tablist"] {
+    background-color: #f1f5f9 !important;
+  }
+
+  /* Watermark styling */
+  .vendor-watermark::before {
+    content: 'FlowStock';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(59, 130, 246, 0.04);
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+    font-family: system-ui;
+  }
 }
