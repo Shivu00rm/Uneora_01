@@ -216,13 +216,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Get initial session
+    // Check for mock user first (for testing)
+    const mockUser = localStorage.getItem('mock_user');
+    if (mockUser) {
+      try {
+        const userData = JSON.parse(mockUser);
+        const userWithPermissions = {
+          ...userData,
+          permissions: getRolePermissions(userData.role)
+        };
+        setUser(userWithPermissions);
+        setLoading(false);
+        return;
+      } catch (error) {
+        console.error('Failed to parse mock user');
+        localStorage.removeItem('mock_user');
+      }
+    }
+
+    // Get initial session from Supabase
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         loadUserProfile(session.user.id);
       } else {
         setLoading(false);
       }
+    }).catch((error) => {
+      console.error('Supabase session error:', error);
+      setLoading(false);
     });
 
     // Listen for auth changes
