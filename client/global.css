@@ -212,16 +212,34 @@
     font-family: system-ui, -apple-system, sans-serif;
   }
 
-  /* Better tab text visibility */
+  /* Force better tab text visibility */
   .enhanced-tabs .tabs-list {
-    @apply bg-slate-100;
+    background-color: #f1f5f9 !important;
   }
 
   .enhanced-tabs .tabs-trigger {
-    @apply text-slate-700 font-medium;
+    color: #374151 !important;
+    font-weight: 500 !important;
   }
 
   .enhanced-tabs .tabs-trigger[data-state="active"] {
-    @apply text-slate-900 font-semibold;
+    color: #1f2937 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Force override any default text colors */
+  [role="tablist"] button {
+    color: #374151 !important;
+    font-weight: 500 !important;
+  }
+
+  [role="tablist"] button[data-state="active"] {
+    color: #1f2937 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Override muted text */
+  .text-muted-foreground {
+    color: #6b7280 !important;
   }
 }
