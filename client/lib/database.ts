@@ -163,24 +163,24 @@ export class DatabaseService {
   }
 
   // Integration operations
-  static async getIntegrations(companyId: string): Promise<Integration[]> {
+  static async getIntegrations(organizationId: string): Promise<Integration[]> {
     const { data, error } = await supabase
       .from('integrations')
       .select('*')
-      .eq('company_id', companyId)
-      .order('connected_at', { ascending: false })
-    
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false })
+
     if (error) throw error
     return data || []
   }
 
-  static async createIntegration(integration: Omit<Integration, 'id' | 'connected_at'>): Promise<Integration> {
+  static async createIntegration(integration: Omit<Integration, 'id' | 'created_at' | 'updated_at'>): Promise<Integration> {
     const { data, error } = await supabase
       .from('integrations')
       .insert(integration)
       .select()
       .single()
-    
+
     if (error) throw error
     return data
   }
