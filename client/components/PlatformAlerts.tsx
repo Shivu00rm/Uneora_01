@@ -237,6 +237,37 @@ export function PlatformAlerts() {
   const criticalCount = alerts.filter(a => a.type === "critical" && !a.resolved).length;
   const unresolvedCount = alerts.filter(a => !a.resolved).length;
 
+  const handleAlertAction = async (alertId: string, actionType: string, alertTitle: string) => {
+    console.log(`Executing action: ${actionType} for alert: ${alertTitle}`);
+
+    // Simulate action execution
+    const actionMessages = {
+      restart: "Service restart initiated...",
+      scale: "Scaling resources...",
+      cleanup: "Cleanup process started...",
+      investigate: "Opening investigation dashboard...",
+      contact: "Sending notification to organization...",
+      retry: "Retrying failed operation...",
+      suspend: "Account suspension initiated...",
+    };
+
+    const message = actionMessages[actionType as keyof typeof actionMessages] || "Processing action...";
+
+    // In a real app, this would be an API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Mark alert as resolved for certain actions
+    if (["restart", "scale", "cleanup", "retry"].includes(actionType)) {
+      setAlerts(prev => prev.map(alert =>
+        alert.id === alertId
+          ? { ...alert, resolved: true }
+          : alert
+      ));
+    }
+
+    console.log(`Action completed: ${message}`);
+  };
+
   return (
     <Card className="h-full">
       <CardHeader className="pb-3">
