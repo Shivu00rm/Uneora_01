@@ -386,7 +386,7 @@ export default function SuperAdmin() {
         </TabsContent>
 
 
-        <TabsContent value="billing" className="space-y-6">
+        <TabsContent value="billing" className="space-y-6 tab-content-watermark flowstock-watermark">
           {/* Recent Plan Changes */}
           {recentPlanChanges.length > 0 && (
             <Card>
@@ -481,7 +481,7 @@ export default function SuperAdmin() {
           </div>
         </TabsContent>
 
-        <TabsContent value="api-keys" className="space-y-6">
+        <TabsContent value="api-keys" className="space-y-6 tab-content-watermark flowstock-watermark">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -536,7 +536,7 @@ export default function SuperAdmin() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="team" className="space-y-6">
+        <TabsContent value="team" className="space-y-6 tab-content-watermark flowstock-watermark">
           <Card>
             <CardHeader>
               <CardTitle>Admin Team Access</CardTitle>
