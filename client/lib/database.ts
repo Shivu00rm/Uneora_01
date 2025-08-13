@@ -128,24 +128,24 @@ export class DatabaseService {
   }
 
   // Sales orders operations
-  static async getSalesOrders(companyId: string): Promise<SalesOrder[]> {
+  static async getSalesOrders(organizationId: string): Promise<SalesOrder[]> {
     const { data, error } = await supabase
       .from('sales_orders')
       .select('*')
-      .eq('company_id', companyId)
+      .eq('organization_id', organizationId)
       .order('created_at', { ascending: false })
-    
+
     if (error) throw error
     return data || []
   }
 
-  static async createSalesOrder(order: Omit<SalesOrder, 'id' | 'created_at'>): Promise<SalesOrder> {
+  static async createSalesOrder(order: Omit<SalesOrder, 'id' | 'created_at' | 'updated_at'>): Promise<SalesOrder> {
     const { data, error } = await supabase
       .from('sales_orders')
       .insert(order)
       .select()
       .single()
-    
+
     if (error) throw error
     return data
   }
@@ -157,7 +157,7 @@ export class DatabaseService {
       .eq('id', id)
       .select()
       .single()
-    
+
     if (error) throw error
     return data
   }
