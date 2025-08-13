@@ -49,11 +49,13 @@ export function SupabaseLogin() {
       if (errorMessage.includes('Invalid API key')) {
         errorMessage = 'Database configuration error. Please check Supabase setup.';
       } else if (errorMessage.includes('Invalid login credentials')) {
-        errorMessage = 'Invalid email or password. Please try again.';
+        errorMessage = 'Invalid email or password. Please try again or create an account.';
       } else if (errorMessage.includes('Email not confirmed')) {
         errorMessage = 'Please check your email and confirm your account.';
       } else if (errorMessage.includes('User already registered')) {
         errorMessage = 'An account with this email already exists. Try signing in instead.';
+      } else if (errorMessage.includes('infinite recursion')) {
+        errorMessage = 'Database configuration issue. Please try again.';
       }
 
       setError(errorMessage);
