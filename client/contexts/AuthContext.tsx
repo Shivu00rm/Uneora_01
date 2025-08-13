@@ -129,17 +129,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (role === 'ORG_ADMIN' && companyNameOrId && !companyNameOrId.includes('-')) {
             console.log('Creating organization for org admin:', companyNameOrId);
             try {
+              const slug = companyNameOrId.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
               const organization = await DatabaseService.createOrganization({
                 name: companyNameOrId,
-                industry: 'Technology', // Default industry
-                slug: companyNameOrId.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+                industry: 'Technology',
+                slug: slug,
                 subscription_plan: 'starter'
               });
               companyId = organization.id;
-              console.log('Organization created with ID:', companyId);
+              console.log('Organization created successfully with ID:', companyId);
             } catch (orgError: any) {
               console.error('Organization creation failed:', orgError);
-              throw new Error(`Failed to create organization: ${orgError.message}`);
+
+              let errorMessage = 'Failed to create organization';
+              if (orgError.message) {
+                errorMessage = orgError.message;
+              } else if (typeof orgError === 'string') {
+                errorMessage = orgError;
+              }
+
+              throw new Error(errorMessage);
             }
           } else if (companyNameOrId && companyNameOrId.includes('-')) {
             // Assume it's an organization ID if it contains dashes (UUID format)
