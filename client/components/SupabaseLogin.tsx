@@ -182,30 +182,6 @@ export function SupabaseLogin() {
             </div>
           </form>
 
-          {/* Quick test accounts */}
-          <div className="mt-6 pt-6 border-t">
-            <p className="text-sm text-gray-600 mb-3">Test Accounts:</p>
-            <div className="space-y-2 text-xs">
-              <div className="bg-gray-50 p-2 rounded">
-                <strong>Super Admin:</strong><br />
-                Email: admin@flowstock.com<br />
-                Password: password123
-              </div>
-              <div className="bg-gray-50 p-2 rounded">
-                <strong>Org Admin:</strong><br />
-                Email: orgadmin@company.com<br />
-                Password: password123
-              </div>
-              <div className="bg-gray-50 p-2 rounded">
-                <strong>Org User:</strong><br />
-                Email: user@company.com<br />
-                Password: password123
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 mt-2">
-              Create these accounts using Sign Up first, then login
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
