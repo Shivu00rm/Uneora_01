@@ -22,10 +22,25 @@ export function SupabaseLogin() {
     e.preventDefault();
     setError(null);
 
+    // Client-side validation
+    if (isSignUp) {
+      if (!formData.name.trim()) {
+        setError('Name is required for sign up');
+        return;
+      }
+      if (formData.password.length < 6) {
+        setError('Password must be at least 6 characters long');
+        return;
+      }
+      if (formData.role === 'ORG_ADMIN' && !formData.companyName.trim()) {
+        setError('Company name is required for Organization Admin');
+        return;
+      }
+    }
+
     try {
       if (isSignUp) {
         // For org admins, create company first if provided
-        let companyId: string | undefined;
         if (formData.role === 'ORG_ADMIN' && formData.companyName) {
           // Company creation will be handled in the signup process
           await signUp(formData.email, formData.password, formData.name, formData.role, formData.companyName);
