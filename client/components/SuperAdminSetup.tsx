@@ -8,7 +8,34 @@ import { DatabaseService } from '../lib/database';
 export function SuperAdminSetup() {
   const [isCreating, setIsCreating] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Check if super admin already exists
+  React.useEffect(() => {
+    checkSuperAdminExists();
+  }, []);
+
+  const checkSuperAdminExists = async () => {
+    try {
+      // Try to find super admin profile
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, role')
+        .eq('email', 'superadmin@flowstock.com')
+        .eq('role', 'super_admin')
+        .single();
+
+      if (data) {
+        setIsComplete(true);
+      }
+    } catch (err) {
+      // Super admin doesn't exist yet
+      console.log('Super admin not found, can create new one');
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   const createSuperAdmin = async () => {
     setIsCreating(true);
