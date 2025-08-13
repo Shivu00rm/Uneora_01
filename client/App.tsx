@@ -80,7 +80,8 @@ function AppContent() {
   // Show login if not authenticated and not on public routes
   const publicRoutes = ['/', '/solutions/manufacturing', '/solutions/retail', '/solutions/wholesale'];
   if (!user && !publicRoutes.includes(location.pathname)) {
-    return <SupabaseLogin />;
+    // Use MockLogin for now due to API key issues
+    return <MockLogin />;
   }
 
   return (
