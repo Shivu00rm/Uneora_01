@@ -54,13 +54,19 @@ export class DatabaseService {
   }
 
   static async createProfile(profile: Profile): Promise<Profile> {
+    console.log('Creating profile:', profile);
     const { data, error } = await supabase
       .from('profiles')
       .insert(profile)
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Profile creation error:', error);
+      throw new Error(`Failed to create profile: ${error.message}`);
+    }
+
+    console.log('Profile created successfully:', data);
     return data
   }
 
