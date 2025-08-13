@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = 'https://givoiztfugawvmkvsprb.supabase.co'
-// Note: In production, get this from your Supabase project settings > API
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdpdm9penRmdWdhd3Zta3ZzcHJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODQzNzMsImV4cCI6MjA3MDY2MDM3M30.iReKXgOidYGUqPJwmD-4jvPZDRJJTjNyOy5rkKb8G8s'
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdpdm9penRmdWdhd3Zta3ZzcHJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODE0OTMsImV4cCI6MjA3MDY1NzQ5M30.NGbpLpPoJWkFeLEK0cX8EvfMC-ir1blCpaR5I_HMEXs'
 
 console.log('Supabase config:', {
   url: supabaseUrl,
