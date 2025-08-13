@@ -60,6 +60,10 @@ export function PlatformAlerts() {
         message: "Main database connection pool at 95% capacity",
         metric: { value: "95%", threshold: "85%", trend: "up" as const },
         actionRequired: true,
+        actions: [
+          { type: "restart" as const, label: "Restart DB Service" },
+          { type: "scale" as const, label: "Scale DB Pool" }
+        ]
       },
       {
         type: "error" as const,
@@ -69,6 +73,10 @@ export function PlatformAlerts() {
         organization: "TechCorp",
         metric: { value: "2.5s", threshold: "1.0s", trend: "up" as const },
         actionRequired: true,
+        actions: [
+          { type: "investigate" as const, label: "Investigate Org" },
+          { type: "restart" as const, label: "Restart Services" }
+        ]
       },
       {
         type: "warning" as const,
@@ -77,6 +85,10 @@ export function PlatformAlerts() {
         message: "Recurring payment failed for organization",
         organization: "Fashion Boutique",
         actionRequired: true,
+        actions: [
+          { type: "contact" as const, label: "Contact Org" },
+          { type: "suspend" as const, label: "Suspend Account", destructive: true }
+        ]
       },
       {
         type: "warning" as const,
@@ -85,6 +97,10 @@ export function PlatformAlerts() {
         message: "Suspicious login activity detected",
         organization: "StartupXYZ",
         actionRequired: false,
+        actions: [
+          { type: "investigate" as const, label: "View Logs" },
+          { type: "suspend" as const, label: "Lock Account", destructive: true }
+        ]
       },
       {
         type: "info" as const,
@@ -101,6 +117,10 @@ export function PlatformAlerts() {
         message: "Primary storage at 92% capacity",
         metric: { value: "92%", threshold: "80%", trend: "up" as const },
         actionRequired: true,
+        actions: [
+          { type: "cleanup" as const, label: "Cleanup Storage" },
+          { type: "scale" as const, label: "Expand Storage" }
+        ]
       },
       {
         type: "warning" as const,
@@ -109,6 +129,10 @@ export function PlatformAlerts() {
         message: "Application server memory usage elevated",
         metric: { value: "87%", threshold: "75%", trend: "stable" as const },
         actionRequired: false,
+        actions: [
+          { type: "restart" as const, label: "Restart Service" },
+          { type: "scale" as const, label: "Scale Memory" }
+        ]
       },
       {
         type: "error" as const,
@@ -116,6 +140,10 @@ export function PlatformAlerts() {
         title: "Background Job Failed",
         message: "Daily backup process failed to complete",
         actionRequired: true,
+        actions: [
+          { type: "retry" as const, label: "Retry Backup" },
+          { type: "investigate" as const, label: "Check Logs" }
+        ]
       },
     ];
 
