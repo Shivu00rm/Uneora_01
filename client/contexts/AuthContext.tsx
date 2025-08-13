@@ -21,7 +21,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  signUp: (email: string, password: string, name: string, role: UserRole, companyId?: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string, role: UserRole, companyNameOrId?: string) => Promise<void>;
   hasPermission: (module: string, action?: string) => boolean;
   isSuperAdmin: () => boolean;
   isOrgAdmin: () => boolean;
