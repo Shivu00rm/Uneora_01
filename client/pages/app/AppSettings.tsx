@@ -30,6 +30,7 @@ import {
   EyeOff,
   Save,
   RefreshCw,
+  BarChart3,
 } from "lucide-react";
 
 export default function AppSettings() {
