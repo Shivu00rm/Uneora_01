@@ -12,6 +12,7 @@ import {
 import { Loader2, AlertCircle, Shield } from "lucide-react";
 import { Alert, AlertDescription } from "./ui/alert";
 import { SuperAdminSetup } from "./SuperAdminSetup";
+import { SupabaseTest } from "./SupabaseTest";
 
 export function SupabaseLogin() {
   const { login, signUp, loading } = useAuth();
