@@ -149,8 +149,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (profile) {
         let organizationName = undefined;
         if (profile.company_id) {
-          const company = await DatabaseService.getCompany(profile.company_id);
-          organizationName = company?.name;
+          try {
+            const company = await DatabaseService.getCompany(profile.company_id);
+            organizationName = company?.name;
+          } catch (companyError) {
+            console.warn('Failed to load company data:', companyError);
+          }
         }
 
         const userData: User = {
@@ -165,9 +169,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
 
         setUser(userData);
+      } else {
+        console.warn('No profile found for user:', userId);
+        // Create a basic profile if none exists
+        try {
+          await DatabaseService.updateProfile(userId, {
+            id: userId,
+            name: 'New User',
+            role: 'ORG_USER'
+          });
+          // Retry loading
+          await loadUserProfile(userId);
+        } catch (createError) {
+          console.error('Failed to create basic profile:', createError);
+        }
       }
     } catch (error) {
       console.error('Failed to load user profile:', error);
+      throw new Error('Failed to load user profile. Please try again.');
     }
   };
 
