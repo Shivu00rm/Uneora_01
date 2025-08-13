@@ -25,13 +25,19 @@ export class DatabaseService {
   }
 
   static async createCompany(company: Omit<Company, 'id' | 'created_at'>): Promise<Company> {
+    console.log('Creating company:', company);
     const { data, error } = await supabase
       .from('companies')
       .insert(company)
       .select()
       .single()
-    
-    if (error) throw error
+
+    if (error) {
+      console.error('Company creation error:', error);
+      throw new Error(`Failed to create company: ${error.message}`);
+    }
+
+    console.log('Company created successfully:', data);
     return data
   }
 
