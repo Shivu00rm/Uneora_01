@@ -468,7 +468,7 @@ export default function PurchaseOrders() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="pending" className="space-y-6">
+        <TabsContent value="pending" className="space-y-6 tab-content-watermark flowstock-watermark">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -519,7 +519,7 @@ export default function PurchaseOrders() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="tracking" className="space-y-6">
+        <TabsContent value="tracking" className="space-y-6 tab-content-watermark flowstock-watermark">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
