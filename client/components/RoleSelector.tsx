@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { useMockLogin, useAuth } from "@/contexts/AuthContext";
-import { Crown, Briefcase, User, LogOut } from "lucide-react";
+import { Crown, Briefcase, User, LogOut, Minimize2, Maximize2 } from "lucide-react";
 
 export function RoleSelector() {
   const { user, logout } = useAuth();
   const { loginAsSuperAdmin, loginAsOrgAdmin, loginAsOrgUser } = useMockLogin();
+  const [isMinimized, setIsMinimized] = useState(false);
 
   if (user) {
     return (
