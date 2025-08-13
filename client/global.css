@@ -103,11 +103,17 @@
 @layer components {
   /* Override default tab styling for better visibility */
   .enhanced-tabs [data-state="active"] {
-    @apply text-slate-800 font-semibold;
+    color: #1e293b !important;
+    font-weight: 600 !important;
   }
 
   .enhanced-tabs [data-state="inactive"] {
-    @apply text-slate-600 hover:text-slate-700;
+    color: #475569 !important;
+    font-weight: 500 !important;
+  }
+
+  .enhanced-tabs [data-state="inactive"]:hover {
+    color: #334155 !important;
   }
 
   /* Individual tab background colors */
