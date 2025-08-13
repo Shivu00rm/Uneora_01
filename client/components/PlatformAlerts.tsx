@@ -38,6 +38,11 @@ interface PlatformAlert {
   };
   actionRequired: boolean;
   resolved: boolean;
+  actions?: {
+    type: "restart" | "scale" | "cleanup" | "investigate" | "contact" | "retry" | "suspend";
+    label: string;
+    destructive?: boolean;
+  }[];
 }
 
 export function PlatformAlerts() {
