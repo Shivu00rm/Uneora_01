@@ -252,15 +252,15 @@ export default function OrganizationMonitor() {
       </div>
 
       {/* Main Content */}
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Organization Overview</TabsTrigger>
-          <TabsTrigger value="performance">Performance Metrics</TabsTrigger>
-          <TabsTrigger value="errors">Error Tracking</TabsTrigger>
-          <TabsTrigger value="incidents">Incident History</TabsTrigger>
+      <Tabs defaultValue="overview" className="space-y-6 enhanced-tabs">
+        <TabsList className="grid w-full grid-cols-4 bg-slate-100">
+          <TabsTrigger value="overview" className="tab-overview text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Organization Overview</TabsTrigger>
+          <TabsTrigger value="performance" className="tab-performance text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Performance Metrics</TabsTrigger>
+          <TabsTrigger value="errors" className="tab-errors text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Error Tracking</TabsTrigger>
+          <TabsTrigger value="incidents" className="tab-incidents text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Incident History</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent value="overview" className="space-y-6 tab-content-watermark flowstock-watermark">
           <Card>
             <CardHeader>
               <CardTitle>Organization Health Status</CardTitle>
