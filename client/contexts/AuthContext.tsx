@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, role: UserRole, companyId?: string) => {
+  const signUp = async (email: string, password: string, name: string, role: UserRole, companyNameOrId?: string) => {
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({ email, password });
@@ -121,12 +121,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data.user) {
         try {
-          // Create profile using insert (since it's a new user)
+          let companyId: string | null = null;
+
+          // Create company if needed (for org admins with company name)
+          if (role === 'ORG_ADMIN' && companyNameOrId && !companyNameOrId.includes('-')) {
+            console.log('Creating company:', companyNameOrId);
+            const company = await DatabaseService.createCompany({
+              name: companyNameOrId,
+              industry: 'Technology' // Default industry
+            });
+            companyId = company.id;
+          } else if (companyNameOrId) {
+            // Assume it's a company ID if it contains dashes (UUID format)
+            companyId = companyNameOrId;
+          }
+
+          // Create profile
           const profileData = {
             id: data.user.id,
             name,
             role,
-            company_id: companyId || null
+            company_id: companyId
           };
 
           console.log('Creating profile:', profileData);
