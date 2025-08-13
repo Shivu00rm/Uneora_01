@@ -120,20 +120,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.user) {
+        console.log('User created successfully:', data.user.id);
+
         try {
           let companyId: string | null = null;
 
           // Create company if needed (for org admins with company name)
           if (role === 'ORG_ADMIN' && companyNameOrId && !companyNameOrId.includes('-')) {
-            console.log('Creating company:', companyNameOrId);
-            const company = await DatabaseService.createCompany({
-              name: companyNameOrId,
-              industry: 'Technology' // Default industry
-            });
-            companyId = company.id;
-          } else if (companyNameOrId) {
+            console.log('Creating company for org admin:', companyNameOrId);
+            try {
+              const company = await DatabaseService.createCompany({
+                name: companyNameOrId,
+                industry: 'Technology' // Default industry
+              });
+              companyId = company.id;
+              console.log('Company created with ID:', companyId);
+            } catch (companyError: any) {
+              console.error('Company creation failed:', companyError);
+              throw new Error(`Failed to create company: ${companyError.message}`);
+            }
+          } else if (companyNameOrId && companyNameOrId.includes('-')) {
             // Assume it's a company ID if it contains dashes (UUID format)
             companyId = companyNameOrId;
+            console.log('Using existing company ID:', companyId);
           }
 
           // Create profile with email
@@ -145,25 +154,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             company_id: companyId
           };
 
-          console.log('Creating profile:', profileData);
-          await DatabaseService.createProfile(profileData);
+          console.log('Creating profile with data:', profileData);
+          try {
+            await DatabaseService.createProfile(profileData);
+            console.log('Profile created successfully');
+          } catch (profileError: any) {
+            console.error('Profile creation failed:', profileError);
+            throw new Error(`Failed to create profile: ${profileError.message}`);
+          }
 
           // Load the profile to set user state
+          console.log('Loading user profile...');
           await loadUserProfile(data.user.id);
+          console.log('Signup process completed successfully');
 
-          console.log('Profile created successfully');
-        } catch (profileError: any) {
-          console.error('Profile creation error:', profileError);
+        } catch (setupError: any) {
+          console.error('Setup error during signup:', setupError);
 
           // Extract meaningful error message
-          let errorMessage = 'Failed to create user profile.';
-          if (profileError.message) {
-            if (profileError.message.includes('duplicate key')) {
+          let errorMessage = 'Account created but setup failed.';
+          if (setupError.message) {
+            if (setupError.message.includes('duplicate key')) {
               errorMessage = 'Profile already exists. Try signing in instead.';
-            } else if (profileError.message.includes('permission denied')) {
-              errorMessage = 'Permission denied. Please contact support.';
+            } else if (setupError.message.includes('row-level security')) {
+              errorMessage = 'Permission error during setup. Please contact support.';
+            } else if (setupError.message.includes('violates')) {
+              errorMessage = 'Database constraint violation. Please contact support.';
             } else {
-              errorMessage = profileError.message;
+              errorMessage = setupError.message;
             }
           }
 
