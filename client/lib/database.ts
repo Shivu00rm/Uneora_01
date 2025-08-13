@@ -89,7 +89,15 @@ export class DatabaseService {
 
     if (error) {
       console.error('Profile creation error:', error);
-      throw new Error(`Failed to create profile: ${error.message}`);
+      let errorMessage = 'Failed to create profile';
+      if (error.message) {
+        errorMessage = `Failed to create profile: ${error.message}`;
+      } else if (error.details) {
+        errorMessage = `Failed to create profile: ${error.details}`;
+      } else if (typeof error === 'string') {
+        errorMessage = `Failed to create profile: ${error}`;
+      }
+      throw new Error(errorMessage);
     }
 
     console.log('Profile created successfully:', data);
