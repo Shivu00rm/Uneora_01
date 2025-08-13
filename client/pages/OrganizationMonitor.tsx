@@ -338,7 +338,7 @@ export default function OrganizationMonitor() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="performance" className="space-y-6">
+        <TabsContent value="performance" className="space-y-6 tab-content-watermark flowstock-watermark">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {orgHealthData.map((org) => (
               <Card key={org.id}>
@@ -394,7 +394,7 @@ export default function OrganizationMonitor() {
           </div>
         </TabsContent>
 
-        <TabsContent value="errors" className="space-y-6">
+        <TabsContent value="errors" className="space-y-6 tab-content-watermark flowstock-watermark">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -466,7 +466,7 @@ export default function OrganizationMonitor() {
           </div>
         </TabsContent>
 
-        <TabsContent value="incidents" className="space-y-6">
+        <TabsContent value="incidents" className="space-y-6 tab-content-watermark flowstock-watermark">
           <Card>
             <CardHeader>
               <CardTitle>Recent Incidents</CardTitle>
