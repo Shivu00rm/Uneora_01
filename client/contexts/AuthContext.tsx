@@ -203,12 +203,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const profile = await DatabaseService.getProfile(userId);
       if (profile) {
         let organizationName = undefined;
-        if (profile.company_id) {
+        if (profile.organization_id) {
           try {
-            const company = await DatabaseService.getCompany(profile.company_id);
-            organizationName = company?.name;
-          } catch (companyError) {
-            console.warn('Failed to load company data:', companyError);
+            const organization = await DatabaseService.getOrganization(profile.organization_id);
+            organizationName = organization?.name;
+          } catch (orgError) {
+            console.warn('Failed to load organization data:', orgError);
           }
         }
 
