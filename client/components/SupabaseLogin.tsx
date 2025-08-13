@@ -236,7 +236,7 @@ export function SupabaseLogin() {
               )}
             </Button>
 
-            <div className="text-center">
+            <div className="text-center space-y-2">
               <Button
                 type="button"
                 variant="ghost"
@@ -248,6 +248,21 @@ export function SupabaseLogin() {
                   : "Don't have an account? Sign up"
                 }
               </Button>
+
+              {!isSignUp && (
+                <div className="border-t pt-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowSuperAdminSetup(true)}
+                    className="text-xs flex items-center gap-1"
+                  >
+                    <Shield className="h-3 w-3" />
+                    Setup Super Admin
+                  </Button>
+                </div>
+              )}
             </div>
 
             {isSignUp && (
