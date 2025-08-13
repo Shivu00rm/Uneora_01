@@ -3,8 +3,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, Shield } from 'lucide-react';
 import { Alert, AlertDescription } from './ui/alert';
+import { SuperAdminSetup } from './SuperAdminSetup';
 
 export function SupabaseLogin() {
   const { login, signUp, loading } = useAuth();
