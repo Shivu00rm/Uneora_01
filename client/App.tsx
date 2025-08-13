@@ -26,6 +26,7 @@ import SuperAdmin from "./pages/SuperAdmin";
 import OrganizationMonitor from "./pages/OrganizationMonitor";
 import AppDashboard from "./pages/app/AppDashboard";
 import TeamManagement from "./pages/app/TeamManagement";
+import AppSettings from "./pages/app/AppSettings";
 import Manufacturing from "./pages/solutions/Manufacturing";
 import Retail from "./pages/solutions/Retail";
 import Wholesale from "./pages/solutions/Wholesale";
