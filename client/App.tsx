@@ -417,12 +417,6 @@ function AppContent() {
         </Routes>
       </main>
       <Footer />
-      {/* Development-only role selector */}
-      {import.meta.env.DEV && (
-        <React.Suspense fallback={null}>
-          <DevRoleSelector />
-        </React.Suspense>
-      )}
     </div>
   );
 }
