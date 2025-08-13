@@ -401,17 +401,30 @@ export function PlatformAlerts() {
                     {/* Action Buttons */}
                     {alert.actions && alert.actions.length > 0 && !alert.resolved && (
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {alert.actions.map((action, actionIndex) => (
-                          <Button
-                            key={actionIndex}
-                            variant={action.destructive ? "destructive" : "outline"}
-                            size="sm"
-                            className="h-6 text-xs px-2"
-                            onClick={() => handleAlertAction(alert.id, action.type, alert.title)}
-                          >
-                            {action.label}
-                          </Button>
-                        ))}
+                        {alert.actions.map((action, actionIndex) => {
+                          const actionKey = `${alert.id}-${action.type}`;
+                          const isLoading = loadingActions.has(actionKey);
+
+                          return (
+                            <Button
+                              key={actionIndex}
+                              variant={action.destructive ? "destructive" : "outline"}
+                              size="sm"
+                              className="h-6 text-xs px-2"
+                              disabled={isLoading}
+                              onClick={() => handleAlertAction(alert.id, action.type, alert.title)}
+                            >
+                              {isLoading ? (
+                                <>
+                                  <div className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent mr-1" />
+                                  Processing...
+                                </>
+                              ) : (
+                                action.label
+                              )}
+                            </Button>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
