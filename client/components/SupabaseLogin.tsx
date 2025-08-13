@@ -152,8 +152,10 @@ export function SupabaseLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md space-y-4">
-        {/* Connection Test */}
-        <SupabaseTest />
+        {/* Simple connection info */}
+        <div className="text-center text-xs text-gray-500">
+          Supabase URL: {import.meta.env.VITE_SUPABASE_URL || 'Not set'}
+        </div>
 
         <Card className="w-full">
         <CardHeader>
