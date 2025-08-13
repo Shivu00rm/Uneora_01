@@ -31,6 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
 import { InvoiceTemplate } from "@/components/InvoiceTemplate";
+import { PlatformAlerts } from "@/components/PlatformAlerts";
 import {
   Shield,
   Users,
