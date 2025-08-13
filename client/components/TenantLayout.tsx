@@ -10,6 +10,8 @@ import {
 } from "./ui/dropdown-menu";
 import { PermissionGate, OrgAdminOnly } from "./ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
+import { GlobalSearch } from "./GlobalSearch";
+import { NotificationCenter } from "./NotificationCenter";
 import {
   Package,
   BarChart3,
