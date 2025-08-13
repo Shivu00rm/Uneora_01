@@ -79,7 +79,20 @@ export function SuperAdminSetup() {
       }
     } catch (err: any) {
       console.error('Super admin creation error:', err);
-      setError(err.message || 'Failed to create super admin');
+
+      // Extract meaningful error message
+      let errorMessage = 'Failed to create super admin';
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.error_description) {
+        errorMessage = err.error_description;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      } else if (err.toString && err.toString() !== '[object Object]') {
+        errorMessage = err.toString();
+      }
+
+      setError(errorMessage);
     } finally {
       setIsCreating(false);
     }
