@@ -230,7 +230,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email: userEmail || '',
           role: (profile.role as UserRole) || 'ORG_USER',
           status: 'active',
-          organizationId: profile.company_id || null,
+          organizationId: profile.organization_id || null,
           organizationName,
           permissions: getRolePermissions((profile.role as UserRole) || 'ORG_USER')
         };
