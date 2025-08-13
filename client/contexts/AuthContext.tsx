@@ -153,7 +153,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             name,
             email: data.user.email || email,
             role,
-            company_id: companyId
+            organization_id: companyId
           };
 
           console.log('Creating profile with data:', profileData);
