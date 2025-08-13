@@ -157,44 +157,7 @@ export default function AppDashboard() {
       {/* Quick Actions & Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5" />
-              Quick Actions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Link to="/app/inventory">
-              <Button className="w-full justify-start" variant="outline">
-                <Package className="mr-2 h-4 w-4" />
-                Manage Inventory
-                <ArrowUpRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/app/pos">
-              <Button className="w-full justify-start" variant="outline">
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                Process Sale
-                <ArrowUpRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/app/purchase-orders">
-              <Button className="w-full justify-start" variant="outline">
-                <BarChart3 className="mr-2 h-4 w-4" />
-                Create Purchase Order
-                <ArrowUpRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/app/analytics">
-              <Button className="w-full justify-start" variant="outline">
-                <TrendingUp className="mr-2 h-4 w-4" />
-                View Analytics
-                <ArrowUpRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+        <QuickActions />
 
         {/* Recent Activity */}
         <Card className="lg:col-span-2">
