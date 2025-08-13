@@ -49,6 +49,7 @@ export function PlatformAlerts() {
   const [alerts, setAlerts] = useState<PlatformAlert[]>([]);
   const [isLive, setIsLive] = useState(true);
   const [filter, setFilter] = useState<string>("all");
+  const [loadingActions, setLoadingActions] = useState<Set<string>>(new Set());
 
   // Mock platform alerts
   const generateMockAlert = (): PlatformAlert => {
