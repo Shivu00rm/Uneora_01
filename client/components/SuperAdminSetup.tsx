@@ -125,6 +125,19 @@ export function SuperAdminSetup() {
     }
   };
 
+  if (isChecking) {
+    return (
+      <Card className="w-full max-w-md mx-auto">
+        <CardContent className="p-6">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Checking super admin status...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (isComplete) {
     return (
       <Card className="w-full max-w-md mx-auto">
