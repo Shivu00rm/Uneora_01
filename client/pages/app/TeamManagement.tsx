@@ -129,6 +129,60 @@ export default function TeamManagement() {
   const activeMembers = mockTeamMembers.filter(m => m.status === "active").length;
   const totalMembers = mockTeamMembers.length;
 
+  const handleSelectAll = () => {
+    if (selectedMembers.length === filteredAndSortedMembers.length) {
+      setSelectedMembers([]);
+    } else {
+      setSelectedMembers(filteredAndSortedMembers.map(m => m.id));
+    }
+  };
+
+  const handleSelectMember = (memberId: number) => {
+    setSelectedMembers(prev =>
+      prev.includes(memberId)
+        ? prev.filter(id => id !== memberId)
+        : [...prev, memberId]
+    );
+  };
+
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const handleBulkAction = async (action: string) => {
+    setIsLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    switch (action) {
+      case "deactivate":
+        console.log("Deactivating members:", selectedMembers);
+        break;
+      case "activate":
+        console.log("Activating members:", selectedMembers);
+        break;
+      case "delete":
+        console.log("Deleting members:", selectedMembers);
+        break;
+      case "export":
+        console.log("Exporting members:", selectedMembers);
+        break;
+    }
+
+    setSelectedMembers([]);
+    setIsLoading(false);
+  };
+
+  const getSortIcon = (field: string) => {
+    if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
+    return sortDirection === "asc" ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />;
+  };
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
