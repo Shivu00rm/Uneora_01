@@ -102,6 +102,8 @@ export function SupabaseLogin() {
         errorMessage = 'Database configuration issue. Please try again.';
       } else if (errorMessage.includes('Password should be at least 6 characters')) {
         errorMessage = 'Password must be at least 6 characters long.';
+      } else if (errorMessage.includes('Email not confirmed')) {
+        errorMessage = 'Please wait a moment and try again. If the issue persists, contact support.';
       } else if (errorMessage.includes('row-level security')) {
         errorMessage = 'Account creation is temporarily disabled. Please contact support.';
       } else if (errorMessage.includes('Permission error')) {
