@@ -361,7 +361,7 @@ export function PlatformAlerts() {
                         </div>
                       </div>
                     )}
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
                       <div className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         {formatTimeAgo(alert.timestamp)}
@@ -375,6 +375,23 @@ export function PlatformAlerts() {
                         </Badge>
                       )}
                     </div>
+
+                    {/* Action Buttons */}
+                    {alert.actions && alert.actions.length > 0 && !alert.resolved && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {alert.actions.map((action, actionIndex) => (
+                          <Button
+                            key={actionIndex}
+                            variant={action.destructive ? "destructive" : "outline"}
+                            size="sm"
+                            className="h-6 text-xs px-2"
+                            onClick={() => handleAlertAction(alert.id, action.type, alert.title)}
+                          >
+                            {action.label}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               );
