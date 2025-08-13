@@ -13,7 +13,8 @@ export function SupabaseLogin() {
     email: '',
     password: '',
     name: '',
-    role: 'ORG_USER' as const
+    role: 'ORG_USER' as const,
+    companyName: ''
   });
   const [error, setError] = useState<string | null>(null);
 
