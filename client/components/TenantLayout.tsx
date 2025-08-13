@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { PermissionGate, OrgAdminOnly } from "./ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -16,7 +22,7 @@ import {
   Building2,
   FileText,
   Truck,
-  TrendingUp
+  TrendingUp,
 } from "lucide-react";
 
 interface TenantLayoutProps {
@@ -28,15 +34,16 @@ export function TenantLayout({ children }: TenantLayoutProps) {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-
   const isActiveRoute = (path: string) => {
-    return location.pathname === path || location.pathname.startsWith(path + '/');
+    return (
+      location.pathname === path || location.pathname.startsWith(path + "/")
+    );
   };
 
   const navLinkClass = (path: string) => {
     return `text-sm font-medium transition-colors ${
-      isActiveRoute(path) 
-        ? "text-foreground" 
+      isActiveRoute(path)
+        ? "text-foreground"
         : "text-muted-foreground hover:text-foreground"
     }`;
   };
@@ -53,18 +60,26 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                   <Package className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <span className="text-xl font-bold text-foreground">FlowStock</span>
+                <span className="text-xl font-bold text-foreground">
+                  FlowStock
+                </span>
               </Link>
             </div>
 
             {/* Centered Desktop Navigation */}
             <nav className="hidden md:flex items-center justify-center flex-1 space-x-6">
-              <Link to="/app/dashboard" className={navLinkClass("/app/dashboard")}>
+              <Link
+                to="/app/dashboard"
+                className={navLinkClass("/app/dashboard")}
+              >
                 Dashboard
               </Link>
 
               <PermissionGate module="inventory" action="view">
-                <Link to="/app/inventory" className={navLinkClass("/app/inventory")}>
+                <Link
+                  to="/app/inventory"
+                  className={navLinkClass("/app/inventory")}
+                >
                   Inventory
                 </Link>
               </PermissionGate>
@@ -76,19 +91,28 @@ export function TenantLayout({ children }: TenantLayoutProps) {
               </PermissionGate>
 
               <PermissionGate module="vendors" action="view">
-                <Link to="/app/vendors" className={navLinkClass("/app/vendors")}>
+                <Link
+                  to="/app/vendors"
+                  className={navLinkClass("/app/vendors")}
+                >
                   Vendors
                 </Link>
               </PermissionGate>
 
               <PermissionGate module="purchase_orders" action="view">
-                <Link to="/app/purchase-orders" className={navLinkClass("/app/purchase-orders")}>
+                <Link
+                  to="/app/purchase-orders"
+                  className={navLinkClass("/app/purchase-orders")}
+                >
                   Orders
                 </Link>
               </PermissionGate>
 
               <PermissionGate module="analytics" action="view">
-                <Link to="/app/analytics" className={navLinkClass("/app/analytics")}>
+                <Link
+                  to="/app/analytics"
+                  className={navLinkClass("/app/analytics")}
+                >
                   Analytics
                 </Link>
               </PermissionGate>
@@ -132,7 +156,10 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                     </DropdownMenuItem>
                   </OrgAdminOnly>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout} className="text-red-600 focus:text-red-600">
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="text-red-600 focus:text-red-600"
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     Sign Out
                   </DropdownMenuItem>
@@ -145,7 +172,11 @@ export function TenantLayout({ children }: TenantLayoutProps) {
               className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
 
@@ -153,7 +184,6 @@ export function TenantLayout({ children }: TenantLayoutProps) {
           {isMenuOpen && (
             <div className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 border-t">
-
                 {/* Navigation Links */}
                 <Link
                   to="/app/dashboard"
@@ -162,7 +192,7 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                 >
                   Dashboard
                 </Link>
-                
+
                 <PermissionGate module="inventory" action="view">
                   <Link
                     to="/app/inventory"
@@ -172,7 +202,7 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                     Inventory
                   </Link>
                 </PermissionGate>
-                
+
                 <PermissionGate module="pos" action="view">
                   <Link
                     to="/app/pos"
@@ -182,7 +212,7 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                     POS
                   </Link>
                 </PermissionGate>
-                
+
                 <PermissionGate module="vendors" action="view">
                   <Link
                     to="/app/vendors"
@@ -192,7 +222,7 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                     Vendors
                   </Link>
                 </PermissionGate>
-                
+
                 <PermissionGate module="purchase_orders" action="view">
                   <Link
                     to="/app/purchase-orders"
@@ -202,7 +232,7 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                     Purchase Orders
                   </Link>
                 </PermissionGate>
-                
+
                 <PermissionGate module="analytics" action="view">
                   <Link
                     to="/app/analytics"
@@ -212,7 +242,7 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                     Analytics
                   </Link>
                 </PermissionGate>
-                
+
                 <OrgAdminOnly>
                   <PermissionGate module="users" action="view">
                     <Link
@@ -226,9 +256,9 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                 </OrgAdminOnly>
 
                 <div className="border-t pt-4 space-y-2">
-                  <Button 
-                    variant="destructive" 
-                    size="sm" 
+                  <Button
+                    variant="destructive"
+                    size="sm"
                     className="w-full"
                     onClick={() => {
                       logout();
@@ -246,9 +276,7 @@ export function TenantLayout({ children }: TenantLayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }

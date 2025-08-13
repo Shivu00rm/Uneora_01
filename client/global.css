@@ -185,14 +185,14 @@
   }
 
   .tab-content-watermark::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 200px;
     height: 200px;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIxIDhWN0EzIDMgMCAwIDAgMTggNEg2QTMgMyAwIDAgMCAzIDdWOE02IDhIMThNNiA4VjE4QTIgMiAwIDAgMCA4IDIwSDE2QTIgMiAwIDAgMCAxOCAxOFY4TTEwIDEySDEwLjAxTTE0IDEySDEwLjAxTTEwIDE2SDEwLjAxTTE0IDE2SDEwLjAxIiBzdHJva2U9IiNmMWY1ZjkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvdHNnPg==');
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIxIDhWN0EzIDMgMCAwIDAgMTggNEg2QTMgMyAwIDAgMCAzIDdWOE02IDhIMThNNiA4VjE4QTIgMiAwIDAgMCA4IDIwSDE2QTIgMiAwIDAgMCAxOCAxOFY4TTEwIDEySDEwLjAxTTE0IDEySDEwLjAxTTEwIDE2SDEwLjAxTTE0IDE2SDEwLjAxIiBzdHJva2U9IiNmMWY1ZjkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjwvdHNnPg==");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -208,7 +208,7 @@
 
   /* FlowStock Logo Watermark */
   .flowstock-watermark::before {
-    content: 'FlowStock';
+    content: "FlowStock";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -219,7 +219,10 @@
     pointer-events: none;
     z-index: 0;
     user-select: none;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
   /* Force better tab text visibility */
@@ -260,7 +263,7 @@
 
   /* Watermark styling */
   .vendor-watermark::before {
-    content: 'FlowStock';
+    content: "FlowStock";
     position: absolute;
     top: 50%;
     left: 50%;

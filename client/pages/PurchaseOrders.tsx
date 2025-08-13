@@ -337,12 +337,30 @@ export default function PurchaseOrders() {
       {/* Main Content */}
       <Tabs defaultValue="orders" className="space-y-6 enhanced-tabs">
         <TabsList className="grid w-full grid-cols-3 bg-slate-100">
-          <TabsTrigger value="orders" className="tab-orders text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">All Orders</TabsTrigger>
-          <TabsTrigger value="pending" className="tab-pending text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Pending Approval</TabsTrigger>
-          <TabsTrigger value="tracking" className="tab-tracking text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Delivery Tracking</TabsTrigger>
+          <TabsTrigger
+            value="orders"
+            className="tab-orders text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            All Orders
+          </TabsTrigger>
+          <TabsTrigger
+            value="pending"
+            className="tab-pending text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Pending Approval
+          </TabsTrigger>
+          <TabsTrigger
+            value="tracking"
+            className="tab-tracking text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Delivery Tracking
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="orders" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="orders"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           {/* Filters */}
           <Card>
             <CardContent className="pt-6">
@@ -468,7 +486,10 @@ export default function PurchaseOrders() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="pending" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="pending"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -519,7 +540,10 @@ export default function PurchaseOrders() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="tracking" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="tracking"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

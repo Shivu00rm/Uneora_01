@@ -4,13 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
-import { 
-  Shield, 
+import {
+  Shield,
   AlertTriangle,
   Activity,
   Building2,
@@ -28,7 +48,7 @@ import {
   LineChart,
   Globe,
   Wifi,
-  WifiOff
+  WifiOff,
 } from "lucide-react";
 
 interface OrganizationHealth {
@@ -58,7 +78,8 @@ export default function OrganizationMonitor() {
   const [selectedOrg, setSelectedOrg] = useState<string>("all");
   const [selectedMetric, setSelectedMetric] = useState("response-time");
   const [isMonitoringDialogOpen, setIsMonitoringDialogOpen] = useState(false);
-  const [selectedOrgForMonitoring, setSelectedOrgForMonitoring] = useState<OrganizationHealth | null>(null);
+  const [selectedOrgForMonitoring, setSelectedOrgForMonitoring] =
+    useState<OrganizationHealth | null>(null);
 
   // Mock organization health data
   const orgHealthData: OrganizationHealth[] = [
@@ -71,10 +92,10 @@ export default function OrganizationMonitor() {
       errorRate: 0.02,
       activeUsers: 156,
       performance: { cpu: 35, memory: 67, storage: 42 },
-      errors: { total: 12, runtime: 3, database: 2, network: 7 }
+      errors: { total: 12, runtime: 3, database: 2, network: 7 },
     },
     {
-      id: "fashion-boutique", 
+      id: "fashion-boutique",
       name: "Fashion Boutique",
       status: "warning",
       responseTime: 1250,
@@ -83,7 +104,7 @@ export default function OrganizationMonitor() {
       activeUsers: 89,
       lastIncident: "2024-01-15T10:30:00Z",
       performance: { cpu: 78, memory: 85, storage: 56 },
-      errors: { total: 45, runtime: 15, database: 8, network: 22 }
+      errors: { total: 45, runtime: 15, database: 8, network: 22 },
     },
     {
       id: "startup-xyz",
@@ -95,7 +116,7 @@ export default function OrganizationMonitor() {
       activeUsers: 12,
       lastIncident: "2024-01-18T14:22:00Z",
       performance: { cpu: 95, memory: 92, storage: 78 },
-      errors: { total: 127, runtime: 56, database: 34, network: 37 }
+      errors: { total: 127, runtime: 56, database: 34, network: 37 },
     },
     {
       id: "retail-chain",
@@ -107,28 +128,37 @@ export default function OrganizationMonitor() {
       activeUsers: 0,
       lastIncident: "2024-01-18T16:45:00Z",
       performance: { cpu: 0, memory: 0, storage: 0 },
-      errors: { total: 234, runtime: 89, database: 67, network: 78 }
-    }
+      errors: { total: 234, runtime: 89, database: 67, network: 78 },
+    },
   ];
-
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "healthy": return "text-emerald-500";
-      case "warning": return "text-yellow-500";
-      case "critical": return "text-red-500";
-      case "offline": return "text-gray-500";
-      default: return "text-muted-foreground";
+      case "healthy":
+        return "text-emerald-500";
+      case "warning":
+        return "text-yellow-500";
+      case "critical":
+        return "text-red-500";
+      case "offline":
+        return "text-gray-500";
+      default:
+        return "text-muted-foreground";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "healthy": return <Wifi className="h-4 w-4" />;
-      case "warning": return <AlertTriangle className="h-4 w-4" />;
-      case "critical": return <AlertTriangle className="h-4 w-4" />;
-      case "offline": return <WifiOff className="h-4 w-4" />;
-      default: return <Activity className="h-4 w-4" />;
+      case "healthy":
+        return <Wifi className="h-4 w-4" />;
+      case "warning":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "critical":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "offline":
+        return <WifiOff className="h-4 w-4" />;
+      default:
+        return <Activity className="h-4 w-4" />;
     }
   };
 
@@ -143,8 +173,10 @@ export default function OrganizationMonitor() {
     setIsMonitoringDialogOpen(true);
   };
 
-  const criticalOrgs = orgHealthData.filter(org => org.status === "critical" || org.status === "offline");
-  const warningOrgs = orgHealthData.filter(org => org.status === "warning");
+  const criticalOrgs = orgHealthData.filter(
+    (org) => org.status === "critical" || org.status === "offline",
+  );
+  const warningOrgs = orgHealthData.filter((org) => org.status === "warning");
 
   return (
     <div className="py-8">
@@ -156,7 +188,8 @@ export default function OrganizationMonitor() {
             Organization Health Monitor
           </h1>
           <p className="text-muted-foreground">
-            Real-time monitoring of all organization instances - performance, errors, and operational health
+            Real-time monitoring of all organization instances - performance,
+            errors, and operational health
           </p>
         </div>
         <div className="flex gap-2">
@@ -176,9 +209,11 @@ export default function OrganizationMonitor() {
         <Alert className="mb-6 border-red-200 bg-red-50">
           <AlertTriangle className="h-4 w-4 text-red-600" />
           <AlertDescription className="text-red-800">
-            <strong>{criticalOrgs.length} organization(s) require immediate attention:</strong>
+            <strong>
+              {criticalOrgs.length} organization(s) require immediate attention:
+            </strong>
             <div className="mt-2 space-x-2">
-              {criticalOrgs.map(org => (
+              {criticalOrgs.map((org) => (
                 <Badge key={org.id} variant="destructive" className="mr-2">
                   {org.name}
                 </Badge>
@@ -192,12 +227,14 @@ export default function OrganizationMonitor() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Healthy Organizations</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Healthy Organizations
+            </CardTitle>
             <Activity className="h-4 w-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-emerald-600">
-              {orgHealthData.filter(org => org.status === "healthy").length}
+              {orgHealthData.filter((org) => org.status === "healthy").length}
             </div>
             <p className="text-xs text-muted-foreground">
               Out of {orgHealthData.length} total
@@ -207,12 +244,18 @@ export default function OrganizationMonitor() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Avg Response Time
+            </CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {Math.round(orgHealthData.reduce((acc, org) => acc + org.responseTime, 0) / orgHealthData.length)}ms
+              {Math.round(
+                orgHealthData.reduce((acc, org) => acc + org.responseTime, 0) /
+                  orgHealthData.length,
+              )}
+              ms
             </div>
             <p className="text-xs text-muted-foreground">
               Across all organizations
@@ -222,16 +265,18 @@ export default function OrganizationMonitor() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Active Users</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Active Users
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {orgHealthData.reduce((acc, org) => acc + org.activeUsers, 0).toLocaleString()}
+              {orgHealthData
+                .reduce((acc, org) => acc + org.activeUsers, 0)
+                .toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Currently online
-            </p>
+            <p className="text-xs text-muted-foreground">Currently online</p>
           </CardContent>
         </Card>
 
@@ -242,7 +287,11 @@ export default function OrganizationMonitor() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {(orgHealthData.reduce((acc, org) => acc + org.uptime, 0) / orgHealthData.length).toFixed(1)}%
+              {(
+                orgHealthData.reduce((acc, org) => acc + org.uptime, 0) /
+                orgHealthData.length
+              ).toFixed(1)}
+              %
             </div>
             <p className="text-xs text-muted-foreground">
               Average across all orgs
@@ -254,13 +303,36 @@ export default function OrganizationMonitor() {
       {/* Main Content */}
       <Tabs defaultValue="overview" className="space-y-6 enhanced-tabs">
         <TabsList className="grid w-full grid-cols-4 bg-slate-100">
-          <TabsTrigger value="overview" className="tab-overview text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Organization Overview</TabsTrigger>
-          <TabsTrigger value="performance" className="tab-performance text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Performance Metrics</TabsTrigger>
-          <TabsTrigger value="errors" className="tab-errors text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Error Tracking</TabsTrigger>
-          <TabsTrigger value="incidents" className="tab-incidents text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Incident History</TabsTrigger>
+          <TabsTrigger
+            value="overview"
+            className="tab-overview text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Organization Overview
+          </TabsTrigger>
+          <TabsTrigger
+            value="performance"
+            className="tab-performance text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Performance Metrics
+          </TabsTrigger>
+          <TabsTrigger
+            value="errors"
+            className="tab-errors text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Error Tracking
+          </TabsTrigger>
+          <TabsTrigger
+            value="incidents"
+            className="tab-incidents text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Incident History
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="overview"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           <Card>
             <CardHeader>
               <CardTitle>Organization Health Status</CardTitle>
@@ -288,18 +360,38 @@ export default function OrganizationMonitor() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className={`flex items-center gap-2 ${getStatusColor(org.status)}`}>
+                        <div
+                          className={`flex items-center gap-2 ${getStatusColor(org.status)}`}
+                        >
                           {getStatusIcon(org.status)}
                           <span className="capitalize">{org.status}</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className={org.responseTime > 1000 ? "text-red-600" : org.responseTime > 500 ? "text-yellow-600" : "text-emerald-600"}>
-                          {org.responseTime > 0 ? `${org.responseTime}ms` : "N/A"}
+                        <span
+                          className={
+                            org.responseTime > 1000
+                              ? "text-red-600"
+                              : org.responseTime > 500
+                                ? "text-yellow-600"
+                                : "text-emerald-600"
+                          }
+                        >
+                          {org.responseTime > 0
+                            ? `${org.responseTime}ms`
+                            : "N/A"}
                         </span>
                       </TableCell>
                       <TableCell>
-                        <span className={org.uptime < 95 ? "text-red-600" : org.uptime < 99 ? "text-yellow-600" : "text-emerald-600"}>
+                        <span
+                          className={
+                            org.uptime < 95
+                              ? "text-red-600"
+                              : org.uptime < 99
+                                ? "text-yellow-600"
+                                : "text-emerald-600"
+                          }
+                        >
                           {org.uptime > 0 ? `${org.uptime}%` : "N/A"}
                         </span>
                       </TableCell>
@@ -310,21 +402,33 @@ export default function OrganizationMonitor() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className={org.errorRate > 0.5 ? "text-red-600" : org.errorRate > 0.1 ? "text-yellow-600" : "text-emerald-600"}>
+                        <span
+                          className={
+                            org.errorRate > 0.5
+                              ? "text-red-600"
+                              : org.errorRate > 0.1
+                                ? "text-yellow-600"
+                                : "text-emerald-600"
+                          }
+                        >
                           {(org.errorRate * 100).toFixed(2)}%
                         </span>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={() => handleViewDetails(org)}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button variant="ghost" size="sm" asChild>
-                            <a href={`https://${org.id}.flowstock.com`} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={`https://${org.id}.flowstock.com`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               <ExternalLink className="h-4 w-4" />
                             </a>
                           </Button>
@@ -338,14 +442,19 @@ export default function OrganizationMonitor() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="performance" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="performance"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {orgHealthData.map((org) => (
               <Card key={org.id}>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     {org.name}
-                    <div className={`flex items-center gap-1 ${getStatusColor(org.status)}`}>
+                    <div
+                      className={`flex items-center gap-1 ${getStatusColor(org.status)}`}
+                    >
                       {getStatusIcon(org.status)}
                       <span className="text-sm capitalize">{org.status}</span>
                     </div>
@@ -358,7 +467,7 @@ export default function OrganizationMonitor() {
                       <span>{org.performance.cpu}%</span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
-                      <div 
+                      <div
                         className={`h-2 rounded-full ${getPerformanceColor(org.performance.cpu)}`}
                         style={{ width: `${org.performance.cpu}%` }}
                       />
@@ -370,7 +479,7 @@ export default function OrganizationMonitor() {
                       <span>{org.performance.memory}%</span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
-                      <div 
+                      <div
                         className={`h-2 rounded-full ${getPerformanceColor(org.performance.memory)}`}
                         style={{ width: `${org.performance.memory}%` }}
                       />
@@ -382,7 +491,7 @@ export default function OrganizationMonitor() {
                       <span>{org.performance.storage}%</span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
-                      <div 
+                      <div
                         className={`h-2 rounded-full ${getPerformanceColor(org.performance.storage)}`}
                         style={{ width: `${org.performance.storage}%` }}
                       />
@@ -394,7 +503,10 @@ export default function OrganizationMonitor() {
           </div>
         </TabsContent>
 
-        <TabsContent value="errors" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="errors"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -405,21 +517,35 @@ export default function OrganizationMonitor() {
                   <div key={org.id} className="space-y-2 p-3 border rounded">
                     <div className="flex justify-between items-center">
                       <span className="font-medium">{org.name}</span>
-                      <Badge variant={org.errors.total > 50 ? "destructive" : org.errors.total > 20 ? "secondary" : "outline"}>
+                      <Badge
+                        variant={
+                          org.errors.total > 50
+                            ? "destructive"
+                            : org.errors.total > 20
+                              ? "secondary"
+                              : "outline"
+                        }
+                      >
                         {org.errors.total} total
                       </Badge>
                     </div>
                     <div className="grid grid-cols-3 gap-2 text-sm">
                       <div className="text-center">
-                        <div className="text-red-600 font-medium">{org.errors.runtime}</div>
+                        <div className="text-red-600 font-medium">
+                          {org.errors.runtime}
+                        </div>
                         <div className="text-muted-foreground">Runtime</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-blue-600 font-medium">{org.errors.database}</div>
+                        <div className="text-blue-600 font-medium">
+                          {org.errors.database}
+                        </div>
                         <div className="text-muted-foreground">Database</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-yellow-600 font-medium">{org.errors.network}</div>
+                        <div className="text-yellow-600 font-medium">
+                          {org.errors.network}
+                        </div>
                         <div className="text-muted-foreground">Network</div>
                       </div>
                     </div>
@@ -437,27 +563,45 @@ export default function OrganizationMonitor() {
                   <div className="flex items-start gap-3 p-3 border-l-4 border-red-500 bg-red-50">
                     <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
                     <div className="space-y-1">
-                      <div className="font-medium text-red-800">Database Connection Timeout</div>
-                      <div className="text-sm text-red-600">StartupXYZ • 15 minutes ago</div>
-                      <div className="text-xs text-red-500">Connection pool exhausted</div>
+                      <div className="font-medium text-red-800">
+                        Database Connection Timeout
+                      </div>
+                      <div className="text-sm text-red-600">
+                        StartupXYZ • 15 minutes ago
+                      </div>
+                      <div className="text-xs text-red-500">
+                        Connection pool exhausted
+                      </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start gap-3 p-3 border-l-4 border-yellow-500 bg-yellow-50">
                     <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                     <div className="space-y-1">
-                      <div className="font-medium text-yellow-800">High Memory Usage</div>
-                      <div className="text-sm text-yellow-600">Fashion Boutique • 2 hours ago</div>
-                      <div className="text-xs text-yellow-500">Memory usage exceeded 85%</div>
+                      <div className="font-medium text-yellow-800">
+                        High Memory Usage
+                      </div>
+                      <div className="text-sm text-yellow-600">
+                        Fashion Boutique • 2 hours ago
+                      </div>
+                      <div className="text-xs text-yellow-500">
+                        Memory usage exceeded 85%
+                      </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start gap-3 p-3 border-l-4 border-blue-500 bg-blue-50">
                     <Database className="h-5 w-5 text-blue-600 mt-0.5" />
                     <div className="space-y-1">
-                      <div className="font-medium text-blue-800">Slow Query Detected</div>
-                      <div className="text-sm text-blue-600">Tech Corp Solutions • 3 hours ago</div>
-                      <div className="text-xs text-blue-500">Query execution time: 3.2s</div>
+                      <div className="font-medium text-blue-800">
+                        Slow Query Detected
+                      </div>
+                      <div className="text-sm text-blue-600">
+                        Tech Corp Solutions • 3 hours ago
+                      </div>
+                      <div className="text-xs text-blue-500">
+                        Query execution time: 3.2s
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -466,7 +610,10 @@ export default function OrganizationMonitor() {
           </div>
         </TabsContent>
 
-        <TabsContent value="incidents" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="incidents"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           <Card>
             <CardHeader>
               <CardTitle>Recent Incidents</CardTitle>
@@ -480,13 +627,18 @@ export default function OrganizationMonitor() {
                   <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between">
                       <div>
-                        <div className="font-medium">Complete Service Outage</div>
-                        <div className="text-sm text-muted-foreground">RetailChain Plus</div>
+                        <div className="font-medium">
+                          Complete Service Outage
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          RetailChain Plus
+                        </div>
                       </div>
                       <Badge variant="destructive">Critical</Badge>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      Server crashed due to memory overflow. All services are down.
+                      Server crashed due to memory overflow. All services are
+                      down.
                     </div>
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                       <span>Jan 18, 2024 4:45 PM</span>
@@ -503,13 +655,18 @@ export default function OrganizationMonitor() {
                   <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between">
                       <div>
-                        <div className="font-medium">Performance Degradation</div>
-                        <div className="text-sm text-muted-foreground">StartupXYZ</div>
+                        <div className="font-medium">
+                          Performance Degradation
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          StartupXYZ
+                        </div>
                       </div>
                       <Badge variant="secondary">High</Badge>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      Response times increased to 3+ seconds. Database queries are slow.
+                      Response times increased to 3+ seconds. Database queries
+                      are slow.
                     </div>
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                       <span>Jan 18, 2024 2:22 PM</span>
@@ -527,12 +684,15 @@ export default function OrganizationMonitor() {
                     <div className="flex items-start justify-between">
                       <div>
                         <div className="font-medium">High Load Alert</div>
-                        <div className="text-sm text-muted-foreground">Fashion Boutique</div>
+                        <div className="text-sm text-muted-foreground">
+                          Fashion Boutique
+                        </div>
                       </div>
                       <Badge variant="outline">Resolved</Badge>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      Traffic spike caused temporary slowdown. Auto-scaling resolved the issue.
+                      Traffic spike caused temporary slowdown. Auto-scaling
+                      resolved the issue.
                     </div>
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                       <span>Jan 15, 2024 10:30 AM</span>
@@ -548,15 +708,20 @@ export default function OrganizationMonitor() {
       </Tabs>
 
       {/* Organization Details Modal */}
-      <Dialog open={isMonitoringDialogOpen} onOpenChange={setIsMonitoringDialogOpen}>
+      <Dialog
+        open={isMonitoringDialogOpen}
+        onOpenChange={setIsMonitoringDialogOpen}
+      >
         <DialogContent className="sm:max-w-6xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Detailed Monitoring - {selectedOrgForMonitoring?.name}</DialogTitle>
+            <DialogTitle>
+              Detailed Monitoring - {selectedOrgForMonitoring?.name}
+            </DialogTitle>
             <DialogDescription>
               Comprehensive health metrics and performance data
             </DialogDescription>
           </DialogHeader>
-          
+
           {selectedOrgForMonitoring && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -567,22 +732,32 @@ export default function OrganizationMonitor() {
                   <CardContent className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-sm">Status:</span>
-                      <div className={`flex items-center gap-1 ${getStatusColor(selectedOrgForMonitoring.status)}`}>
+                      <div
+                        className={`flex items-center gap-1 ${getStatusColor(selectedOrgForMonitoring.status)}`}
+                      >
                         {getStatusIcon(selectedOrgForMonitoring.status)}
-                        <span className="capitalize font-medium">{selectedOrgForMonitoring.status}</span>
+                        <span className="capitalize font-medium">
+                          {selectedOrgForMonitoring.status}
+                        </span>
                       </div>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Response Time:</span>
-                      <span className="font-medium">{selectedOrgForMonitoring.responseTime}ms</span>
+                      <span className="font-medium">
+                        {selectedOrgForMonitoring.responseTime}ms
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Uptime:</span>
-                      <span className="font-medium">{selectedOrgForMonitoring.uptime}%</span>
+                      <span className="font-medium">
+                        {selectedOrgForMonitoring.uptime}%
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Error Rate:</span>
-                      <span className="font-medium">{(selectedOrgForMonitoring.errorRate * 100).toFixed(2)}%</span>
+                      <span className="font-medium">
+                        {(selectedOrgForMonitoring.errorRate * 100).toFixed(2)}%
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
@@ -598,33 +773,43 @@ export default function OrganizationMonitor() {
                         <span>{selectedOrgForMonitoring.performance.cpu}%</span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
-                        <div 
+                        <div
                           className={`h-2 rounded-full ${getPerformanceColor(selectedOrgForMonitoring.performance.cpu)}`}
-                          style={{ width: `${selectedOrgForMonitoring.performance.cpu}%` }}
+                          style={{
+                            width: `${selectedOrgForMonitoring.performance.cpu}%`,
+                          }}
                         />
                       </div>
                     </div>
                     <div className="space-y-1">
                       <div className="flex justify-between text-sm">
                         <span>Memory:</span>
-                        <span>{selectedOrgForMonitoring.performance.memory}%</span>
+                        <span>
+                          {selectedOrgForMonitoring.performance.memory}%
+                        </span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
-                        <div 
+                        <div
                           className={`h-2 rounded-full ${getPerformanceColor(selectedOrgForMonitoring.performance.memory)}`}
-                          style={{ width: `${selectedOrgForMonitoring.performance.memory}%` }}
+                          style={{
+                            width: `${selectedOrgForMonitoring.performance.memory}%`,
+                          }}
                         />
                       </div>
                     </div>
                     <div className="space-y-1">
                       <div className="flex justify-between text-sm">
                         <span>Storage:</span>
-                        <span>{selectedOrgForMonitoring.performance.storage}%</span>
+                        <span>
+                          {selectedOrgForMonitoring.performance.storage}%
+                        </span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
-                        <div 
+                        <div
                           className={`h-2 rounded-full ${getPerformanceColor(selectedOrgForMonitoring.performance.storage)}`}
-                          style={{ width: `${selectedOrgForMonitoring.performance.storage}%` }}
+                          style={{
+                            width: `${selectedOrgForMonitoring.performance.storage}%`,
+                          }}
                         />
                       </div>
                     </div>
@@ -638,19 +823,27 @@ export default function OrganizationMonitor() {
                   <CardContent className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Total Errors:</span>
-                      <Badge variant="destructive">{selectedOrgForMonitoring.errors.total}</Badge>
+                      <Badge variant="destructive">
+                        {selectedOrgForMonitoring.errors.total}
+                      </Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Runtime:</span>
-                      <span className="font-medium">{selectedOrgForMonitoring.errors.runtime}</span>
+                      <span className="font-medium">
+                        {selectedOrgForMonitoring.errors.runtime}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Database:</span>
-                      <span className="font-medium">{selectedOrgForMonitoring.errors.database}</span>
+                      <span className="font-medium">
+                        {selectedOrgForMonitoring.errors.database}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Network:</span>
-                      <span className="font-medium">{selectedOrgForMonitoring.errors.network}</span>
+                      <span className="font-medium">
+                        {selectedOrgForMonitoring.errors.network}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
@@ -658,7 +851,11 @@ export default function OrganizationMonitor() {
 
               <div className="flex gap-2">
                 <Button asChild>
-                  <a href={`https://${selectedOrgForMonitoring.id}.flowstock.com/app/dashboard`} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={`https://${selectedOrgForMonitoring.id}.flowstock.com/app/dashboard`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <ExternalLink className="mr-2 h-4 w-4" />
                     Access Organization Dashboard
                   </a>

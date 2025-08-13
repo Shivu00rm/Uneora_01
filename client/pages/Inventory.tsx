@@ -191,7 +191,7 @@ export default function Inventory() {
     reorderLevel: "",
     maxStock: "",
     supplier: "",
-    description: ""
+    description: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -220,19 +220,21 @@ export default function Inventory() {
 
   // Form validation
   const isFormValid = () => {
-    return newProduct.name.trim() !== "" &&
-           newProduct.sku.trim() !== "" &&
-           newProduct.category !== "" &&
-           newProduct.unitPrice !== "" &&
-           newProduct.initialStock !== "" &&
-           newProduct.reorderLevel !== "" &&
-           newProduct.maxStock !== "" &&
-           newProduct.supplier !== "" &&
-           Number(newProduct.unitPrice) > 0 &&
-           Number(newProduct.initialStock) >= 0 &&
-           Number(newProduct.reorderLevel) >= 0 &&
-           Number(newProduct.maxStock) > 0 &&
-           Number(newProduct.maxStock) >= Number(newProduct.reorderLevel);
+    return (
+      newProduct.name.trim() !== "" &&
+      newProduct.sku.trim() !== "" &&
+      newProduct.category !== "" &&
+      newProduct.unitPrice !== "" &&
+      newProduct.initialStock !== "" &&
+      newProduct.reorderLevel !== "" &&
+      newProduct.maxStock !== "" &&
+      newProduct.supplier !== "" &&
+      Number(newProduct.unitPrice) > 0 &&
+      Number(newProduct.initialStock) >= 0 &&
+      Number(newProduct.reorderLevel) >= 0 &&
+      Number(newProduct.maxStock) > 0 &&
+      Number(newProduct.maxStock) >= Number(newProduct.reorderLevel)
+    );
   };
 
   // Handle form submission
@@ -245,8 +247,8 @@ export default function Inventory() {
     }
 
     // Check if SKU already exists
-    const existingSKU = mockInventory.find(item =>
-      item.sku.toLowerCase() === newProduct.sku.toLowerCase()
+    const existingSKU = mockInventory.find(
+      (item) => item.sku.toLowerCase() === newProduct.sku.toLowerCase(),
     );
 
     if (existingSKU) {
@@ -269,15 +271,24 @@ export default function Inventory() {
         unitPrice: Number(newProduct.unitPrice),
         supplier: newProduct.supplier,
         location: "Warehouse A", // Default location
-        lastUpdated: new Date().toISOString().split('T')[0],
-        status: Number(newProduct.initialStock) === 0 ? "out_of_stock" :
-                Number(newProduct.initialStock) <= Number(newProduct.reorderLevel) ? "low_stock" : "in_stock",
-        movements: Number(newProduct.initialStock) > 0 ? [{
-          type: "in" as const,
-          quantity: Number(newProduct.initialStock),
-          date: new Date().toISOString().split('T')[0],
-          reason: "Initial Stock - Product Creation"
-        }] : []
+        lastUpdated: new Date().toISOString().split("T")[0],
+        status:
+          Number(newProduct.initialStock) === 0
+            ? "out_of_stock"
+            : Number(newProduct.initialStock) <= Number(newProduct.reorderLevel)
+              ? "low_stock"
+              : "in_stock",
+        movements:
+          Number(newProduct.initialStock) > 0
+            ? [
+                {
+                  type: "in" as const,
+                  quantity: Number(newProduct.initialStock),
+                  date: new Date().toISOString().split("T")[0],
+                  reason: "Initial Stock - Product Creation",
+                },
+              ]
+            : [],
       };
 
       // In a real app, this would be an API call
@@ -296,15 +307,16 @@ export default function Inventory() {
         reorderLevel: "",
         maxStock: "",
         supplier: "",
-        description: ""
+        description: "",
       });
 
       // Close dialog
       setIsAddProductOpen(false);
 
       // Show success message
-      alert(`Product "${newProduct.name}" has been successfully added to inventory!`);
-
+      alert(
+        `Product "${newProduct.name}" has been successfully added to inventory!`,
+      );
     } catch (error) {
       console.error("Error adding product:", error);
       alert("Failed to add product. Please try again.");
@@ -324,7 +336,7 @@ export default function Inventory() {
       reorderLevel: "",
       maxStock: "",
       supplier: "",
-      description: ""
+      description: "",
     });
     setIsAddProductOpen(false);
   };
@@ -440,7 +452,12 @@ export default function Inventory() {
                       id="product-name"
                       placeholder="Enter product name"
                       value={newProduct.name}
-                      onChange={(e) => setNewProduct(prev => ({...prev, name: e.target.value}))}
+                      onChange={(e) =>
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -450,13 +467,23 @@ export default function Inventory() {
                       id="product-sku"
                       placeholder="Product SKU"
                       value={newProduct.sku}
-                      onChange={(e) => setNewProduct(prev => ({...prev, sku: e.target.value.toUpperCase()}))}
+                      onChange={(e) =>
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          sku: e.target.value.toUpperCase(),
+                        }))
+                      }
                       required
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="product-category">Category *</Label>
-                    <Select value={newProduct.category} onValueChange={(value) => setNewProduct(prev => ({...prev, category: value}))}>
+                    <Select
+                      value={newProduct.category}
+                      onValueChange={(value) =>
+                        setNewProduct((prev) => ({ ...prev, category: value }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
@@ -465,7 +492,9 @@ export default function Inventory() {
                         <SelectItem value="Clothing">Clothing</SelectItem>
                         <SelectItem value="Footwear">Footwear</SelectItem>
                         <SelectItem value="Accessories">Accessories</SelectItem>
-                        <SelectItem value="Home & Garden">Home & Garden</SelectItem>
+                        <SelectItem value="Home & Garden">
+                          Home & Garden
+                        </SelectItem>
                         <SelectItem value="Books">Books</SelectItem>
                         <SelectItem value="Sports">Sports</SelectItem>
                       </SelectContent>
@@ -480,7 +509,12 @@ export default function Inventory() {
                       step="0.01"
                       min="0"
                       value={newProduct.unitPrice}
-                      onChange={(e) => setNewProduct(prev => ({...prev, unitPrice: e.target.value}))}
+                      onChange={(e) =>
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          unitPrice: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -492,7 +526,12 @@ export default function Inventory() {
                       placeholder="0"
                       min="0"
                       value={newProduct.initialStock}
-                      onChange={(e) => setNewProduct(prev => ({...prev, initialStock: e.target.value}))}
+                      onChange={(e) =>
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          initialStock: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -504,7 +543,12 @@ export default function Inventory() {
                       placeholder="10"
                       min="0"
                       value={newProduct.reorderLevel}
-                      onChange={(e) => setNewProduct(prev => ({...prev, reorderLevel: e.target.value}))}
+                      onChange={(e) =>
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          reorderLevel: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -516,22 +560,40 @@ export default function Inventory() {
                       placeholder="100"
                       min="1"
                       value={newProduct.maxStock}
-                      onChange={(e) => setNewProduct(prev => ({...prev, maxStock: e.target.value}))}
+                      onChange={(e) =>
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          maxStock: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="supplier">Supplier *</Label>
-                    <Select value={newProduct.supplier} onValueChange={(value) => setNewProduct(prev => ({...prev, supplier: value}))}>
+                    <Select
+                      value={newProduct.supplier}
+                      onValueChange={(value) =>
+                        setNewProduct((prev) => ({ ...prev, supplier: value }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select supplier" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="TechSupply India">TechSupply India</SelectItem>
-                        <SelectItem value="Electronics Hub">Electronics Hub</SelectItem>
+                        <SelectItem value="TechSupply India">
+                          TechSupply India
+                        </SelectItem>
+                        <SelectItem value="Electronics Hub">
+                          Electronics Hub
+                        </SelectItem>
                         <SelectItem value="Fashion Hub">Fashion Hub</SelectItem>
-                        <SelectItem value="Global Suppliers">Global Suppliers</SelectItem>
-                        <SelectItem value="Local Vendor">Local Vendor</SelectItem>
+                        <SelectItem value="Global Suppliers">
+                          Global Suppliers
+                        </SelectItem>
+                        <SelectItem value="Local Vendor">
+                          Local Vendor
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -541,7 +603,12 @@ export default function Inventory() {
                       id="product-description"
                       placeholder="Product description (optional)"
                       value={newProduct.description}
-                      onChange={(e) => setNewProduct(prev => ({...prev, description: e.target.value}))}
+                      onChange={(e) =>
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
                     />
                   </div>
                   <div className="md:col-span-2 flex gap-2 pt-4">
@@ -633,12 +700,30 @@ export default function Inventory() {
       {/* Main Content */}
       <Tabs defaultValue="inventory" className="space-y-6 enhanced-tabs">
         <TabsList className="grid w-full grid-cols-3 bg-slate-100">
-          <TabsTrigger value="inventory" className="tab-orders text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">All Inventory</TabsTrigger>
-          <TabsTrigger value="alerts" className="tab-pending text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Stock Alerts</TabsTrigger>
-          <TabsTrigger value="movements" className="tab-movements text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">Stock Movements</TabsTrigger>
+          <TabsTrigger
+            value="inventory"
+            className="tab-orders text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            All Inventory
+          </TabsTrigger>
+          <TabsTrigger
+            value="alerts"
+            className="tab-pending text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Stock Alerts
+          </TabsTrigger>
+          <TabsTrigger
+            value="movements"
+            className="tab-movements text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Stock Movements
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="inventory" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="inventory"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           {/* Filters */}
           <Card>
             <CardContent className="pt-6">
@@ -769,7 +854,10 @@ export default function Inventory() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="alerts" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="alerts"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -838,7 +926,10 @@ export default function Inventory() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="movements" className="space-y-6 tab-content-watermark flowstock-watermark">
+        <TabsContent
+          value="movements"
+          className="space-y-6 tab-content-watermark flowstock-watermark"
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
