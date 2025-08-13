@@ -173,7 +173,7 @@ export function LiveAuditLogs() {
                   className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
                 >
                   <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <ActionIcon className="text-primary" />
+                    <ActionIcon className="h-3 w-3 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
