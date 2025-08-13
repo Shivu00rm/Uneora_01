@@ -272,13 +272,49 @@ export default function Vendors() {
 
       {/* Main Content */}
       <Tabs defaultValue="vendors" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="vendors">Vendor List</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
-          <TabsTrigger value="orders">Recent Orders</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3" style={{backgroundColor: '#f1f5f9'}}>
+          <TabsTrigger
+            value="vendors"
+            style={{color: '#1e293b', fontWeight: '500'}}
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-50 data-[state=active]:to-blue-100 data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Vendor List
+          </TabsTrigger>
+          <TabsTrigger
+            value="performance"
+            style={{color: '#1e293b', fontWeight: '500'}}
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-50 data-[state=active]:to-emerald-100 data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Performance
+          </TabsTrigger>
+          <TabsTrigger
+            value="orders"
+            style={{color: '#1e293b', fontWeight: '500'}}
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-50 data-[state=active]:to-amber-100 data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
+            Recent Orders
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="vendors" className="space-y-6">
+        <TabsContent value="vendors" className="space-y-6" style={{position: 'relative'}}>
+          {/* FlowStock Watermark */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%) rotate(-45deg)',
+              fontSize: '4rem',
+              fontWeight: '900',
+              color: 'rgba(59, 130, 246, 0.04)',
+              pointerEvents: 'none',
+              zIndex: 0,
+              userSelect: 'none',
+              fontFamily: 'system-ui'
+            }}
+          >
+            FlowStock
+          </div>
           {/* Filters */}
           <Card>
             <CardContent className="pt-6">
@@ -410,7 +446,25 @@ export default function Vendors() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="performance" className="space-y-6">
+        <TabsContent value="performance" className="space-y-6" style={{position: 'relative'}}>
+          {/* FlowStock Watermark */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%) rotate(-45deg)',
+              fontSize: '4rem',
+              fontWeight: '900',
+              color: 'rgba(59, 130, 246, 0.04)',
+              pointerEvents: 'none',
+              zIndex: 0,
+              userSelect: 'none',
+              fontFamily: 'system-ui'
+            }}
+          >
+            FlowStock
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Top Performing Vendors */}
             <Card>
@@ -474,7 +528,25 @@ export default function Vendors() {
           </div>
         </TabsContent>
 
-        <TabsContent value="orders" className="space-y-6">
+        <TabsContent value="orders" className="space-y-6" style={{position: 'relative'}}>
+          {/* FlowStock Watermark */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%) rotate(-45deg)',
+              fontSize: '4rem',
+              fontWeight: '900',
+              color: 'rgba(59, 130, 246, 0.04)',
+              pointerEvents: 'none',
+              zIndex: 0,
+              userSelect: 'none',
+              fontFamily: 'system-ui'
+            }}
+          >
+            FlowStock
+          </div>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
