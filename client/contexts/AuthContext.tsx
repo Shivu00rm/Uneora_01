@@ -121,22 +121,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data.user) {
         try {
-          // Create profile using upsert to handle any conflicts
-          await DatabaseService.upsertProfile({
+          // Create profile using insert (since it's a new user)
+          const profileData = {
             id: data.user.id,
             name,
             role,
-            company_id: companyId
-          });
+            company_id: companyId || null
+          };
 
+          console.log('Creating profile:', profileData);
+          await DatabaseService.createProfile(profileData);
+
+          // Load the profile to set user state
           await loadUserProfile(data.user.id);
+
+          console.log('Profile created successfully');
         } catch (profileError: any) {
           console.error('Profile creation error:', profileError);
 
-          // Better error message based on the actual error
-          let errorMessage = 'Account created but profile setup failed.';
+          // Extract meaningful error message
+          let errorMessage = 'Failed to create user profile.';
           if (profileError.message) {
-            errorMessage += ` Error: ${profileError.message}`;
+            if (profileError.message.includes('duplicate key')) {
+              errorMessage = 'Profile already exists. Try signing in instead.';
+            } else if (profileError.message.includes('permission denied')) {
+              errorMessage = 'Permission denied. Please contact support.';
+            } else {
+              errorMessage = profileError.message;
+            }
           }
 
           throw new Error(errorMessage);
