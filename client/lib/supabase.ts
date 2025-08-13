@@ -1,19 +1,18 @@
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = "https://givoiztfugawvmkvsprb.supabase.co";
-const supabaseKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdpdm9penRmdWdhd3Zta3ZzcHJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODE0OTMsImV4cCI6MjA3MDY1NzQ5M30.NGbpLpPoJWkFeLEK0cX8EvfMC-ir1blCpaR5I_HMEXs";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdpdm9penRmdWdhd3Zta3ZzcHJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODE0OTMsImV4cCI6MjA3MDY1NzQ5M30.NGbpLpPoJWkFeLEK0cX8EvfMC-ir1blCpaR5I_HMEXs";
 
-console.log("Supabase config:", {
-  url: supabaseUrl,
-  hasKey: !!supabaseKey,
-  keyLength: supabaseKey?.length,
-});
-
-if (!supabaseKey) {
-  console.error("Missing VITE_SUPABASE_ANON_KEY environment variable");
+// Validate configuration
+if (!supabaseUrl || !supabaseKey) {
+  console.error("Supabase configuration missing");
+  throw new Error("Supabase configuration is incomplete");
 }
+
+console.log("Supabase configured:", {
+  url: supabaseUrl,
+  keyValid: supabaseKey.length > 100
+});
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
