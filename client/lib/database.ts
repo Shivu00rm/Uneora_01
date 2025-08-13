@@ -117,13 +117,27 @@ export class DatabaseService {
   }
 
   static async upsertProfile(profile: Profile): Promise<Profile> {
+    console.log('Upserting profile:', profile);
     const { data, error } = await supabase
       .from('profiles')
       .upsert(profile)
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Profile upsert error:', error);
+      let errorMessage = 'Failed to upsert profile';
+      if (error.message) {
+        errorMessage = `Failed to upsert profile: ${error.message}`;
+      } else if (error.details) {
+        errorMessage = `Failed to upsert profile: ${error.details}`;
+      } else if (typeof error === 'string') {
+        errorMessage = `Failed to upsert profile: ${error}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    console.log('Profile upserted successfully:', data);
     return data
   }
 
