@@ -356,17 +356,107 @@ export default function TeamManagement() {
       {/* Team Members Table */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <CardTitle>Team Members ({filteredMembers.length})</CardTitle>
-            <div className="relative w-full sm:w-80">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search team members..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <CardTitle>Team Members ({filteredAndSortedMembers.length})</CardTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setIsLoading(true);
+                    setTimeout(() => setIsLoading(false), 1000);
+                  }}
+                  disabled={isLoading}
+                >
+                  <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </div>
             </div>
+
+            {/* Filters and Search */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search team members..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <Select value={filterRole} onValueChange={setFilterRole}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Filter by role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Roles</SelectItem>
+                  <SelectItem value="ORG_ADMIN">Org Admin</SelectItem>
+                  <SelectItem value="ORG_USER">Org User</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Bulk Actions */}
+            {selectedMembers.length > 0 && (
+              <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
+                <span className="text-sm font-medium">
+                  {selectedMembers.length} member{selectedMembers.length > 1 ? 's' : ''} selected
+                </span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleBulkAction("activate")}
+                    disabled={isLoading}
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Activate
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleBulkAction("deactivate")}
+                    disabled={isLoading}
+                  >
+                    <UserX className="h-4 w-4 mr-2" />
+                    Deactivate
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleBulkAction("export")}
+                    disabled={isLoading}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Selected
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleBulkAction("delete")}
+                    disabled={isLoading}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </CardHeader>
         <CardContent>
