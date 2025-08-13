@@ -154,44 +154,88 @@ export default function AppDashboard() {
         </Card>
       </div>
 
-      {/* Quick Actions & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Quick Actions */}
-        <QuickActions />
+      {/* Role-Specific Dashboard Section */}
+      {user?.role === "ORG_ADMIN" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Live Audit Logs for Org Admin */}
+          <LiveAuditLogs />
 
-        {/* Recent Activity */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {mockOrgData.recentActivities.map((activity) => {
-                const ActivityIcon = getActivityIcon(activity.type);
-                return (
-                  <div key={activity.id} className="flex items-center gap-3 p-3 border rounded-lg">
-                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <ActivityIcon className="h-4 w-4 text-primary" />
+          {/* Recent Activity */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                Recent Activity
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {mockOrgData.recentActivities.map((activity) => {
+                  const ActivityIcon = getActivityIcon(activity.type);
+                  return (
+                    <div key={activity.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <ActivityIcon className="h-4 w-4 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{activity.message}</p>
+                        <p className="text-xs text-muted-foreground">
+                          by {activity.user} • {activity.timestamp}
+                        </p>
+                      </div>
+                      <Badge variant={getStatusColor(activity.status)} className="text-xs">
+                        {activity.status}
+                      </Badge>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.message}</p>
-                      <p className="text-xs text-muted-foreground">
-                        by {activity.user} • {activity.timestamp}
-                      </p>
-                    </div>
-                    <Badge variant={getStatusColor(activity.status)} className="text-xs">
-                      {activity.status}
-                    </Badge>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Org Users get a simpler, cleaner layout */}
+      {user?.role === "ORG_USER" && (
+        <div className="mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Quick Navigation
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Link to="/app/inventory">
+                  <Button variant="outline" className="h-16 w-full flex flex-col gap-2">
+                    <Package className="h-5 w-5" />
+                    <span className="text-sm">Inventory</span>
+                  </Button>
+                </Link>
+                <Link to="/app/pos">
+                  <Button variant="outline" className="h-16 w-full flex flex-col gap-2">
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="text-sm">POS</span>
+                  </Button>
+                </Link>
+                <Link to="/app/analytics">
+                  <Button variant="outline" className="h-16 w-full flex flex-col gap-2">
+                    <BarChart3 className="h-5 w-5" />
+                    <span className="text-sm">Analytics</span>
+                  </Button>
+                </Link>
+                <Link to="/app/vendors">
+                  <Button variant="outline" className="h-16 w-full flex flex-col gap-2">
+                    <Users className="h-5 w-5" />
+                    <span className="text-sm">Vendors</span>
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Performance Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
