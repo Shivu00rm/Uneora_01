@@ -147,23 +147,100 @@ export default function Analytics() {
           </p>
         </div>
 
-        <div className="flex gap-2">
-          <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+        <div className="flex flex-wrap gap-2">
+          {/* Date Range Filter */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Calendar className="h-4 w-4" />
+                {isCustomDateRange ? "Custom Range" : selectedPeriod.replace(/(\d+)/, "$1 ").replace(/days|months|year/, (match) => match === "days" ? "Days" : match === "months" ? "Months" : "Year")}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80" align="end">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Quick Select</Label>
+                  <Select
+                    value={isCustomDateRange ? "custom" : selectedPeriod}
+                    onValueChange={(value) => {
+                      if (value === "custom") {
+                        setIsCustomDateRange(true);
+                      } else {
+                        setIsCustomDateRange(false);
+                        setSelectedPeriod(value);
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="7days">Last 7 Days</SelectItem>
+                      <SelectItem value="30days">Last 30 Days</SelectItem>
+                      <SelectItem value="3months">Last 3 Months</SelectItem>
+                      <SelectItem value="6months">Last 6 Months</SelectItem>
+                      <SelectItem value="1year">Last Year</SelectItem>
+                      <SelectItem value="custom">Custom Range</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {isCustomDateRange && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1">
+                        <Label htmlFor="start-date">Start Date</Label>
+                        <Input
+                          id="start-date"
+                          type="date"
+                          value={customStartDate}
+                          onChange={(e) => setCustomStartDate(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label htmlFor="end-date">End Date</Label>
+                        <Input
+                          id="end-date"
+                          type="date"
+                          value={customEndDate}
+                          onChange={(e) => setCustomEndDate(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          {/* Category Filter */}
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-32">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="7days">7 Days</SelectItem>
-              <SelectItem value="30days">30 Days</SelectItem>
-              <SelectItem value="3months">3 Months</SelectItem>
-              <SelectItem value="6months">6 Months</SelectItem>
-              <SelectItem value="1year">1 Year</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="electronics">Electronics</SelectItem>
+              <SelectItem value="clothing">Clothing</SelectItem>
+              <SelectItem value="footwear">Footwear</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Export
+
+          {/* Refresh Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setIsRefreshing(true);
+              setTimeout(() => setIsRefreshing(false), 1000);
+            }}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </Button>
+
+          {/* Export Reports */}
+          <ReportExporter />
         </div>
       </div>
 
