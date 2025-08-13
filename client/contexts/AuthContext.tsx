@@ -180,7 +180,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.warn('No profile found for user:', userId);
         // Create a basic profile if none exists
         try {
-          await DatabaseService.updateProfile(userId, {
+          await DatabaseService.upsertProfile({
             id: userId,
             name: 'New User',
             role: 'ORG_USER'
