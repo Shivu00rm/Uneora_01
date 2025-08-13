@@ -38,7 +38,15 @@ export class DatabaseService {
 
     if (error) {
       console.error('Organization creation error:', error);
-      throw new Error(`Failed to create organization: ${error.message}`);
+      let errorMessage = 'Failed to create organization';
+      if (error.message) {
+        errorMessage = `Failed to create organization: ${error.message}`;
+      } else if (error.details) {
+        errorMessage = `Failed to create organization: ${error.details}`;
+      } else if (typeof error === 'string') {
+        errorMessage = `Failed to create organization: ${error}`;
+      }
+      throw new Error(errorMessage);
     }
 
     console.log('Organization created successfully:', data);
