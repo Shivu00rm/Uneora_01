@@ -119,6 +119,10 @@ const inventoryAlerts = [
 export default function Analytics() {
   const [selectedPeriod, setSelectedPeriod] = useState("6months");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [customStartDate, setCustomStartDate] = useState("");
+  const [customEndDate, setCustomEndDate] = useState("");
+  const [isCustomDateRange, setIsCustomDateRange] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const currentMonthSales = salesData[salesData.length - 1].sales;
   const previousMonthSales = salesData[salesData.length - 2].sales;
