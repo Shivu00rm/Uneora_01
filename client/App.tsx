@@ -43,6 +43,18 @@ const DevRoleSelector = React.lazy(() =>
   }))
 );
 
+// Conditional header that doesn't render on tenant routes
+function ConditionalHeader() {
+  const location = useLocation();
+
+  // Don't render header on tenant routes since TenantLayout provides its own header
+  if (location.pathname.startsWith('/app/')) {
+    return null;
+  }
+
+  return <Header />;
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
