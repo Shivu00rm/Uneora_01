@@ -239,34 +239,55 @@ export function PlatformAlerts() {
   const unresolvedCount = alerts.filter(a => !a.resolved).length;
 
   const handleAlertAction = async (alertId: string, actionType: string, alertTitle: string) => {
-    console.log(`Executing action: ${actionType} for alert: ${alertTitle}`);
+    const actionKey = `${alertId}-${actionType}`;
 
-    // Simulate action execution
-    const actionMessages = {
-      restart: "Service restart initiated...",
-      scale: "Scaling resources...",
-      cleanup: "Cleanup process started...",
-      investigate: "Opening investigation dashboard...",
-      contact: "Sending notification to organization...",
-      retry: "Retrying failed operation...",
-      suspend: "Account suspension initiated...",
-    };
+    // Set loading state
+    setLoadingActions(prev => new Set(prev).add(actionKey));
 
-    const message = actionMessages[actionType as keyof typeof actionMessages] || "Processing action...";
+    try {
+      console.log(`Executing action: ${actionType} for alert: ${alertTitle}`);
 
-    // In a real app, this would be an API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+      // Simulate action execution with realistic timing
+      const actionMessages = {
+        restart: "Service restart initiated...",
+        scale: "Scaling resources...",
+        cleanup: "Cleanup process started...",
+        investigate: "Opening investigation dashboard...",
+        contact: "Sending notification to organization...",
+        retry: "Retrying failed operation...",
+        suspend: "Account suspension initiated...",
+      };
 
-    // Mark alert as resolved for certain actions
-    if (["restart", "scale", "cleanup", "retry"].includes(actionType)) {
-      setAlerts(prev => prev.map(alert =>
-        alert.id === alertId
-          ? { ...alert, resolved: true }
-          : alert
-      ));
+      const message = actionMessages[actionType as keyof typeof actionMessages] || "Processing action...";
+
+      // In a real app, this would be an API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Mark alert as resolved for certain actions
+      if (["restart", "scale", "cleanup", "retry"].includes(actionType)) {
+        setAlerts(prev => prev.map(alert =>
+          alert.id === alertId
+            ? { ...alert, resolved: true }
+            : alert
+        ));
+      }
+
+      // For contact/investigate actions, just provide feedback
+      if (["contact", "investigate", "suspend"].includes(actionType)) {
+        // These actions don't resolve the alert but provide feedback
+        console.log(`Action completed: ${message}`);
+      }
+
+    } catch (error) {
+      console.error(`Action failed: ${actionType} for alert: ${alertTitle}`, error);
+    } finally {
+      // Remove loading state
+      setLoadingActions(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(actionKey);
+        return newSet;
+      });
     }
-
-    console.log(`Action completed: ${message}`);
   };
 
   return (
