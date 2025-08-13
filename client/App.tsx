@@ -90,7 +90,7 @@ function AppContent() {
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/login" element={user ? <Navigate to={user.role === 'SUPER_ADMIN' ? '/super-admin' : '/app/dashboard'} replace /> : <SupabaseLogin />} />
+          <Route path="/login" element={user ? <Navigate to={user.role === 'SUPER_ADMIN' ? '/super-admin' : '/app/dashboard'} replace /> : <MockLogin />} />
           <Route path="/email-auth" element={<EmailAuth />} />
 
           {/* Solution Pages */}
