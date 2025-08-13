@@ -21,6 +21,7 @@ import Vendors from "./pages/Vendors";
 import PurchaseOrders from "./pages/PurchaseOrders";
 import Analytics from "./pages/Analytics";
 import Files from "./pages/Files";
+import Settings from "./pages/Settings";
 import SuperAdmin from "./pages/SuperAdmin";
 import OrganizationMonitor from "./pages/OrganizationMonitor";
 import AppDashboard from "./pages/app/AppDashboard";
