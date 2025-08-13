@@ -8,18 +8,36 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
-import { 
-  UserPlus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  Shield, 
+import {
+  UserPlus,
+  Search,
+  Edit,
+  Trash2,
+  Shield,
   Users as UsersIcon,
   Briefcase,
   User,
   Building2,
-  Crown
+  Crown,
+  Filter,
+  SortAsc,
+  SortDesc,
+  MoreHorizontal,
+  Download,
+  Mail,
+  UserX,
+  CheckCircle,
+  ArrowUpDown,
+  RefreshCw
 } from "lucide-react";
 
 // Mock team data for the current organization
