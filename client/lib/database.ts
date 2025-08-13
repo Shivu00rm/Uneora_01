@@ -216,7 +216,7 @@ export class DatabaseService {
   }
 
   // Real-time subscriptions
-  static subscribeToSalesOrders(companyId: string, callback: (payload: any) => void) {
+  static subscribeToSalesOrders(organizationId: string, callback: (payload: any) => void) {
     return supabase
       .channel('sales_orders_changes')
       .on(
@@ -225,14 +225,14 @@ export class DatabaseService {
           event: '*',
           schema: 'public',
           table: 'sales_orders',
-          filter: `company_id=eq.${companyId}`
+          filter: `organization_id=eq.${organizationId}`
         },
         callback
       )
       .subscribe()
   }
 
-  static subscribeToIntegrations(companyId: string, callback: (payload: any) => void) {
+  static subscribeToIntegrations(organizationId: string, callback: (payload: any) => void) {
     return supabase
       .channel('integrations_changes')
       .on(
@@ -241,7 +241,7 @@ export class DatabaseService {
           event: '*',
           schema: 'public',
           table: 'integrations',
-          filter: `company_id=eq.${companyId}`
+          filter: `organization_id=eq.${organizationId}`
         },
         callback
       )
