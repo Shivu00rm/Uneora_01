@@ -1,4 +1,4 @@
-import { supabase, Company, Profile, SalesOrder, Integration } from './supabase'
+import { supabase, Organization, Profile, Product, SalesOrder, Integration } from './supabase'
 
 // Database service layer for FlowStock
 export class DatabaseService {
