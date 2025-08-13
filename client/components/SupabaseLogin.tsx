@@ -24,7 +24,14 @@ export function SupabaseLogin() {
 
     try {
       if (isSignUp) {
-        await signUp(formData.email, formData.password, formData.name, formData.role);
+        // For org admins, create company first if provided
+        let companyId: string | undefined;
+        if (formData.role === 'ORG_ADMIN' && formData.companyName) {
+          // Company creation will be handled in the signup process
+          await signUp(formData.email, formData.password, formData.name, formData.role, formData.companyName);
+        } else {
+          await signUp(formData.email, formData.password, formData.name, formData.role);
+        }
       } else {
         await login(formData.email, formData.password);
       }
