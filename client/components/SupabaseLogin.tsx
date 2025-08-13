@@ -79,6 +79,12 @@ export function SupabaseLogin() {
         errorMessage = 'An account with this email already exists. Try signing in instead.';
       } else if (errorMessage.includes('infinite recursion')) {
         errorMessage = 'Database configuration issue. Please try again.';
+      } else if (errorMessage.includes('Password should be at least 6 characters')) {
+        errorMessage = 'Password must be at least 6 characters long.';
+      } else if (errorMessage.includes('row-level security')) {
+        errorMessage = 'Account creation is temporarily disabled. Please contact support.';
+      } else if (errorMessage.includes('Permission error')) {
+        errorMessage = 'Account creation failed. Please try again or contact support.';
       }
 
       setError(errorMessage);
