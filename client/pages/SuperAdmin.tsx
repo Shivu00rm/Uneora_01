@@ -275,6 +275,11 @@ export default function SuperAdmin() {
         </Card>
       </div>
 
+      {/* Platform Alerts */}
+      <div className="mb-8">
+        <PlatformAlerts />
+      </div>
+
       {/* Main Content */}
       <Tabs defaultValue="organizations" className="space-y-6 enhanced-tabs">
         <TabsList className="grid w-full grid-cols-4 bg-slate-100">
