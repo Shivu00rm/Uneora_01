@@ -121,8 +121,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data.user) {
         try {
-          // Create profile
-          await DatabaseService.updateProfile(data.user.id, {
+          // Create profile using upsert to handle any conflicts
+          await DatabaseService.upsertProfile({
             id: data.user.id,
             name,
             role,
@@ -130,9 +130,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           });
 
           await loadUserProfile(data.user.id);
-        } catch (profileError) {
+        } catch (profileError: any) {
           console.error('Profile creation error:', profileError);
-          throw new Error('Account created but profile setup failed. Please contact support.');
+
+          // Better error message based on the actual error
+          let errorMessage = 'Account created but profile setup failed.';
+          if (profileError.message) {
+            errorMessage += ` Error: ${profileError.message}`;
+          }
+
+          throw new Error(errorMessage);
         }
       }
     } catch (error) {
