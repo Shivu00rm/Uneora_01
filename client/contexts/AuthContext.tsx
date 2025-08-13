@@ -114,18 +114,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase signup error:', error);
+        throw new Error(error.message || 'Signup failed');
+      }
 
       if (data.user) {
-        // Create profile
-        await DatabaseService.updateProfile(data.user.id, {
-          id: data.user.id,
-          name,
-          role,
-          company_id: companyId
-        });
+        try {
+          // Create profile
+          await DatabaseService.updateProfile(data.user.id, {
+            id: data.user.id,
+            name,
+            role,
+            company_id: companyId
+          });
 
-        await loadUserProfile(data.user.id);
+          await loadUserProfile(data.user.id);
+        } catch (profileError) {
+          console.error('Profile creation error:', profileError);
+          throw new Error('Account created but profile setup failed. Please contact support.');
+        }
       }
     } catch (error) {
       console.error('Sign up error:', error);
