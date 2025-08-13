@@ -195,21 +195,21 @@ export class DatabaseService {
   }
 
   // Analytics operations
-  static async getDashboardStats(companyId: string) {
+  static async getDashboardStats(organizationId: string) {
     const [orders, integrations] = await Promise.all([
-      this.getSalesOrders(companyId),
-      this.getIntegrations(companyId)
+      this.getSalesOrders(organizationId),
+      this.getIntegrations(organizationId)
     ])
 
     const totalRevenue = orders.reduce((sum, order) => sum + (Number(order.total_amount) || 0), 0)
     const pendingOrders = orders.filter(order => order.status === 'pending').length
-    const completedOrders = orders.filter(order => order.status === 'completed').length
+    const deliveredOrders = orders.filter(order => order.status === 'delivered').length
 
     return {
       totalRevenue,
       totalOrders: orders.length,
       pendingOrders,
-      completedOrders,
+      deliveredOrders,
       connectedPlatforms: integrations.length,
       recentOrders: orders.slice(0, 5)
     }
