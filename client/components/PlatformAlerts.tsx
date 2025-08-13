@@ -153,15 +153,15 @@ export function PlatformAlerts() {
   }, [isLive]);
 
   const getAlertIcon = (type: string, category: string) => {
-    if (type === "critical") return <AlertCircle className="h-4 w-4" />;
-    if (type === "error") return <XCircle className="h-4 w-4" />;
-    if (type === "warning") return <AlertTriangle className="h-4 w-4" />;
-    if (category === "system") return <Server className="h-4 w-4" />;
-    if (category === "security") return <Shield className="h-4 w-4" />;
-    if (category === "performance") return <TrendingUp className="h-4 w-4" />;
-    if (category === "billing") return <DollarSign className="h-4 w-4" />;
-    if (category === "organization") return <Building2 className="h-4 w-4" />;
-    return <Bell className="h-4 w-4" />;
+    if (type === "critical") return AlertCircle;
+    if (type === "error") return XCircle;
+    if (type === "warning") return AlertTriangle;
+    if (category === "system") return Server;
+    if (category === "security") return Shield;
+    if (category === "performance") return TrendingUp;
+    if (category === "billing") return DollarSign;
+    if (category === "organization") return Building2;
+    return Bell;
   };
 
   const getAlertColor = (type: string, resolved: boolean) => {
