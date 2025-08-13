@@ -82,7 +82,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase auth error:', error);
+        throw new Error(error.message || 'Login failed');
+      }
 
       if (data.user) {
         await loadUserProfile(data.user.id);
