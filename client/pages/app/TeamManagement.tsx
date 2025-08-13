@@ -463,16 +463,49 @@ export default function TeamManagement() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Member</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="w-12">
+                  <Checkbox
+                    checked={selectedMembers.length === filteredAndSortedMembers.length && filteredAndSortedMembers.length > 0}
+                    onCheckedChange={handleSelectAll}
+                  />
+                </TableHead>
+                <TableHead>
+                  <Button
+                    variant="ghost"
+                    className="h-auto p-0 font-medium"
+                    onClick={() => handleSort("name")}
+                  >
+                    Member
+                    {getSortIcon("name")}
+                  </Button>
+                </TableHead>
+                <TableHead>
+                  <Button
+                    variant="ghost"
+                    className="h-auto p-0 font-medium"
+                    onClick={() => handleSort("role")}
+                  >
+                    Role
+                    {getSortIcon("role")}
+                  </Button>
+                </TableHead>
+                <TableHead>
+                  <Button
+                    variant="ghost"
+                    className="h-auto p-0 font-medium"
+                    onClick={() => handleSort("status")}
+                  >
+                    Status
+                    {getSortIcon("status")}
+                  </Button>
+                </TableHead>
                 <TableHead>Last Login</TableHead>
                 <TableHead>Permissions</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredMembers.map((member) => {
+              {filteredAndSortedMembers.map((member) => {
                 const RoleIcon = roleIcons[member.role as keyof typeof roleIcons];
                 return (
                   <TableRow key={member.id}>
