@@ -105,10 +105,26 @@ export default function TeamManagement() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(false);
 
-  const filteredMembers = mockTeamMembers.filter(member => 
-    member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    member.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAndSortedMembers = mockTeamMembers
+    .filter(member => {
+      const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           member.email.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesRole = filterRole === "all" || member.role === filterRole;
+      const matchesStatus = filterStatus === "all" || member.status === filterStatus;
+
+      return matchesSearch && matchesRole && matchesStatus;
+    })
+    .sort((a, b) => {
+      const aValue = a[sortField as keyof typeof a];
+      const bValue = b[sortField as keyof typeof b];
+
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        const comparison = aValue.localeCompare(bValue);
+        return sortDirection === "asc" ? comparison : -comparison;
+      }
+
+      return 0;
+    });
 
   const activeMembers = mockTeamMembers.filter(m => m.status === "active").length;
   const totalMembers = mockTeamMembers.length;
