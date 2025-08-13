@@ -192,10 +192,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
 
+        // Get email from profile or auth
+        let userEmail = profile.email;
+        if (!userEmail) {
+          try {
+            const { data: { user } } = await supabase.auth.getUser();
+            userEmail = user?.email || '';
+          } catch (emailError) {
+            console.warn('Failed to get user email from auth');
+            userEmail = '';
+          }
+        }
+
         const userData: User = {
           id: profile.id,
           name: profile.name || 'Unknown User',
-          email: '', // Will be filled from auth
+          email: userEmail || '',
           role: (profile.role as UserRole) || 'ORG_USER',
           status: 'active',
           organizationId: profile.company_id || null,
@@ -206,11 +218,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(userData);
       } else {
         console.warn('No profile found for user:', userId);
+        // Get email from auth for new profile
+        let userEmail = '';
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          userEmail = user?.email || '';
+        } catch (emailError) {
+          console.warn('Failed to get user email from auth');
+        }
+
         // Create a basic profile if none exists
         try {
           await DatabaseService.upsertProfile({
             id: userId,
             name: 'New User',
+            email: userEmail,
             role: 'ORG_USER'
           });
           // Retry loading
