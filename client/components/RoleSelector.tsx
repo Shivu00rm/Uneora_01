@@ -11,11 +11,40 @@ export function RoleSelector() {
   const [isMinimized, setIsMinimized] = useState(false);
 
   if (user) {
+    if (isMinimized) {
+      return (
+        <div className="fixed bottom-4 right-4 z-50">
+          <Button
+            onClick={() => setIsMinimized(false)}
+            size="sm"
+            className="h-10 w-10 rounded-full bg-orange-100 hover:bg-orange-200 border border-orange-200"
+            variant="ghost"
+          >
+            <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+              {user.role === "SUPER_ADMIN" && <Crown className="h-3 w-3 text-primary" />}
+              {user.role === "ORG_ADMIN" && <Briefcase className="h-3 w-3 text-primary" />}
+              {user.role === "ORG_USER" && <User className="h-3 w-3 text-primary" />}
+            </div>
+          </Button>
+        </div>
+      );
+    }
+
     return (
       <div className="fixed bottom-4 right-4 z-50">
         <Card className="w-80 border-orange-200 bg-orange-50">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm text-orange-800">DEV: Current User</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm text-orange-800">DEV: Current User</CardTitle>
+              <Button
+                onClick={() => setIsMinimized(true)}
+                size="sm"
+                variant="ghost"
+                className="h-6 w-6 p-0 hover:bg-orange-200"
+              >
+                <Minimize2 className="h-3 w-3" />
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-2">
@@ -38,11 +67,11 @@ export function RoleSelector() {
                 {user.role.replace('_', ' ')}
               </Badge>
             </div>
-            
+
             <div className="space-y-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="w-full justify-start"
                 onClick={loginAsSuperAdmin}
                 disabled={user.role === "SUPER_ADMIN"}
@@ -50,9 +79,9 @@ export function RoleSelector() {
                 <Crown className="mr-2 h-4 w-4" />
                 Switch to Super Admin
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="w-full justify-start"
                 onClick={loginAsOrgAdmin}
                 disabled={user.role === "ORG_ADMIN"}
@@ -60,9 +89,9 @@ export function RoleSelector() {
                 <Briefcase className="mr-2 h-4 w-4" />
                 Switch to Org Admin
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="w-full justify-start"
                 onClick={loginAsOrgUser}
                 disabled={user.role === "ORG_USER"}
@@ -70,9 +99,9 @@ export function RoleSelector() {
                 <User className="mr-2 h-4 w-4" />
                 Switch to Org User
               </Button>
-              <Button 
-                variant="destructive" 
-                size="sm" 
+              <Button
+                variant="destructive"
+                size="sm"
                 className="w-full"
                 onClick={logout}
               >
