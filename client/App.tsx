@@ -6,8 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { SupabaseAuthProvider, useSupabaseAuth } from "./contexts/SupabaseAuthContext";
 import { SuperAdminProvider } from "./contexts/SuperAdminContext";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ProtectedRoute } from "./components/SupabaseProtectedRoute";
 import { LoadingScreen } from "./components/LoadingScreen";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import Index from "./pages/Index";
@@ -33,7 +34,7 @@ import Retail from "./pages/solutions/Retail";
 import Wholesale from "./pages/solutions/Wholesale";
 import { TenantLayout } from "./components/TenantLayout";
 import { SuperAdminLayout } from "./components/SuperAdminLayout";
-import { RoleRoute } from "./components/ProtectedRoute";
+import { RoleRoute } from "./components/SupabaseProtectedRoute";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
@@ -45,9 +46,13 @@ const queryClient = new QueryClient({
         if (error?.status === 401 || error?.status === 403) {
           return false;
         }
-        return failureCount < 3;
+        return failureCount < 2;
       },
       staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: 1,
     },
   },
 });
@@ -64,7 +69,7 @@ function ConditionalHeader() {
   const location = useLocation();
 
   // Don't render header on tenant routes since TenantLayout provides its own header
-  if (location.pathname.startsWith("/app/")) {
+  if (location.pathname.startsWith("/app/") || location.pathname === "/login") {
     return null;
   }
 
@@ -432,18 +437,20 @@ function AuthenticatedApp() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <SupabaseAuthProvider>
-          <SuperAdminProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <AuthenticatedApp />
-            </BrowserRouter>
-          </SuperAdminProvider>
-        </SupabaseAuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <SupabaseAuthProvider>
+            <SuperAdminProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <AuthenticatedApp />
+              </BrowserRouter>
+            </SuperAdminProvider>
+          </SupabaseAuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
