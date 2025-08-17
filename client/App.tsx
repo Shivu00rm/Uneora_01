@@ -442,13 +442,15 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <SupabaseAuthProvider>
-            <SuperAdminProvider>
+            <AuthProvider>
+              <SuperAdminProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
                 <AuthenticatedApp />
               </BrowserRouter>
-            </SuperAdminProvider>
+              </SuperAdminProvider>
+            </AuthProvider>
           </SupabaseAuthProvider>
         </TooltipProvider>
       </QueryClientProvider>
