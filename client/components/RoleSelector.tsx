@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { useMockLogin, useAuth } from "@/contexts/AuthContext";
+import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
 import {
   Crown,
   Briefcase,
@@ -10,12 +10,22 @@ import {
   LogOut,
   Minimize2,
   Maximize2,
+  LogIn,
 } from "lucide-react";
 
 export function RoleSelector() {
-  const { user, logout } = useAuth();
-  const { loginAsSuperAdmin, loginAsOrgAdmin, loginAsOrgUser } = useMockLogin();
+  const { user, logout } = useSupabaseAuth();
   const [isMinimized, setIsMinimized] = useState(false);
+
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      // For development, we'll navigate to the login page
+      // In a real scenario, you'd want to implement actual login
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
 
   if (user) {
     if (isMinimized) {
@@ -99,35 +109,17 @@ export function RoleSelector() {
             </div>
 
             <div className="space-y-2">
+              <div className="text-xs text-muted-foreground text-center py-2">
+                Production Mode - Use Supabase Auth
+              </div>
               <Button
                 variant="outline"
                 size="sm"
                 className="w-full justify-start"
-                onClick={loginAsSuperAdmin}
-                disabled={user.role === "SUPER_ADMIN"}
+                onClick={() => window.location.href = '/login'}
               >
-                <Crown className="mr-2 h-4 w-4" />
-                Switch to Super Admin
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full justify-start"
-                onClick={loginAsOrgAdmin}
-                disabled={user.role === "ORG_ADMIN"}
-              >
-                <Briefcase className="mr-2 h-4 w-4" />
-                Switch to Org Admin
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full justify-start"
-                onClick={loginAsOrgUser}
-                disabled={user.role === "ORG_USER"}
-              >
-                <User className="mr-2 h-4 w-4" />
-                Switch to Org User
+                <LogIn className="mr-2 h-4 w-4" />
+                Switch User (Go to Login)
               </Button>
               <Button
                 variant="destructive"
@@ -150,36 +142,21 @@ export function RoleSelector() {
       <Card className="w-80 border-orange-200 bg-orange-50">
         <CardHeader>
           <CardTitle className="text-sm text-orange-800">
-            DEV: Login as Different Roles
+            DEV: Not Logged In
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
+          <div className="text-xs text-muted-foreground text-center py-2">
+            Use real Supabase authentication
+          </div>
           <Button
             variant="outline"
             size="sm"
             className="w-full justify-start"
-            onClick={loginAsSuperAdmin}
+            onClick={() => window.location.href = '/login'}
           >
-            <Crown className="mr-2 h-4 w-4" />
-            Login as Super Admin
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full justify-start"
-            onClick={loginAsOrgAdmin}
-          >
-            <Briefcase className="mr-2 h-4 w-4" />
-            Login as Org Admin
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full justify-start"
-            onClick={loginAsOrgUser}
-          >
-            <User className="mr-2 h-4 w-4" />
-            Login as Org User
+            <LogIn className="mr-2 h-4 w-4" />
+            Go to Login Page
           </Button>
         </CardContent>
       </Card>
