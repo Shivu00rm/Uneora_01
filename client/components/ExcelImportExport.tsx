@@ -37,7 +37,7 @@ import {
   AlertTriangle,
   XCircle,
   Eye,
-  CloudUpload,
+  Upload,
   File,
   RefreshCw,
 } from "lucide-react";
@@ -266,7 +266,7 @@ export function ExcelImportExport() {
             {importStep === 1 && (
               <div className="space-y-4">
                 <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
-                  <CloudUpload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <div className="space-y-2">
                     <h3 className="text-lg font-medium">Upload Excel File</h3>
                     <p className="text-muted-foreground">

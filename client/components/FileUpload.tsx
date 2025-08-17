@@ -27,7 +27,7 @@ import {
   Download,
   Trash2,
   Eye,
-  CloudUpload,
+  Upload,
   CheckCircle,
   AlertTriangle,
   RefreshCw,
@@ -180,7 +180,7 @@ export function FileUpload() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CloudUpload className="h-5 w-5" />
+            <Upload className="h-5 w-5" />
             File Storage
           </CardTitle>
         </CardHeader>
@@ -195,7 +195,7 @@ export function FileUpload() {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <CloudUpload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <div className="space-y-2">
               <h3 className="text-lg font-medium">
                 Upload Files to Cloudflare R2
