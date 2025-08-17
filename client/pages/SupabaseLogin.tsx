@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
-import { Package, Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
+import { hasValidSupabaseConfig } from "@/lib/supabase";
+import { Package, Eye, EyeOff, Loader2, AlertCircle, Info } from "lucide-react";
 
 export default function SupabaseLogin() {
   const [email, setEmail] = useState("");
@@ -103,6 +104,15 @@ export default function SupabaseLogin() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {!hasValidSupabaseConfig && (
+              <Alert>
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Development Mode:</strong> Using mock authentication. Set real Supabase credentials for production.
+                </AlertDescription>
+              </Alert>
+            )}
+
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
