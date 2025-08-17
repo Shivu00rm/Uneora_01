@@ -37,7 +37,6 @@ import {
   AlertTriangle,
   XCircle,
   Eye,
-  Upload,
   File,
   RefreshCw,
 } from "lucide-react";
