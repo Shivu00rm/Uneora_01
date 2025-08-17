@@ -35,22 +35,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const supabaseAuth = useSupabaseAuth();
 
   // Convert Supabase user to legacy user format
-  const legacyUser: User | null = supabaseAuth.user ? {
-    id: parseInt(supabaseAuth.user.id.substring(0, 8), 16), // Convert UUID to number for compatibility
-    name: supabaseAuth.user.name,
-    email: supabaseAuth.user.email,
-    role: supabaseAuth.user.role,
-    status: supabaseAuth.user.status as "active" | "inactive",
-    organizationId: supabaseAuth.user.organizationId,
-    organizationName: supabaseAuth.user.organizationName,
-    permissions: convertPermissions(supabaseAuth.user.permissions),
-    lastLogin: supabaseAuth.user.lastLogin,
-  } : null;
+  const legacyUser: User | null = supabaseAuth.user
+    ? {
+        id: parseInt(supabaseAuth.user.id.substring(0, 8), 16), // Convert UUID to number for compatibility
+        name: supabaseAuth.user.name,
+        email: supabaseAuth.user.email,
+        role: supabaseAuth.user.role,
+        status: supabaseAuth.user.status as "active" | "inactive",
+        organizationId: supabaseAuth.user.organizationId,
+        organizationName: supabaseAuth.user.organizationName,
+        permissions: convertPermissions(supabaseAuth.user.permissions),
+        lastLogin: supabaseAuth.user.lastLogin,
+      }
+    : null;
 
   // Convert new permission format to legacy format
-  function convertPermissions(newPermissions: Record<string, any>): Record<string, string[]> {
+  function convertPermissions(
+    newPermissions: Record<string, any>,
+  ): Record<string, string[]> {
     const legacyPermissions: Record<string, string[]> = {};
-    
+
     // Convert the new flat permission structure to the old nested one
     for (const [module, actions] of Object.entries(newPermissions)) {
       if (Array.isArray(actions)) {
@@ -61,18 +65,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Add default permissions based on role
     if (supabaseAuth.user?.role === "SUPER_ADMIN") {
       legacyPermissions.system = ["view", "edit", "delete", "manage"];
-      legacyPermissions.organizations = ["view", "create", "edit", "delete", "manage"];
+      legacyPermissions.organizations = [
+        "view",
+        "create",
+        "edit",
+        "delete",
+        "manage",
+      ];
       legacyPermissions.billing = ["view", "edit", "manage"];
       legacyPermissions.api_keys = ["view", "edit", "manage"];
       legacyPermissions.admin_team = ["view", "create", "edit", "delete"];
       legacyPermissions.impersonation = ["use"];
     } else if (supabaseAuth.user?.role === "ORG_ADMIN") {
       legacyPermissions.dashboard = ["view"];
-      legacyPermissions.inventory = ["view", "create", "edit", "delete", "export"];
+      legacyPermissions.inventory = [
+        "view",
+        "create",
+        "edit",
+        "delete",
+        "export",
+      ];
       legacyPermissions.stock_movements = ["view", "create", "edit"];
       legacyPermissions.pos = ["view", "create", "refund"];
       legacyPermissions.vendors = ["view", "create", "edit", "delete"];
-      legacyPermissions.purchase_orders = ["view", "create", "edit", "approve", "delete"];
+      legacyPermissions.purchase_orders = [
+        "view",
+        "create",
+        "edit",
+        "approve",
+        "delete",
+      ];
       legacyPermissions.analytics = ["view", "export"];
       legacyPermissions.users = ["view", "create", "edit", "delete"];
       legacyPermissions.files = ["view", "upload", "delete"];
@@ -138,14 +160,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isOrgUser,
     canManageUsers,
     canAccessOrganizationData,
-    getDefaultRoute
+    getDefaultRoute,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
@@ -158,12 +176,19 @@ export function useAuth() {
 
 // Permission checking hook for components with organization context
 export function usePermissions() {
-  const { hasPermission, isSuperAdmin, isOrgAdmin, isOrgUser, canManageUsers, canAccessOrganizationData } = useAuth();
-  
+  const {
+    hasPermission,
+    isSuperAdmin,
+    isOrgAdmin,
+    isOrgUser,
+    canManageUsers,
+    canAccessOrganizationData,
+  } = useAuth();
+
   return {
     hasPermission,
     isSuperAdmin,
-    isOrgAdmin, 
+    isOrgAdmin,
     isOrgUser,
     canManageUsers,
     canAccessOrganizationData,
@@ -176,7 +201,9 @@ export function usePermissions() {
     canManageVendors: () => hasPermission("vendors", "edit"),
     canApprovePOs: () => hasPermission("purchase_orders", "approve"),
     canViewAnalytics: () => hasPermission("analytics", "view"),
-    canExportData: () => hasPermission("analytics", "export") || hasPermission("inventory", "export"),
+    canExportData: () =>
+      hasPermission("analytics", "export") ||
+      hasPermission("inventory", "export"),
     canManageFiles: () => hasPermission("files", "upload"),
     canManageOrgSettings: () => hasPermission("settings", "edit"),
     // Super admin specific permissions
@@ -186,15 +213,21 @@ export function usePermissions() {
     canManageAPIKeys: () => hasPermission("api_keys", "manage"),
     canImpersonate: () => hasPermission("impersonation", "use"),
     // Simple permission check
-    can: (module: string, action?: string) => hasPermission(module, action)
+    can: (module: string, action?: string) => hasPermission(module, action),
   };
 }
 
 // Mock function that now redirects to real login
 export function useMockLogin() {
   return {
-    loginAsSuperAdmin: () => { window.location.href = '/login'; },
-    loginAsOrgAdmin: () => { window.location.href = '/login'; },
-    loginAsOrgUser: () => { window.location.href = '/login'; }
+    loginAsSuperAdmin: () => {
+      window.location.href = "/login";
+    },
+    loginAsOrgAdmin: () => {
+      window.location.href = "/login";
+    },
+    loginAsOrgUser: () => {
+      window.location.href = "/login";
+    },
   };
 }
