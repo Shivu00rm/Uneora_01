@@ -32,31 +32,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Bridge provider that uses Supabase auth under the hood
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Add error handling for context availability
-  let supabaseAuth;
-  try {
-    supabaseAuth = useSupabaseAuth();
-  } catch (error) {
-    console.error('AuthProvider: SupabaseAuthContext not available, falling back to null state');
-    // Fallback to null state if context is not available
-    supabaseAuth = {
-      user: null,
-      session: null,
-      loading: false,
-      error: null,
-      login: async () => {},
-      logout: async () => {},
-      signUp: async () => {},
-      hasPermission: () => false,
-      isSuperAdmin: () => false,
-      isOrgAdmin: () => false,
-      isOrgUser: () => false,
-      canManageUsers: () => false,
-      canAccessOrganizationData: () => false,
-      getDefaultRoute: () => "/login",
-      refreshUser: async () => {}
-    };
-  }
+  const supabaseAuth = useSupabaseAuth();
 
   // Convert Supabase user to legacy user format
   const legacyUser: User | null = supabaseAuth.user
