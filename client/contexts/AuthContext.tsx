@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode } from "react";
+import { useSupabaseAuth } from "./SupabaseAuthContext";
 
 export type UserRole = "SUPER_ADMIN" | "ORG_ADMIN" | "ORG_USER";
 
@@ -29,153 +30,106 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock users for different roles and organizations
-const mockUsers = {
-  superAdmin: {
-    id: 1,
-    name: "System Owner",
-    email: "owner@flowstock.com",
-    role: "SUPER_ADMIN" as UserRole,
-    status: "active" as const,
-    organizationId: null,
-    permissions: {
-      // Super admin has all permissions across all modules
-      system: ["view", "edit", "delete", "manage"],
-      organizations: ["view", "create", "edit", "delete", "manage"],
-      billing: ["view", "edit", "manage"],
-      api_keys: ["view", "edit", "manage"],
-      admin_team: ["view", "create", "edit", "delete"],
-      impersonation: ["use"]
-    }
-  },
-  orgAdmin: {
-    id: 2,
-    name: "Rajesh Sharma",
-    email: "rajesh@techcorp.com",
-    role: "ORG_ADMIN" as UserRole,
-    status: "active" as const,
-    organizationId: "org-1",
-    organizationName: "TechCorp Solutions",
-    permissions: {
-      dashboard: ["view"],
-      inventory: ["view", "create", "edit", "delete", "export"],
-      stock_movements: ["view", "create", "edit"],
-      pos: ["view", "create", "refund"],
-      vendors: ["view", "create", "edit", "delete"],
-      purchase_orders: ["view", "create", "edit", "approve", "delete"],
-      analytics: ["view", "export"],
-      users: ["view", "create", "edit", "delete"], // Can manage users in their org
-      files: ["view", "upload", "delete"],
-      settings: ["view", "edit"] // Org settings only
-    }
-  },
-  orgUser: {
-    id: 3,
-    name: "Priya Patel",
-    email: "priya@techcorp.com",
-    role: "ORG_USER" as UserRole,
-    status: "active" as const,
-    organizationId: "org-1", 
-    organizationName: "TechCorp Solutions",
-    permissions: {
-      dashboard: ["view"],
-      inventory: ["view", "edit"],
-      stock_movements: ["view", "create"],
-      pos: ["view", "create"],
-      vendors: ["view"],
-      purchase_orders: ["view", "create"],
-      analytics: ["view"],
-      files: ["view", "upload"]
-      // No user management or settings access
-    }
-  }
-};
-
+// Bridge provider that uses Supabase auth under the hood
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // For demo, start with super admin. In real app, this would be null initially
-  const [user, setUser] = useState<User | null>(mockUsers.superAdmin);
+  const supabaseAuth = useSupabaseAuth();
 
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem("flowstock_user", JSON.stringify(userData));
+  // Convert Supabase user to legacy user format
+  const legacyUser: User | null = supabaseAuth.user ? {
+    id: parseInt(supabaseAuth.user.id.substring(0, 8), 16), // Convert UUID to number for compatibility
+    name: supabaseAuth.user.name,
+    email: supabaseAuth.user.email,
+    role: supabaseAuth.user.role,
+    status: supabaseAuth.user.status as "active" | "inactive",
+    organizationId: supabaseAuth.user.organizationId,
+    organizationName: supabaseAuth.user.organizationName,
+    permissions: convertPermissions(supabaseAuth.user.permissions),
+    lastLogin: supabaseAuth.user.lastLogin,
+  } : null;
+
+  // Convert new permission format to legacy format
+  function convertPermissions(newPermissions: Record<string, any>): Record<string, string[]> {
+    const legacyPermissions: Record<string, string[]> = {};
+    
+    // Convert the new flat permission structure to the old nested one
+    for (const [module, actions] of Object.entries(newPermissions)) {
+      if (Array.isArray(actions)) {
+        legacyPermissions[module] = actions;
+      }
+    }
+
+    // Add default permissions based on role
+    if (supabaseAuth.user?.role === "SUPER_ADMIN") {
+      legacyPermissions.system = ["view", "edit", "delete", "manage"];
+      legacyPermissions.organizations = ["view", "create", "edit", "delete", "manage"];
+      legacyPermissions.billing = ["view", "edit", "manage"];
+      legacyPermissions.api_keys = ["view", "edit", "manage"];
+      legacyPermissions.admin_team = ["view", "create", "edit", "delete"];
+      legacyPermissions.impersonation = ["use"];
+    } else if (supabaseAuth.user?.role === "ORG_ADMIN") {
+      legacyPermissions.dashboard = ["view"];
+      legacyPermissions.inventory = ["view", "create", "edit", "delete", "export"];
+      legacyPermissions.stock_movements = ["view", "create", "edit"];
+      legacyPermissions.pos = ["view", "create", "refund"];
+      legacyPermissions.vendors = ["view", "create", "edit", "delete"];
+      legacyPermissions.purchase_orders = ["view", "create", "edit", "approve", "delete"];
+      legacyPermissions.analytics = ["view", "export"];
+      legacyPermissions.users = ["view", "create", "edit", "delete"];
+      legacyPermissions.files = ["view", "upload", "delete"];
+      legacyPermissions.settings = ["view", "edit"];
+    } else if (supabaseAuth.user?.role === "ORG_USER") {
+      legacyPermissions.dashboard = ["view"];
+      legacyPermissions.inventory = ["view", "edit"];
+      legacyPermissions.stock_movements = ["view", "create"];
+      legacyPermissions.pos = ["view", "create"];
+      legacyPermissions.vendors = ["view"];
+      legacyPermissions.purchase_orders = ["view", "create"];
+      legacyPermissions.analytics = ["view"];
+      legacyPermissions.files = ["view", "upload"];
+    }
+
+    return legacyPermissions;
+  }
+
+  const login = async (userData: User) => {
+    // This is now handled by Supabase auth
+    console.warn("Legacy login called - use Supabase auth instead");
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("flowstock_user");
+  const logout = async () => {
+    return supabaseAuth.logout();
   };
 
   const hasPermission = (module: string, action?: string): boolean => {
-    if (!user) return false;
-    
-    // Super admin has all permissions
-    if (user.role === "SUPER_ADMIN") return true;
-    
-    const modulePermissions = user.permissions[module] || [];
-    
-    // If no specific action is required, check if user has any permission for the module
-    if (!action) return modulePermissions.length > 0;
-    
-    // Check for specific action permission
-    return modulePermissions.includes(action);
+    return supabaseAuth.hasPermission(module, action);
   };
 
   const isSuperAdmin = (): boolean => {
-    return user?.role === "SUPER_ADMIN" || false;
+    return supabaseAuth.isSuperAdmin();
   };
 
   const isOrgAdmin = (): boolean => {
-    return user?.role === "ORG_ADMIN" || false;
+    return supabaseAuth.isOrgAdmin();
   };
 
   const isOrgUser = (): boolean => {
-    return user?.role === "ORG_USER" || false;
+    return supabaseAuth.isOrgUser();
   };
 
   const canManageUsers = (): boolean => {
-    return isSuperAdmin() || (isOrgAdmin() && hasPermission("users", "create"));
+    return supabaseAuth.canManageUsers();
   };
 
   const canAccessOrganizationData = (orgId: string): boolean => {
-    if (!user) return false;
-    
-    // Super admin can access all organization data
-    if (user.role === "SUPER_ADMIN") return true;
-    
-    // Organization users can only access their own organization's data
-    return user.organizationId === orgId;
+    return supabaseAuth.canAccessOrganizationData(orgId);
   };
 
   const getDefaultRoute = (): string => {
-    if (!user) return "/login";
-    
-    switch (user.role) {
-      case "SUPER_ADMIN":
-        return "/super-admin";
-      case "ORG_ADMIN":
-      case "ORG_USER":
-        return "/app/dashboard";
-      default:
-        return "/login";
-    }
+    return supabaseAuth.getDefaultRoute();
   };
 
-  useEffect(() => {
-    // In real app, this would validate the stored token and fetch user data
-    const storedUser = localStorage.getItem("flowstock_user");
-    if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-      } catch (error) {
-        console.error("Failed to parse stored user data");
-        logout();
-      }
-    }
-  }, []);
-
   const value = {
-    user,
+    user: legacyUser,
     login,
     logout,
     hasPermission,
@@ -230,17 +184,17 @@ export function usePermissions() {
     canManageOrganizations: () => hasPermission("organizations", "manage"),
     canManageBilling: () => hasPermission("billing", "manage"),
     canManageAPIKeys: () => hasPermission("api_keys", "manage"),
-    canImpersonate: () => hasPermission("impersonation", "use")
+    canImpersonate: () => hasPermission("impersonation", "use"),
+    // Simple permission check
+    can: (module: string, action?: string) => hasPermission(module, action)
   };
 }
 
-// Mock function to switch between different user types for testing
+// Mock function that now redirects to real login
 export function useMockLogin() {
-  const { login } = useAuth();
-  
   return {
-    loginAsSuperAdmin: () => login(mockUsers.superAdmin),
-    loginAsOrgAdmin: () => login(mockUsers.orgAdmin),
-    loginAsOrgUser: () => login(mockUsers.orgUser)
+    loginAsSuperAdmin: () => { window.location.href = '/login'; },
+    loginAsOrgAdmin: () => { window.location.href = '/login'; },
+    loginAsOrgUser: () => { window.location.href = '/login'; }
   };
 }
