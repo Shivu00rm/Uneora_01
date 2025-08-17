@@ -3,7 +3,13 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useSupabaseAuth, UserRole } from "@/contexts/SupabaseAuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Lock, AlertTriangle, ArrowLeft, Shield, Building2 } from "lucide-react";
+import {
+  Lock,
+  AlertTriangle,
+  ArrowLeft,
+  Shield,
+  Building2,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { LoadingScreen } from "./LoadingScreen";
 
@@ -26,9 +32,15 @@ export function ProtectedRoute({
   requiredAction,
   requireOrganizationAccess = false,
   organizationId,
-  fallbackPath
+  fallbackPath,
 }: ProtectedRouteProps) {
-  const { user, loading, hasPermission, canAccessOrganizationData, getDefaultRoute } = useSupabaseAuth();
+  const {
+    user,
+    loading,
+    hasPermission,
+    canAccessOrganizationData,
+    getDefaultRoute,
+  } = useSupabaseAuth();
   const location = useLocation();
 
   // Show loading screen while auth is initializing
@@ -50,23 +62,43 @@ export function ProtectedRoute({
   }
 
   // Check super admin access for super admin routes
-  if (location.pathname.startsWith('/super-admin') && user?.role !== "SUPER_ADMIN") {
+  if (
+    location.pathname.startsWith("/super-admin") &&
+    user?.role !== "SUPER_ADMIN"
+  ) {
     return <Navigate to={redirectPath} replace />;
   }
 
   // Check tenant access for app routes
-  if (location.pathname.startsWith('/app') && user?.role === "SUPER_ADMIN") {
+  if (location.pathname.startsWith("/app") && user?.role === "SUPER_ADMIN") {
     return <Navigate to="/super-admin" replace />;
   }
 
   // Check organization-specific access
-  if (requireOrganizationAccess && organizationId && user && !canAccessOrganizationData(organizationId)) {
-    return <AccessDenied reason="organization" requiredOrgId={organizationId} />;
+  if (
+    requireOrganizationAccess &&
+    organizationId &&
+    user &&
+    !canAccessOrganizationData(organizationId)
+  ) {
+    return (
+      <AccessDenied reason="organization" requiredOrgId={organizationId} />
+    );
   }
 
   // Check permission-based access
-  if (requiredModule && user && !hasPermission(requiredModule, requiredAction)) {
-    return <AccessDenied reason="permission" requiredModule={requiredModule} requiredAction={requiredAction} />;
+  if (
+    requiredModule &&
+    user &&
+    !hasPermission(requiredModule, requiredAction)
+  ) {
+    return (
+      <AccessDenied
+        reason="permission"
+        requiredModule={requiredModule}
+        requiredAction={requiredAction}
+      />
+    );
   }
 
   return <>{children}</>;
@@ -80,7 +112,13 @@ interface AccessDeniedProps {
   requiredOrgId?: string;
 }
 
-function AccessDenied({ reason, requiredRole, requiredModule, requiredAction, requiredOrgId }: AccessDeniedProps) {
+function AccessDenied({
+  reason,
+  requiredRole,
+  requiredModule,
+  requiredAction,
+  requiredOrgId,
+}: AccessDeniedProps) {
   const { user, getDefaultRoute } = useSupabaseAuth();
 
   const getErrorMessage = () => {
@@ -126,28 +164,36 @@ function AccessDenied({ reason, requiredRole, requiredModule, requiredAction, re
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
                 <div className="text-left">
-                  <p className="font-medium text-destructive">Insufficient Permissions</p>
+                  <p className="font-medium text-destructive">
+                    Insufficient Permissions
+                  </p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {getErrorMessage()}
                   </p>
                 </div>
               </div>
             </div>
-            
+
             <p className="text-muted-foreground">
-              You don't have the necessary permissions to access this page. 
+              You don't have the necessary permissions to access this page.
               Please contact your administrator to request access.
             </p>
-            
+
             <div className="space-y-4 pt-4">
               <div className="text-sm text-muted-foreground">
-                <p><strong>Current user:</strong> {user?.name} ({user?.email})</p>
-                <p><strong>Current role:</strong> {user?.role}</p>
+                <p>
+                  <strong>Current user:</strong> {user?.name} ({user?.email})
+                </p>
+                <p>
+                  <strong>Current role:</strong> {user?.role}
+                </p>
                 {user?.organizationName && (
-                  <p><strong>Organization:</strong> {user.organizationName}</p>
+                  <p>
+                    <strong>Organization:</strong> {user.organizationName}
+                  </p>
                 )}
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to={getDefaultRoute()}>
                   <Button>
@@ -156,15 +202,14 @@ function AccessDenied({ reason, requiredRole, requiredModule, requiredAction, re
                   </Button>
                 </Link>
                 <Link to="/">
-                  <Button variant="outline">
-                    Go to Home
-                  </Button>
+                  <Button variant="outline">Go to Home</Button>
                 </Link>
               </div>
-              
+
               <div className="pt-4 border-t">
                 <p className="text-sm text-muted-foreground">
-                  Need access? Contact your system administrator or organization admin to update your permissions.
+                  Need access? Contact your system administrator or organization
+                  admin to update your permissions.
                 </p>
               </div>
             </div>
@@ -185,13 +230,13 @@ interface PermissionGateProps {
   fallback?: ReactNode;
 }
 
-export function PermissionGate({ 
-  children, 
-  module, 
-  action, 
+export function PermissionGate({
+  children,
+  module,
+  action,
   role,
   organizationId,
-  fallback = null 
+  fallback = null,
 }: PermissionGateProps) {
   const { user, hasPermission, canAccessOrganizationData } = useSupabaseAuth();
 
@@ -219,13 +264,16 @@ interface SuperAdminOnlyProps {
   fallback?: ReactNode;
 }
 
-export function SuperAdminOnly({ children, fallback = null }: SuperAdminOnlyProps) {
+export function SuperAdminOnly({
+  children,
+  fallback = null,
+}: SuperAdminOnlyProps) {
   const { user } = useSupabaseAuth();
-  
+
   if (user?.role !== "SUPER_ADMIN") {
     return <>{fallback}</>;
   }
-  
+
   return <>{children}</>;
 }
 
@@ -237,11 +285,11 @@ interface OrgAdminOnlyProps {
 
 export function OrgAdminOnly({ children, fallback = null }: OrgAdminOnlyProps) {
   const { user } = useSupabaseAuth();
-  
+
   if (user?.role !== "ORG_ADMIN" && user?.role !== "SUPER_ADMIN") {
     return <>{fallback}</>;
   }
-  
+
   return <>{children}</>;
 }
 
@@ -253,14 +301,14 @@ interface RoleRouteProps {
 
 export function RoleRoute({ children, allowedRoles }: RoleRouteProps) {
   const { user, loading, getDefaultRoute } = useSupabaseAuth();
-  
+
   if (loading) {
     return <LoadingScreen message="Checking permissions..." />;
   }
-  
+
   if (!user || !allowedRoles.includes(user.role)) {
     return <Navigate to={getDefaultRoute()} replace />;
   }
-  
+
   return <>{children}</>;
 }

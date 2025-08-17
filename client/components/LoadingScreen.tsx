@@ -5,12 +5,12 @@ interface LoadingScreenProps {
   fullScreen?: boolean;
 }
 
-export function LoadingScreen({ 
-  message = "Loading...", 
-  fullScreen = false 
+export function LoadingScreen({
+  message = "Loading...",
+  fullScreen = false,
 }: LoadingScreenProps) {
-  const containerClass = fullScreen 
-    ? "fixed inset-0 bg-background/80 backdrop-blur-sm z-50" 
+  const containerClass = fullScreen
+    ? "fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
     : "min-h-screen";
 
   return (
@@ -41,17 +41,17 @@ export function LoadingScreen({
   );
 }
 
-export function InlineLoading({ 
-  message = "Loading...", 
-  size = "default" 
-}: { 
-  message?: string; 
-  size?: "sm" | "default" | "lg" 
+export function InlineLoading({
+  message = "Loading...",
+  size = "default",
+}: {
+  message?: string;
+  size?: "sm" | "default" | "lg";
 }) {
   const sizeClasses = {
     sm: "h-4 w-4",
-    default: "h-5 w-5", 
-    lg: "h-6 w-6"
+    default: "h-5 w-5",
+    lg: "h-6 w-6",
   };
 
   return (

@@ -24,8 +24,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+
     this.setState({
       error,
       errorInfo,
@@ -42,7 +42,7 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   render() {
@@ -57,28 +57,34 @@ export class ErrorBoundary extends Component<Props, State> {
                     <AlertTriangle className="h-8 w-8 text-destructive" />
                   </div>
                 </div>
-                <CardTitle className="text-2xl mb-2">Something went wrong</CardTitle>
+                <CardTitle className="text-2xl mb-2">
+                  Something went wrong
+                </CardTitle>
                 <p className="text-muted-foreground">
-                  We apologize for the inconvenience. An unexpected error has occurred.
+                  We apologize for the inconvenience. An unexpected error has
+                  occurred.
                 </p>
               </CardHeader>
               <CardContent className="space-y-6">
                 {import.meta.env.DEV && this.state.error && (
                   <div className="p-4 bg-destructive/5 rounded-lg border border-destructive/20">
-                    <h4 className="font-medium text-destructive mb-2">Error Details (Development Mode):</h4>
+                    <h4 className="font-medium text-destructive mb-2">
+                      Error Details (Development Mode):
+                    </h4>
                     <pre className="text-xs overflow-auto max-h-32 text-destructive/80">
                       {this.state.error.toString()}
                       {this.state.errorInfo?.componentStack}
                     </pre>
                   </div>
                 )}
-                
+
                 <div className="text-center space-y-4">
                   <p className="text-sm text-muted-foreground">
-                    This error has been logged and our team has been notified. 
-                    You can try refreshing the page or returning to the home page.
+                    This error has been logged and our team has been notified.
+                    You can try refreshing the page or returning to the home
+                    page.
                   </p>
-                  
+
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button onClick={this.handleRetry} variant="default">
                       <RefreshCw className="mr-2 h-4 w-4" />
@@ -93,7 +99,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
                 <div className="pt-4 border-t text-center">
                   <p className="text-xs text-muted-foreground">
-                    If this problem persists, please contact support with the error details.
+                    If this problem persists, please contact support with the
+                    error details.
                   </p>
                 </div>
               </CardContent>
@@ -110,13 +117,13 @@ export class ErrorBoundary extends Component<Props, State> {
 // Hook for functional components to handle errors
 export function useErrorHandler() {
   const handleError = (error: Error, errorInfo?: string) => {
-    console.error('Error caught by useErrorHandler:', error);
-    
+    console.error("Error caught by useErrorHandler:", error);
+
     // In production, log to monitoring service
     if (import.meta.env.PROD) {
       // Example: logErrorToService(error, { info: errorInfo });
     }
-    
+
     // You can also show a toast notification here
     throw error; // Re-throw to trigger error boundary
   };

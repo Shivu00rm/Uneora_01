@@ -21,9 +21,9 @@ export function RoleSelector() {
     try {
       // For development, we'll navigate to the login page
       // In a real scenario, you'd want to implement actual login
-      window.location.href = '/login';
+      window.location.href = "/login";
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   };
 
@@ -116,7 +116,7 @@ export function RoleSelector() {
                 variant="outline"
                 size="sm"
                 className="w-full justify-start"
-                onClick={() => window.location.href = '/login'}
+                onClick={() => (window.location.href = "/login")}
               >
                 <LogIn className="mr-2 h-4 w-4" />
                 Switch User (Go to Login)
@@ -153,7 +153,7 @@ export function RoleSelector() {
             variant="outline"
             size="sm"
             className="w-full justify-start"
-            onClick={() => window.location.href = '/login'}
+            onClick={() => (window.location.href = "/login")}
           >
             <LogIn className="mr-2 h-4 w-4" />
             Go to Login Page

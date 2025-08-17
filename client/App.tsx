@@ -4,7 +4,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { SupabaseAuthProvider, useSupabaseAuth } from "./contexts/SupabaseAuthContext";
+import {
+  SupabaseAuthProvider,
+  useSupabaseAuth,
+} from "./contexts/SupabaseAuthContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { SuperAdminProvider } from "./contexts/SuperAdminContext";
 import { ProtectedRoute } from "./components/SupabaseProtectedRoute";
@@ -95,24 +98,15 @@ function AuthenticatedApp() {
           <Route path="/email-auth" element={<EmailAuth />} />
 
           {/* Solution Pages */}
-          <Route
-            path="/solutions/manufacturing"
-            element={<Manufacturing />}
-          />
+          <Route path="/solutions/manufacturing" element={<Manufacturing />} />
           <Route path="/solutions/retail" element={<Retail />} />
-          <Route
-            path="/solutions/wholesale"
-            element={<Wholesale />}
-          />
+          <Route path="/solutions/wholesale" element={<Wholesale />} />
 
           {/* Legacy Protected Routes - Redirect to role-appropriate routes */}
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute
-                requiredModule="dashboard"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="dashboard" requiredAction="view">
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -120,10 +114,7 @@ function AuthenticatedApp() {
           <Route
             path="/users"
             element={
-              <ProtectedRoute
-                requiredModule="users"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="users" requiredAction="view">
                 <Users />
               </ProtectedRoute>
             }
@@ -131,10 +122,7 @@ function AuthenticatedApp() {
           <Route
             path="/inventory"
             element={
-              <ProtectedRoute
-                requiredModule="inventory"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="inventory" requiredAction="view">
                 <Inventory />
               </ProtectedRoute>
             }
@@ -153,10 +141,7 @@ function AuthenticatedApp() {
           <Route
             path="/pos"
             element={
-              <ProtectedRoute
-                requiredModule="pos"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="pos" requiredAction="view">
                 <POS />
               </ProtectedRoute>
             }
@@ -164,10 +149,7 @@ function AuthenticatedApp() {
           <Route
             path="/vendors"
             element={
-              <ProtectedRoute
-                requiredModule="vendors"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="vendors" requiredAction="view">
                 <Vendors />
               </ProtectedRoute>
             }
@@ -186,10 +168,7 @@ function AuthenticatedApp() {
           <Route
             path="/analytics"
             element={
-              <ProtectedRoute
-                requiredModule="analytics"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="analytics" requiredAction="view">
                 <Analytics />
               </ProtectedRoute>
             }
@@ -197,10 +176,7 @@ function AuthenticatedApp() {
           <Route
             path="/files"
             element={
-              <ProtectedRoute
-                requiredModule="files"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="files" requiredAction="view">
                 <Files />
               </ProtectedRoute>
             }
@@ -208,10 +184,7 @@ function AuthenticatedApp() {
           <Route
             path="/settings"
             element={
-              <ProtectedRoute
-                requiredModule="settings"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="settings" requiredAction="view">
                 <Settings />
               </ProtectedRoute>
             }
@@ -269,10 +242,7 @@ function AuthenticatedApp() {
           <Route
             path="/alerts"
             element={
-              <ProtectedRoute
-                requiredModule="settings"
-                requiredAction="view"
-              >
+              <ProtectedRoute requiredModule="settings" requiredAction="view">
                 <Placeholder
                   title="WhatsApp Alerts"
                   description="Automated WhatsApp notifications for stock alerts, orders, and business updates."
@@ -311,10 +281,7 @@ function AuthenticatedApp() {
               <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER"]}>
                 <TenantLayout>
                   <Routes>
-                    <Route
-                      path="dashboard"
-                      element={<AppDashboard />}
-                    />
+                    <Route path="dashboard" element={<AppDashboard />} />
                     <Route
                       path="inventory"
                       element={
@@ -444,11 +411,11 @@ export default function App() {
           <SupabaseAuthProvider>
             <AuthProvider>
               <SuperAdminProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <AuthenticatedApp />
-              </BrowserRouter>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <AuthenticatedApp />
+                </BrowserRouter>
               </SuperAdminProvider>
             </AuthProvider>
           </SupabaseAuthProvider>

@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { User as SupabaseUser, Session } from "@supabase/supabase-js";
 import { supabase, Tables } from "@/lib/supabase";
 
@@ -44,37 +50,41 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   // Fetch user profile from database (with mock fallback)
-  const fetchUserProfile = async (supabaseUser: SupabaseUser): Promise<User | null> => {
+  const fetchUserProfile = async (
+    supabaseUser: SupabaseUser,
+  ): Promise<User | null> => {
     try {
       const { data: profile, error: profileError } = await supabase
-        .from('user_profiles')
-        .select(`
+        .from("user_profiles")
+        .select(
+          `
           *,
           organization:organizations(
             id,
             name,
             status
           )
-        `)
-        .eq('id', supabaseUser.id)
+        `,
+        )
+        .eq("id", supabaseUser.id)
         .single();
 
       // If we get an error (likely from mock), create a mock profile based on the user
       if (profileError) {
-        console.log('Using mock user profile for development');
+        console.log("Using mock user profile for development");
         return createMockUserProfile(supabaseUser);
       }
 
       if (!profile) {
-        console.log('No user profile found, creating mock profile');
+        console.log("No user profile found, creating mock profile");
         return createMockUserProfile(supabaseUser);
       }
 
       // Update last login (will fail silently in mock mode)
       await supabase
-        .from('user_profiles')
+        .from("user_profiles")
         .update({ last_login: new Date().toISOString() })
-        .eq('id', supabaseUser.id);
+        .eq("id", supabaseUser.id);
 
       return {
         id: profile.id,
@@ -86,10 +96,10 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         organizationName: profile.organization?.name,
         permissions: profile.permissions || {},
         lastLogin: profile.last_login,
-        avatarUrl: profile.avatar_url
+        avatarUrl: profile.avatar_url,
       };
     } catch (error) {
-      console.log('Error fetching profile, using mock data:', error);
+      console.log("Error fetching profile, using mock data:", error);
       return createMockUserProfile(supabaseUser);
     }
   };
@@ -97,66 +107,66 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   // Create mock user profile for development
   const createMockUserProfile = (supabaseUser: SupabaseUser): User => {
     const email = supabaseUser.email;
-    let role: UserRole = 'ORG_USER';
-    let organizationId: string | null = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
-    let organizationName = 'TechCorp Solutions';
+    let role: UserRole = "ORG_USER";
+    let organizationId: string | null = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
+    let organizationName = "TechCorp Solutions";
 
     // Determine role based on email
-    if (email === 'admin@flowstock.com') {
-      role = 'SUPER_ADMIN';
+    if (email === "admin@flowstock.com") {
+      role = "SUPER_ADMIN";
       organizationId = null;
       organizationName = undefined;
-    } else if (email === 'admin@techcorp.com') {
-      role = 'ORG_ADMIN';
+    } else if (email === "admin@techcorp.com") {
+      role = "ORG_ADMIN";
     }
 
     return {
       id: supabaseUser.id,
-      name: supabaseUser.user_metadata?.name || email.split('@')[0],
+      name: supabaseUser.user_metadata?.name || email.split("@")[0],
       email: email,
       role: role,
-      status: 'active',
+      status: "active",
       organizationId,
       organizationName,
       permissions: createMockPermissions(role),
       lastLogin: new Date().toISOString(),
-      avatarUrl: null
+      avatarUrl: null,
     };
   };
 
   // Create mock permissions based on role
   const createMockPermissions = (role: UserRole): Record<string, any> => {
     switch (role) {
-      case 'SUPER_ADMIN':
+      case "SUPER_ADMIN":
         return {
-          system: ['view', 'edit', 'delete', 'manage'],
-          organizations: ['view', 'create', 'edit', 'delete', 'manage'],
-          billing: ['view', 'edit', 'manage'],
-          api_keys: ['view', 'edit', 'manage'],
+          system: ["view", "edit", "delete", "manage"],
+          organizations: ["view", "create", "edit", "delete", "manage"],
+          billing: ["view", "edit", "manage"],
+          api_keys: ["view", "edit", "manage"],
         };
-      case 'ORG_ADMIN':
+      case "ORG_ADMIN":
         return {
-          dashboard: ['view'],
-          inventory: ['view', 'create', 'edit', 'delete', 'export'],
-          stock_movements: ['view', 'create', 'edit'],
-          pos: ['view', 'create', 'refund'],
-          vendors: ['view', 'create', 'edit', 'delete'],
-          purchase_orders: ['view', 'create', 'edit', 'approve', 'delete'],
-          analytics: ['view', 'export'],
-          users: ['view', 'create', 'edit', 'delete'],
-          files: ['view', 'upload', 'delete'],
-          settings: ['view', 'edit']
+          dashboard: ["view"],
+          inventory: ["view", "create", "edit", "delete", "export"],
+          stock_movements: ["view", "create", "edit"],
+          pos: ["view", "create", "refund"],
+          vendors: ["view", "create", "edit", "delete"],
+          purchase_orders: ["view", "create", "edit", "approve", "delete"],
+          analytics: ["view", "export"],
+          users: ["view", "create", "edit", "delete"],
+          files: ["view", "upload", "delete"],
+          settings: ["view", "edit"],
         };
-      case 'ORG_USER':
+      case "ORG_USER":
         return {
-          dashboard: ['view'],
-          inventory: ['view', 'edit'],
-          stock_movements: ['view', 'create'],
-          pos: ['view', 'create'],
-          vendors: ['view'],
-          purchase_orders: ['view', 'create'],
-          analytics: ['view'],
-          files: ['view', 'upload']
+          dashboard: ["view"],
+          inventory: ["view", "edit"],
+          stock_movements: ["view", "create"],
+          pos: ["view", "create"],
+          vendors: ["view"],
+          purchase_orders: ["view", "create"],
+          analytics: ["view"],
+          files: ["view", "upload"],
         };
       default:
         return {};
@@ -171,10 +181,13 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         setError(null);
 
         // Get initial session
-        const { data: { session: initialSession }, error: sessionError } = await supabase.auth.getSession();
-        
+        const {
+          data: { session: initialSession },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
         if (sessionError) {
-          console.error('Session error:', sessionError);
+          console.error("Session error:", sessionError);
           setError(sessionError.message);
           return;
         }
@@ -186,8 +199,8 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
           setUser(userProfile);
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
-        setError('Failed to initialize authentication');
+        console.error("Auth initialization error:", error);
+        setError("Failed to initialize authentication");
       } finally {
         setLoading(false);
       }
@@ -199,19 +212,19 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state change:', event, session?.user?.email);
-      
+      console.log("Auth state change:", event, session?.user?.email);
+
       setSession(session);
       setError(null);
 
-      if (event === 'SIGNED_IN' && session?.user) {
+      if (event === "SIGNED_IN" && session?.user) {
         setLoading(true);
         const userProfile = await fetchUserProfile(session.user);
         setUser(userProfile);
         setLoading(false);
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === "SIGNED_OUT") {
         setUser(null);
-      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+      } else if (event === "TOKEN_REFRESHED" && session?.user) {
         // Optionally refresh user profile on token refresh
         const userProfile = await fetchUserProfile(session.user);
         setUser(userProfile);
@@ -226,10 +239,11 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
 
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
       if (signInError) {
         throw signInError;
@@ -237,18 +251,23 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       if (data.user && data.session) {
         // Persist session for mock mode
-        localStorage.setItem('mock-supabase-session', JSON.stringify(data.session));
+        localStorage.setItem(
+          "mock-supabase-session",
+          JSON.stringify(data.session),
+        );
 
         const userProfile = await fetchUserProfile(data.user);
         if (!userProfile) {
-          throw new Error('Unable to load user profile. Please contact support.');
+          throw new Error(
+            "Unable to load user profile. Please contact support.",
+          );
         }
         setUser(userProfile);
         setSession(data.session);
       }
     } catch (error: any) {
-      console.error('Login error:', error);
-      setError(error.message || 'Login failed');
+      console.error("Login error:", error);
+      setError(error.message || "Login failed");
       throw error;
     } finally {
       setLoading(false);
@@ -261,19 +280,19 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       setError(null);
 
       // Clear mock session
-      localStorage.removeItem('mock-supabase-session');
+      localStorage.removeItem("mock-supabase-session");
 
       const { error: signOutError } = await supabase.auth.signOut();
 
-      if (signOutError && !signOutError.message.includes('Mock')) {
+      if (signOutError && !signOutError.message.includes("Mock")) {
         throw signOutError;
       }
 
       setUser(null);
       setSession(null);
     } catch (error: any) {
-      console.error('Logout error:', error);
-      setError(error.message || 'Logout failed');
+      console.error("Logout error:", error);
+      setError(error.message || "Logout failed");
       throw error;
     } finally {
       setLoading(false);
@@ -297,14 +316,14 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       if (data.user) {
         // Create user profile
         const { error: profileError } = await supabase
-          .from('user_profiles')
+          .from("user_profiles")
           .insert({
             id: data.user.id,
             name: userData.name,
             email: userData.email,
-            role: userData.role || 'ORG_USER',
+            role: userData.role || "ORG_USER",
             organization_id: userData.organizationId,
-            permissions: userData.permissions || {}
+            permissions: userData.permissions || {},
           });
 
         if (profileError) {
@@ -312,8 +331,8 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         }
       }
     } catch (error: any) {
-      console.error('Sign up error:', error);
-      setError(error.message || 'Sign up failed');
+      console.error("Sign up error:", error);
+      setError(error.message || "Sign up failed");
       throw error;
     } finally {
       setLoading(false);
@@ -331,18 +350,21 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
   const hasPermission = (module: string, action?: string): boolean => {
     if (!user) return false;
-    
+
     // Super admin has all permissions
     if (user.role === "SUPER_ADMIN") return true;
-    
+
     const permissions = user.permissions || {};
     const modulePermissions = permissions[module] || [];
-    
+
     // If no specific action is required, check if user has any permission for the module
-    if (!action) return Array.isArray(modulePermissions) && modulePermissions.length > 0;
-    
+    if (!action)
+      return Array.isArray(modulePermissions) && modulePermissions.length > 0;
+
     // Check for specific action permission
-    return Array.isArray(modulePermissions) && modulePermissions.includes(action);
+    return (
+      Array.isArray(modulePermissions) && modulePermissions.includes(action)
+    );
   };
 
   const isSuperAdmin = (): boolean => {
@@ -363,17 +385,17 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
   const canAccessOrganizationData = (orgId: string): boolean => {
     if (!user) return false;
-    
+
     // Super admin can access all organization data
     if (user.role === "SUPER_ADMIN") return true;
-    
+
     // Organization users can only access their own organization's data
     return user.organizationId === orgId;
   };
 
   const getDefaultRoute = (): string => {
     if (!user) return "/login";
-    
+
     switch (user.role) {
       case "SUPER_ADMIN":
         return "/super-admin";
@@ -400,20 +422,18 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     canManageUsers,
     canAccessOrganizationData,
     getDefaultRoute,
-    refreshUser
+    refreshUser,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useSupabaseAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useSupabaseAuth must be used within a SupabaseAuthProvider");
+    throw new Error(
+      "useSupabaseAuth must be used within a SupabaseAuthProvider",
+    );
   }
   return context;
 }

@@ -20,7 +20,7 @@ export default function SupabaseLogin() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const { login, loading, error } = useSupabaseAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,7 +29,7 @@ export default function SupabaseLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       return;
     }
@@ -37,11 +37,11 @@ export default function SupabaseLogin() {
     try {
       setIsSubmitting(true);
       await login(email, password);
-      
+
       // Navigate to the intended route or default route
       navigate(from, { replace: true });
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
       // Error is handled by the auth context
     } finally {
       setIsSubmitting(false);
@@ -54,22 +54,22 @@ export default function SupabaseLogin() {
       email: "admin@flowstock.com",
       password: "admin123",
       description: "Full platform access",
-      variant: "destructive" as const
+      variant: "destructive" as const,
     },
     {
       role: "Org Admin",
-      email: "admin@techcorp.com", 
+      email: "admin@techcorp.com",
       password: "admin123",
       description: "Organization management",
-      variant: "secondary" as const
+      variant: "secondary" as const,
     },
     {
       role: "Org User",
       email: "user@techcorp.com",
-      password: "user123", 
+      password: "user123",
       description: "Basic inventory access",
-      variant: "outline" as const
-    }
+      variant: "outline" as const,
+    },
   ];
 
   const fillDemoCredentials = (email: string, password: string) => {
@@ -108,7 +108,8 @@ export default function SupabaseLogin() {
               <Alert>
                 <Info className="h-4 w-4" />
                 <AlertDescription>
-                  <strong>Development Mode:</strong> Using mock authentication. Set real Supabase credentials for production.
+                  <strong>Development Mode:</strong> Using mock authentication.
+                  Set real Supabase credentials for production.
                 </AlertDescription>
               </Alert>
             )}
@@ -161,12 +162,14 @@ export default function SupabaseLogin() {
                 </div>
               </div>
 
-              <Button 
-                className="w-full" 
-                type="submit" 
+              <Button
+                className="w-full"
+                type="submit"
                 disabled={loading || isSubmitting || !email || !password}
               >
-                {(loading || isSubmitting) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {(loading || isSubmitting) && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 {loading || isSubmitting ? "Signing In..." : "Sign In"}
               </Button>
             </form>
@@ -187,11 +190,16 @@ export default function SupabaseLogin() {
               </p>
               <div className="space-y-2">
                 {getDemoAccounts().map((account, index) => (
-                  <div key={index} className="p-3 bg-muted/50 rounded-lg border">
+                  <div
+                    key={index}
+                    className="p-3 bg-muted/50 rounded-lg border"
+                  >
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <p className="text-sm font-medium">{account.role}</p>
-                        <p className="text-xs text-muted-foreground">{account.description}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {account.description}
+                        </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {account.email}
                         </p>
@@ -199,7 +207,9 @@ export default function SupabaseLogin() {
                       <Button
                         variant={account.variant}
                         size="sm"
-                        onClick={() => fillDemoCredentials(account.email, account.password)}
+                        onClick={() =>
+                          fillDemoCredentials(account.email, account.password)
+                        }
                         disabled={loading || isSubmitting}
                       >
                         Use
