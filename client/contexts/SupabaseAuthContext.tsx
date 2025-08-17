@@ -235,12 +235,16 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         throw signInError;
       }
 
-      if (data.user) {
+      if (data.user && data.session) {
+        // Persist session for mock mode
+        localStorage.setItem('mock-supabase-session', JSON.stringify(data.session));
+
         const userProfile = await fetchUserProfile(data.user);
         if (!userProfile) {
           throw new Error('Unable to load user profile. Please contact support.');
         }
         setUser(userProfile);
+        setSession(data.session);
       }
     } catch (error: any) {
       console.error('Login error:', error);
