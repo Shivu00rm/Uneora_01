@@ -259,10 +259,13 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      
+
+      // Clear mock session
+      localStorage.removeItem('mock-supabase-session');
+
       const { error: signOutError } = await supabase.auth.signOut();
-      
-      if (signOutError) {
+
+      if (signOutError && !signOutError.message.includes('Mock')) {
         throw signOutError;
       }
 
