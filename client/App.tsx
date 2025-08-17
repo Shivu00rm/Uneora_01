@@ -3,25 +3,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-<<<<<<< HEAD
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import {
-  SupabaseAuthProvider,
-  useSupabaseAuth,
-} from "./contexts/SupabaseAuthContext";
+import { SupabaseAuthProvider, useSupabaseAuth } from "./contexts/SupabaseAuthContext";
 import { AuthProvider } from "./contexts/AuthContext";
-=======
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import { SupabaseLogin } from "./components/SupabaseLogin";
-import { Loader2 } from "lucide-react";
->>>>>>> refs/remotes/origin/main
 import { SuperAdminProvider } from "./contexts/SuperAdminContext";
 import { ProtectedRoute } from "./components/SupabaseProtectedRoute";
 import { LoadingScreen } from "./components/LoadingScreen";
@@ -74,6 +58,13 @@ const queryClient = new QueryClient({
   },
 });
 
+// Development-only component for role switching
+const DevRoleSelector = React.lazy(() =>
+  import("./components/RoleSelector").then((module) => ({
+    default: module.RoleSelector,
+  })),
+);
+
 // Conditional header that doesn't render on tenant routes
 function ConditionalHeader() {
   const location = useLocation();
@@ -86,41 +77,12 @@ function ConditionalHeader() {
   return <Header />;
 }
 
-<<<<<<< HEAD
 // Auth-aware routing wrapper
 function AuthenticatedApp() {
   const { user, loading } = useSupabaseAuth();
 
   if (loading) {
     return <LoadingScreen message="Authenticating..." fullScreen />;
-=======
-// App content that handles authentication state
-function AppContent() {
-  const { user, loading } = useAuth();
-  const location = useLocation();
-
-  // Show loading spinner while checking auth
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="mx-auto h-8 w-8 animate-spin mb-4" />
-          <p className="text-gray-600">Loading FlowStock...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show login if not authenticated and not on public routes
-  const publicRoutes = [
-    "/",
-    "/solutions/manufacturing",
-    "/solutions/retail",
-    "/solutions/wholesale",
-  ];
-  if (!user && !publicRoutes.includes(location.pathname)) {
-    return <SupabaseLogin />;
->>>>>>> refs/remotes/origin/main
   }
 
   return (
@@ -129,39 +91,28 @@ function AppContent() {
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Index />} />
-<<<<<<< HEAD
           <Route path="/login" element={<SupabaseLogin />} />
-=======
-          <Route
-            path="/login"
-            element={
-              user ? (
-                <Navigate
-                  to={
-                    user.role === "SUPER_ADMIN"
-                      ? "/super-admin"
-                      : "/app/dashboard"
-                  }
-                  replace
-                />
-              ) : (
-                <SupabaseLogin />
-              )
-            }
-          />
->>>>>>> refs/remotes/origin/main
           <Route path="/email-auth" element={<EmailAuth />} />
 
           {/* Solution Pages */}
-          <Route path="/solutions/manufacturing" element={<Manufacturing />} />
+          <Route
+            path="/solutions/manufacturing"
+            element={<Manufacturing />}
+          />
           <Route path="/solutions/retail" element={<Retail />} />
-          <Route path="/solutions/wholesale" element={<Wholesale />} />
+          <Route
+            path="/solutions/wholesale"
+            element={<Wholesale />}
+          />
 
           {/* Legacy Protected Routes - Redirect to role-appropriate routes */}
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute requiredModule="dashboard" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="dashboard"
+                requiredAction="view"
+              >
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -169,7 +120,10 @@ function AppContent() {
           <Route
             path="/users"
             element={
-              <ProtectedRoute requiredModule="users" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="users"
+                requiredAction="view"
+              >
                 <Users />
               </ProtectedRoute>
             }
@@ -177,7 +131,10 @@ function AppContent() {
           <Route
             path="/inventory"
             element={
-              <ProtectedRoute requiredModule="inventory" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="inventory"
+                requiredAction="view"
+              >
                 <Inventory />
               </ProtectedRoute>
             }
@@ -196,7 +153,10 @@ function AppContent() {
           <Route
             path="/pos"
             element={
-              <ProtectedRoute requiredModule="pos" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="pos"
+                requiredAction="view"
+              >
                 <POS />
               </ProtectedRoute>
             }
@@ -204,7 +164,10 @@ function AppContent() {
           <Route
             path="/vendors"
             element={
-              <ProtectedRoute requiredModule="vendors" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="vendors"
+                requiredAction="view"
+              >
                 <Vendors />
               </ProtectedRoute>
             }
@@ -223,7 +186,10 @@ function AppContent() {
           <Route
             path="/analytics"
             element={
-              <ProtectedRoute requiredModule="analytics" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="analytics"
+                requiredAction="view"
+              >
                 <Analytics />
               </ProtectedRoute>
             }
@@ -231,7 +197,10 @@ function AppContent() {
           <Route
             path="/files"
             element={
-              <ProtectedRoute requiredModule="files" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="files"
+                requiredAction="view"
+              >
                 <Files />
               </ProtectedRoute>
             }
@@ -239,7 +208,10 @@ function AppContent() {
           <Route
             path="/settings"
             element={
-              <ProtectedRoute requiredModule="settings" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="settings"
+                requiredAction="view"
+              >
                 <Settings />
               </ProtectedRoute>
             }
@@ -249,11 +221,7 @@ function AppContent() {
           <Route
             path="/automation"
             element={
-<<<<<<< HEAD
               <ProtectedRoute allowedRoles={["ORG_ADMIN"]}>
-=======
-              <ProtectedRoute requiredRole="manager">
->>>>>>> refs/remotes/origin/main
                 <Placeholder
                   title="Smart Automation"
                   description="Drag-and-drop workflow builder with intelligent triggers and automated actions."
@@ -265,11 +233,7 @@ function AppContent() {
           <Route
             path="/ecommerce"
             element={
-<<<<<<< HEAD
               <ProtectedRoute allowedRoles={["ORG_ADMIN"]}>
-=======
-              <ProtectedRoute requiredRole="manager">
->>>>>>> refs/remotes/origin/main
                 <Placeholder
                   title="E-commerce Sync"
                   description="Real-time synchronization with Shopify, Amazon, WooCommerce and other platforms."
@@ -281,11 +245,7 @@ function AppContent() {
           <Route
             path="/consulting"
             element={
-<<<<<<< HEAD
               <ProtectedRoute allowedRoles={["ORG_ADMIN"]}>
-=======
-              <ProtectedRoute requiredRole="manager">
->>>>>>> refs/remotes/origin/main
                 <Placeholder
                   title="MSME Consulting"
                   description="Expert business consulting services with AI-powered analysis and recommendations."
@@ -297,11 +257,7 @@ function AppContent() {
           <Route
             path="/payments"
             element={
-<<<<<<< HEAD
               <ProtectedRoute allowedRoles={["ORG_ADMIN"]}>
-=======
-              <ProtectedRoute requiredRole="manager">
->>>>>>> refs/remotes/origin/main
                 <Placeholder
                   title="Payment Integration"
                   description="Razorpay and UPI integration for seamless payment processing."
@@ -313,7 +269,10 @@ function AppContent() {
           <Route
             path="/alerts"
             element={
-              <ProtectedRoute requiredModule="settings" requiredAction="view">
+              <ProtectedRoute
+                requiredModule="settings"
+                requiredAction="view"
+              >
                 <Placeholder
                   title="WhatsApp Alerts"
                   description="Automated WhatsApp notifications for stock alerts, orders, and business updates."
@@ -352,7 +311,10 @@ function AppContent() {
               <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER"]}>
                 <TenantLayout>
                   <Routes>
-                    <Route path="dashboard" element={<AppDashboard />} />
+                    <Route
+                      path="dashboard"
+                      element={<AppDashboard />}
+                    />
                     <Route
                       path="inventory"
                       element={
@@ -464,22 +426,18 @@ function AppContent() {
         </Routes>
       </main>
       <Footer />
-<<<<<<< HEAD
       {/* Development-only role selector */}
       {import.meta.env.DEV && (
         <React.Suspense fallback={null}>
           <DevRoleSelector />
         </React.Suspense>
       )}
-=======
->>>>>>> refs/remotes/origin/main
     </div>
   );
 }
 
 export default function App() {
   return (
-<<<<<<< HEAD
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
@@ -497,20 +455,5 @@ export default function App() {
         </TooltipProvider>
       </QueryClientProvider>
     </ErrorBoundary>
-=======
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          <SuperAdminProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
-          </SuperAdminProvider>
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
->>>>>>> refs/remotes/origin/main
   );
 }
