@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { SupabaseAuthProvider, useSupabaseAuth } from "./contexts/SupabaseAuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import { SuperAdminProvider } from "./contexts/SuperAdminContext";
 import { ProtectedRoute } from "./components/SupabaseProtectedRoute";
 import { LoadingScreen } from "./components/LoadingScreen";
