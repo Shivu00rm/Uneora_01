@@ -41,7 +41,9 @@ interface AuthContextType {
   refreshUser: () => Promise<void>;
 }
 
-const SupabaseAuthContext = createContext<AuthContextType | undefined>(undefined);
+const SupabaseAuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);
 
 export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -425,7 +427,11 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     refreshUser,
   };
 
-  return <SupabaseAuthContext.Provider value={value}>{children}</SupabaseAuthContext.Provider>;
+  return (
+    <SupabaseAuthContext.Provider value={value}>
+      {children}
+    </SupabaseAuthContext.Provider>
+  );
 }
 
 export function useSupabaseAuth() {
