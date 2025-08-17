@@ -15,7 +15,6 @@
     "test": "jest"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -68,12 +67,6 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.0",
     "zod": "^3.22.4"
-=======
-    "@supabase/supabase-js": "^2.55.0",
-    "dotenv": "^17.2.0",
-    "express": "^4.18.2",
-    "zod": "^3.23.8"
->>>>>>> refs/remotes/origin/main
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
