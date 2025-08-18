@@ -30,6 +30,11 @@ if (hasValidSupabaseConfig) {
 
   // Mock user data for development
   const mockUsers = {
+    "superadmin@uneora.com": {
+      id: "00000000-0000-0000-0000-000000000000",
+      email: "superadmin@uneora.com",
+      user_metadata: { name: "Uneora Super Admin" },
+    },
     "admin@uneora.com": {
       id: "00000000-0000-0000-0000-000000000001",
       email: "admin@uneora.com",
