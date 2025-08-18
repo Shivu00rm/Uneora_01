@@ -184,9 +184,9 @@ export function SupabaseLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md space-y-4">
-        {/* Simple connection info */}
+        {/* Development mode indicator */}
         <div className="text-center text-xs text-gray-500">
-          Supabase URL: {import.meta.env.VITE_SUPABASE_URL || 'Not set'}
+          🛠️ Development Mode - Demo accounts available below
         </div>
 
         <Card className="w-full">
