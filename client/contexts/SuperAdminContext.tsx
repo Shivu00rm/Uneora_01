@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface Organization {
   id: string;
@@ -32,7 +38,12 @@ interface SuperAdminUser {
   id: string;
   name: string;
   email: string;
-  role: "super_admin" | "platform_dev" | "data_engineer" | "support_lead" | "security_analyst";
+  role:
+    | "super_admin"
+    | "platform_dev"
+    | "data_engineer"
+    | "support_lead"
+    | "security_analyst";
   permissions: string[];
   lastLogin: string;
 }
@@ -58,7 +69,9 @@ interface SuperAdminContextType {
   hasSystemPermission: (permission: string) => boolean;
 }
 
-const SuperAdminContext = createContext<SuperAdminContextType | undefined>(undefined);
+const SuperAdminContext = createContext<SuperAdminContextType | undefined>(
+  undefined,
+);
 
 // Mock data
 const mockOrganizations: Organization[] = [
@@ -76,11 +89,16 @@ const mockOrganizations: Organization[] = [
     createdAt: "2023-06-15T00:00:00Z",
     billingEmail: "billing@techcorp.com",
     customDomain: "inventory.techcorp.com",
-    features: ["advanced_analytics", "automation", "api_access", "priority_support"],
-    health: "healthy"
+    features: [
+      "advanced_analytics",
+      "automation",
+      "api_access",
+      "priority_support",
+    ],
+    health: "healthy",
   },
   {
-    id: "org-2", 
+    id: "org-2",
     name: "Retail Plus India",
     domain: "retailplus.in",
     plan: "growth",
@@ -93,12 +111,12 @@ const mockOrganizations: Organization[] = [
     createdAt: "2023-09-20T00:00:00Z",
     billingEmail: "admin@retailplus.in",
     features: ["ecommerce_sync", "automation", "whatsapp_alerts"],
-    health: "healthy"
+    health: "healthy",
   },
   {
     id: "org-3",
     name: "StartupXYZ",
-    domain: "startupxyz.io", 
+    domain: "startupxyz.io",
     plan: "starter",
     status: "trial",
     users: 8,
@@ -109,7 +127,7 @@ const mockOrganizations: Organization[] = [
     createdAt: "2024-01-01T00:00:00Z",
     billingEmail: "founder@startupxyz.io",
     features: ["basic_inventory", "pos"],
-    health: "warning"
+    health: "warning",
   },
   {
     id: "org-4",
@@ -125,8 +143,13 @@ const mockOrganizations: Organization[] = [
     createdAt: "2023-03-10T00:00:00Z",
     billingEmail: "it@megamart.co.in",
     customDomain: "inventory.megamart.co.in",
-    features: ["all_features", "dedicated_support", "custom_integrations", "sla_guarantee"],
-    health: "healthy"
+    features: [
+      "all_features",
+      "dedicated_support",
+      "custom_integrations",
+      "sla_guarantee",
+    ],
+    health: "healthy",
   },
   {
     id: "org-5",
@@ -138,12 +161,12 @@ const mockOrganizations: Organization[] = [
     monthlyRevenue: 2999,
     dataUsage: 0.8,
     apiCalls: 28000,
-    lastActivity: "2024-01-10T14:20:00Z", 
+    lastActivity: "2024-01-10T14:20:00Z",
     createdAt: "2023-11-05T00:00:00Z",
     billingEmail: "owner@fashionboutique.com",
     features: ["ecommerce_sync", "inventory_management"],
-    health: "critical"
-  }
+    health: "critical",
+  },
 ];
 
 const mockSystemMetrics: SystemMetrics = {
@@ -153,20 +176,21 @@ const mockSystemMetrics: SystemMetrics = {
   systemLoad: 67,
   apiRequestsPerMinute: 12500,
   storageUsed: 234.5,
-  uptime: 99.97
+  uptime: 99.97,
 };
 
 const mockSuperAdminUser: SuperAdminUser = {
   id: "sa-1",
   name: "System Owner",
   email: "owner@uneora.com",
-  role: "super_admin", 
+  role: "super_admin",
   permissions: ["all"],
-  lastLogin: "2024-01-15T12:00:00Z"
+  lastLogin: "2024-01-15T12:00:00Z",
 };
 
 export function SuperAdminProvider({ children }: { children: ReactNode }) {
-  const [organizations, setOrganizations] = useState<Organization[]>(mockOrganizations);
+  const [organizations, setOrganizations] =
+    useState<Organization[]>(mockOrganizations);
   const [systemMetrics] = useState<SystemMetrics>(mockSystemMetrics);
   const [superAdminUser] = useState<SuperAdminUser | null>(mockSuperAdminUser);
   const [recentPlanChanges, setRecentPlanChanges] = useState<PlanChange[]>([]);
@@ -174,56 +198,50 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   const isSuperAdmin = superAdminUser?.role === "super_admin" || false;
 
   const updateOrganizationPlan = (orgId: string, plan: string) => {
-    const org = organizations.find(o => o.id === orgId);
+    const org = organizations.find((o) => o.id === orgId);
     if (org) {
       const planChange: PlanChange = {
         orgId,
         oldPlan: org.plan,
         newPlan: plan,
         timestamp: new Date().toISOString(),
-        adminName: superAdminUser?.name || "System Admin"
+        adminName: superAdminUser?.name || "System Admin",
       };
 
-      setRecentPlanChanges(prev => [planChange, ...prev.slice(0, 9)]); // Keep last 10 changes
+      setRecentPlanChanges((prev) => [planChange, ...prev.slice(0, 9)]); // Keep last 10 changes
 
-      setOrganizations(prev =>
-        prev.map(o =>
-          o.id === orgId
-            ? { ...o, plan: plan as Organization["plan"] }
-            : o
-        )
+      setOrganizations((prev) =>
+        prev.map((o) =>
+          o.id === orgId ? { ...o, plan: plan as Organization["plan"] } : o,
+        ),
       );
     }
   };
 
   const suspendOrganization = (orgId: string) => {
-    setOrganizations(prev =>
-      prev.map(org =>
-        org.id === orgId
-          ? { ...org, status: "suspended" }
-          : org
-      )
+    setOrganizations((prev) =>
+      prev.map((org) =>
+        org.id === orgId ? { ...org, status: "suspended" } : org,
+      ),
     );
   };
 
   const reactivateOrganization = (orgId: string) => {
-    setOrganizations(prev =>
-      prev.map(org =>
-        org.id === orgId
-          ? { ...org, status: "active" }
-          : org
-      )
+    setOrganizations((prev) =>
+      prev.map((org) =>
+        org.id === orgId ? { ...org, status: "active" } : org,
+      ),
     );
   };
 
   const getOrganizationMetrics = (orgId: string) => {
-    const org = organizations.find(o => o.id === orgId);
+    const org = organizations.find((o) => o.id === orgId);
     return {
       users: org?.users || 0,
       revenue: org?.monthlyRevenue || 0,
       dataUsage: org?.dataUsage || 0,
       apiCalls: org?.apiCalls || 0,
-      health: org?.health || "unknown"
+      health: org?.health || "unknown",
     };
   };
 
@@ -243,7 +261,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     suspendOrganization,
     reactivateOrganization,
     getOrganizationMetrics,
-    hasSystemPermission
+    hasSystemPermission,
   };
 
   return (

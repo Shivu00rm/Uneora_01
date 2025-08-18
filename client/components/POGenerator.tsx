@@ -3,22 +3,35 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
-import { 
-  FileText, 
-  Calculator, 
-  Building2, 
-  Truck, 
-  Package, 
+import {
+  FileText,
+  Calculator,
+  Building2,
+  Truck,
+  Package,
   Download,
   Mail,
   Plus,
   Minus,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 
 interface Product {
@@ -62,7 +75,9 @@ export function POGenerator({ inventory }: POGeneratorProps) {
   const [gstRate, setGstRate] = useState(18);
   const [sgstRate, setSgstRate] = useState(9);
   const [cgstRate, setCgstRate] = useState(9);
-  const [selectedProducts, setSelectedProducts] = useState<Set<number>>(new Set());
+  const [selectedProducts, setSelectedProducts] = useState<Set<number>>(
+    new Set(),
+  );
   const [poItems, setPOItems] = useState<POItem[]>([]);
   const [showPOPreview, setShowPOPreview] = useState(false);
 
@@ -79,7 +94,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
       2: 28, // Galaxy Buds sold 28 units this month so far
       3: 8, // Nike shoes sold 8 units this month so far
       4: 15, // Sony headphones sold 15 units this month so far
-    }
+    },
   };
 
   // Calculate the number of weeks passed in current month
@@ -88,25 +103,33 @@ export function POGenerator({ inventory }: POGeneratorProps) {
 
   // Filter products that need reordering
   const lowStockProducts = useMemo(() => {
-    return inventory.filter(product => {
-      const isLowStock = product.status === "low_stock" || product.status === "out_of_stock";
-      const isAlmostLow = includeAlmostLow && 
-        product.currentStock <= (product.reorderLevel * 1.2) && 
+    return inventory.filter((product) => {
+      const isLowStock =
+        product.status === "low_stock" || product.status === "out_of_stock";
+      const isAlmostLow =
+        includeAlmostLow &&
+        product.currentStock <= product.reorderLevel * 1.2 &&
         product.currentStock > product.reorderLevel;
-      
+
       return isLowStock || isAlmostLow;
     });
   }, [inventory, includeAlmostLow]);
 
   // Get unique vendors
   const vendors = useMemo(() => {
-    return Array.from(new Set(inventory.map(item => item.supplier)));
+    return Array.from(new Set(inventory.map((item) => item.supplier)));
   }, [inventory]);
 
   // Calculate recommended quantity based on sales data and frequency
   const calculateRecommendedQty = (product: Product): number => {
-    const lastMonthSales = mockSalesData.lastMonth[product.id as keyof typeof mockSalesData.lastMonth] || 0;
-    const thisMonthSales = mockSalesData.thisMonth[product.id as keyof typeof mockSalesData.thisMonth] || 0;
+    const lastMonthSales =
+      mockSalesData.lastMonth[
+        product.id as keyof typeof mockSalesData.lastMonth
+      ] || 0;
+    const thisMonthSales =
+      mockSalesData.thisMonth[
+        product.id as keyof typeof mockSalesData.thisMonth
+      ] || 0;
 
     let multiplier = 1;
     switch (orderFrequency) {
@@ -123,34 +146,36 @@ export function POGenerator({ inventory }: POGeneratorProps) {
 
     // Calculate average weekly sales
     const lastMonthWeeklyAvg = lastMonthSales / totalWeeksInMonth;
-    const thisMonthWeeklyAvg = weeksPassedThisMonth > 0 ? thisMonthSales / weeksPassedThisMonth : 0;
-    
+    const thisMonthWeeklyAvg =
+      weeksPassedThisMonth > 0 ? thisMonthSales / weeksPassedThisMonth : 0;
+
     // Take average of both months
     const avgWeeklySales = (lastMonthWeeklyAvg + thisMonthWeeklyAvg) / 2;
-    
+
     // Calculate recommended quantity
     const recommendedQty = Math.ceil(avgWeeklySales * multiplier);
-    
+
     // Ensure minimum order and don't exceed max stock
     const minOrder = Math.max(recommendedQty, product.reorderLevel);
     const maxOrder = product.maxStock - product.currentStock;
-    
+
     return Math.min(minOrder, maxOrder);
   };
 
   // Generate PO items based on selection
   const generatePOItems = () => {
-    const filteredProducts = generationType === "single" 
-      ? lowStockProducts.filter(p => p.supplier === selectedVendor)
-      : lowStockProducts;
+    const filteredProducts =
+      generationType === "single"
+        ? lowStockProducts.filter((p) => p.supplier === selectedVendor)
+        : lowStockProducts;
 
-    const items: POItem[] = filteredProducts.map(product => {
+    const items: POItem[] = filteredProducts.map((product) => {
       const calculatedQty = calculateRecommendedQty(product);
       return {
         product,
         calculatedQty,
         customQty: calculatedQty,
-        totalAmount: calculatedQty * product.unitPrice
+        totalAmount: calculatedQty * product.unitPrice,
       };
     });
 
@@ -160,15 +185,17 @@ export function POGenerator({ inventory }: POGeneratorProps) {
 
   // Update custom quantity
   const updateCustomQty = (productId: number, newQty: number) => {
-    setPOItems(prev => prev.map(item => 
-      item.product.id === productId 
-        ? { 
-            ...item, 
-            customQty: newQty, 
-            totalAmount: newQty * item.product.unitPrice 
-          }
-        : item
-    ));
+    setPOItems((prev) =>
+      prev.map((item) =>
+        item.product.id === productId
+          ? {
+              ...item,
+              customQty: newQty,
+              totalAmount: newQty * item.product.unitPrice,
+            }
+          : item,
+      ),
+    );
   };
 
   // Calculate totals
@@ -180,25 +207,81 @@ export function POGenerator({ inventory }: POGeneratorProps) {
 
   // Convert number to words (simplified)
   const numberToWords = (num: number): string => {
-    const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
-    const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
-    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-    
-    if (num === 0) return 'Zero';
+    const ones = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+    ];
+    const teens = [
+      "Ten",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
+    ];
+    const tens = [
+      "",
+      "",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
+
+    if (num === 0) return "Zero";
     if (num < 10) return ones[num];
     if (num < 20) return teens[num - 10];
-    if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? ' ' + ones[num % 10] : '');
-    if (num < 1000) return ones[Math.floor(num / 100)] + ' Hundred' + (num % 100 !== 0 ? ' ' + numberToWords(num % 100) : '');
-    if (num < 100000) return numberToWords(Math.floor(num / 1000)) + ' Thousand' + (num % 1000 !== 0 ? ' ' + numberToWords(num % 1000) : '');
-    if (num < 10000000) return numberToWords(Math.floor(num / 100000)) + ' Lakh' + (num % 100000 !== 0 ? ' ' + numberToWords(num % 100000) : '');
-    
-    return numberToWords(Math.floor(num / 10000000)) + ' Crore' + (num % 10000000 !== 0 ? ' ' + numberToWords(num % 10000000) : '');
+    if (num < 100)
+      return (
+        tens[Math.floor(num / 10)] +
+        (num % 10 !== 0 ? " " + ones[num % 10] : "")
+      );
+    if (num < 1000)
+      return (
+        ones[Math.floor(num / 100)] +
+        " Hundred" +
+        (num % 100 !== 0 ? " " + numberToWords(num % 100) : "")
+      );
+    if (num < 100000)
+      return (
+        numberToWords(Math.floor(num / 1000)) +
+        " Thousand" +
+        (num % 1000 !== 0 ? " " + numberToWords(num % 1000) : "")
+      );
+    if (num < 10000000)
+      return (
+        numberToWords(Math.floor(num / 100000)) +
+        " Lakh" +
+        (num % 100000 !== 0 ? " " + numberToWords(num % 100000) : "")
+      );
+
+    return (
+      numberToWords(Math.floor(num / 10000000)) +
+      " Crore" +
+      (num % 10000000 !== 0 ? " " + numberToWords(num % 10000000) : "")
+    );
   };
 
   // Group PO items by vendor
   const groupedByVendor = useMemo(() => {
     const groups = new Map<string, POItem[]>();
-    poItems.forEach(item => {
+    poItems.forEach((item) => {
       const vendor = item.product.supplier;
       if (!groups.has(vendor)) {
         groups.set(vendor, []);
@@ -221,7 +304,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
           )}
         </Button>
       </DialogTrigger>
-      
+
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -229,7 +312,8 @@ export function POGenerator({ inventory }: POGeneratorProps) {
             Purchase Order Generator
           </DialogTitle>
           <DialogDescription>
-            Generate purchase orders for low stock items based on sales data and demand forecasting
+            Generate purchase orders for low stock items based on sales data and
+            demand forecasting
           </DialogDescription>
         </DialogHeader>
 
@@ -244,12 +328,19 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Generation Type</Label>
-                    <Select value={generationType} onValueChange={(value: "single" | "all") => setGenerationType(value)}>
+                    <Select
+                      value={generationType}
+                      onValueChange={(value: "single" | "all") =>
+                        setGenerationType(value)
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Vendors (Separate POs)</SelectItem>
+                        <SelectItem value="all">
+                          All Vendors (Separate POs)
+                        </SelectItem>
                         <SelectItem value="single">Single Vendor</SelectItem>
                       </SelectContent>
                     </Select>
@@ -258,13 +349,18 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                   {generationType === "single" && (
                     <div className="space-y-2">
                       <Label>Select Vendor</Label>
-                      <Select value={selectedVendor} onValueChange={setSelectedVendor}>
+                      <Select
+                        value={selectedVendor}
+                        onValueChange={setSelectedVendor}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Choose vendor" />
                         </SelectTrigger>
                         <SelectContent>
-                          {vendors.map(vendor => (
-                            <SelectItem key={vendor} value={vendor}>{vendor}</SelectItem>
+                          {vendors.map((vendor) => (
+                            <SelectItem key={vendor} value={vendor}>
+                              {vendor}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -273,7 +369,10 @@ export function POGenerator({ inventory }: POGeneratorProps) {
 
                   <div className="space-y-2">
                     <Label>Order Frequency</Label>
-                    <Select value={orderFrequency} onValueChange={setOrderFrequency}>
+                    <Select
+                      value={orderFrequency}
+                      onValueChange={setOrderFrequency}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -287,8 +386,8 @@ export function POGenerator({ inventory }: POGeneratorProps) {
 
                   <div className="space-y-2">
                     <Label>Company Name</Label>
-                    <Input 
-                      value={customCompany} 
+                    <Input
+                      value={customCompany}
                       onChange={(e) => setCustomCompany(e.target.value)}
                       placeholder="Your Company Name"
                     />
@@ -296,36 +395,40 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Checkbox 
+                  <Checkbox
                     id="include-almost-low"
                     checked={includeAlmostLow}
-                    onCheckedChange={(checked) => setIncludeAlmostLow(checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      setIncludeAlmostLow(checked as boolean)
+                    }
                   />
-                  <Label htmlFor="include-almost-low">Include items approaching low stock threshold</Label>
+                  <Label htmlFor="include-almost-low">
+                    Include items approaching low stock threshold
+                  </Label>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label>GST Rate (%)</Label>
-                    <Input 
-                      type="number" 
-                      value={gstRate} 
+                    <Input
+                      type="number"
+                      value={gstRate}
                       onChange={(e) => setGstRate(Number(e.target.value))}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>SGST Rate (%)</Label>
-                    <Input 
-                      type="number" 
-                      value={sgstRate} 
+                    <Input
+                      type="number"
+                      value={sgstRate}
                       onChange={(e) => setSgstRate(Number(e.target.value))}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>CGST Rate (%)</Label>
-                    <Input 
-                      type="number" 
-                      value={cgstRate} 
+                    <Input
+                      type="number"
+                      value={cgstRate}
                       onChange={(e) => setCgstRate(Number(e.target.value))}
                     />
                   </div>
@@ -343,26 +446,41 @@ export function POGenerator({ inventory }: POGeneratorProps) {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 max-h-64 overflow-y-auto">
-                  {lowStockProducts.map(product => (
-                    <div key={product.id} className="flex items-center justify-between p-3 border rounded">
+                  {lowStockProducts.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex items-center justify-between p-3 border rounded"
+                    >
                       <div className="flex-1">
                         <div className="font-medium">{product.name}</div>
                         <div className="text-sm text-muted-foreground">
                           SKU: {product.sku} | Supplier: {product.supplier}
                         </div>
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge variant={product.status === "out_of_stock" ? "destructive" : "secondary"}>
-                            {product.status.replace('_', ' ')}
+                          <Badge
+                            variant={
+                              product.status === "out_of_stock"
+                                ? "destructive"
+                                : "secondary"
+                            }
+                          >
+                            {product.status.replace("_", " ")}
                           </Badge>
                           <span className="text-sm">
-                            Current: {product.currentStock} | Reorder at: {product.reorderLevel}
+                            Current: {product.currentStock} | Reorder at:{" "}
+                            {product.reorderLevel}
                           </span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-medium">Recommended: {calculateRecommendedQty(product)}</div>
+                        <div className="font-medium">
+                          Recommended: {calculateRecommendedQty(product)}
+                        </div>
                         <div className="text-sm text-muted-foreground">
-                          ₹{(calculateRecommendedQty(product) * product.unitPrice).toLocaleString()}
+                          ₹
+                          {(
+                            calculateRecommendedQty(product) * product.unitPrice
+                          ).toLocaleString()}
                         </div>
                       </div>
                     </div>
@@ -372,8 +490,8 @@ export function POGenerator({ inventory }: POGeneratorProps) {
             </Card>
 
             <div className="flex gap-2">
-              <Button 
-                onClick={generatePOItems} 
+              <Button
+                onClick={generatePOItems}
                 disabled={generationType === "single" && !selectedVendor}
                 className="flex-1"
               >
@@ -391,7 +509,10 @@ export function POGenerator({ inventory }: POGeneratorProps) {
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Purchase Order Preview</h3>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setShowPOPreview(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowPOPreview(false)}
+                >
                   <Package className="mr-2 h-4 w-4" />
                   Back to Config
                 </Button>
@@ -408,11 +529,15 @@ export function POGenerator({ inventory }: POGeneratorProps) {
 
             {/* Render separate POs for each vendor */}
             {Array.from(groupedByVendor.entries()).map(([vendor, items]) => {
-              const vendorSubtotal = items.reduce((sum, item) => sum + item.totalAmount, 0);
+              const vendorSubtotal = items.reduce(
+                (sum, item) => sum + item.totalAmount,
+                0,
+              );
               const vendorGST = vendorSubtotal * (gstRate / 100);
               const vendorSGST = vendorSubtotal * (sgstRate / 100);
               const vendorCGST = vendorSubtotal * (cgstRate / 100);
-              const vendorTotal = vendorSubtotal + vendorGST + vendorSGST + vendorCGST;
+              const vendorTotal =
+                vendorSubtotal + vendorGST + vendorSGST + vendorCGST;
 
               return (
                 <Card key={vendor} className="print:shadow-none">
@@ -420,11 +545,15 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                     {/* PO Header */}
                     <div className="flex justify-between items-start mb-6">
                       <div>
-                        <h2 className="text-2xl font-bold text-primary">PURCHASE ORDER</h2>
+                        <h2 className="text-2xl font-bold text-primary">
+                          PURCHASE ORDER
+                        </h2>
                         <div className="mt-2 space-y-1">
                           <div className="flex items-center gap-2">
                             <Building2 className="h-4 w-4" />
-                            <span className="font-medium">{customCompany || "Uneora Company"}</span>
+                            <span className="font-medium">
+                              {customCompany || "Uneora Company"}
+                            </span>
                           </div>
                           <div className="text-sm text-muted-foreground">
                             123 Business Street, Mumbai, Maharashtra 400001
@@ -435,8 +564,17 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-lg font-bold">PO-{new Date().getFullYear()}-{vendor.replace(/\s+/g, '').substring(0, 3).toUpperCase()}-{String(Date.now()).slice(-4)}</div>
-                        <div className="text-sm text-muted-foreground">Date: {new Date().toLocaleDateString('en-IN')}</div>
+                        <div className="text-lg font-bold">
+                          PO-{new Date().getFullYear()}-
+                          {vendor
+                            .replace(/\s+/g, "")
+                            .substring(0, 3)
+                            .toUpperCase()}
+                          -{String(Date.now()).slice(-4)}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Date: {new Date().toLocaleDateString("en-IN")}
+                        </div>
                       </div>
                     </div>
 
@@ -448,7 +586,8 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                       </div>
                       <div className="font-semibold">{vendor}</div>
                       <div className="text-sm text-muted-foreground">
-                        Contact: vendor@{vendor.toLowerCase().replace(/\s+/g, '')}.com
+                        Contact: vendor@
+                        {vendor.toLowerCase().replace(/\s+/g, "")}.com
                       </div>
                     </div>
 
@@ -458,11 +597,17 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                         <thead>
                           <tr className="bg-muted/50">
                             <th className="border p-2 text-left">S.No.</th>
-                            <th className="border p-2 text-left">Item Description</th>
+                            <th className="border p-2 text-left">
+                              Item Description
+                            </th>
                             <th className="border p-2 text-left">SKU</th>
                             <th className="border p-2 text-center">Qty</th>
-                            <th className="border p-2 text-right">Unit Price</th>
-                            <th className="border p-2 text-right">Total Amount</th>
+                            <th className="border p-2 text-right">
+                              Unit Price
+                            </th>
+                            <th className="border p-2 text-right">
+                              Total Amount
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -470,36 +615,61 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                             <tr key={item.product.id}>
                               <td className="border p-2">{index + 1}</td>
                               <td className="border p-2">
-                                <div className="font-medium">{item.product.name}</div>
-                                <div className="text-xs text-muted-foreground">{item.product.category}</div>
+                                <div className="font-medium">
+                                  {item.product.name}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {item.product.category}
+                                </div>
                               </td>
-                              <td className="border p-2 font-mono text-sm">{item.product.sku}</td>
+                              <td className="border p-2 font-mono text-sm">
+                                {item.product.sku}
+                              </td>
                               <td className="border p-2 text-center">
                                 <div className="flex items-center justify-center gap-1">
-                                  <Button 
-                                    size="sm" 
-                                    variant="outline" 
-                                    onClick={() => updateCustomQty(item.product.id, Math.max(1, item.customQty - 1))}
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      updateCustomQty(
+                                        item.product.id,
+                                        Math.max(1, item.customQty - 1),
+                                      )
+                                    }
                                   >
                                     <Minus className="h-3 w-3" />
                                   </Button>
-                                  <Input 
-                                    type="number" 
+                                  <Input
+                                    type="number"
                                     value={item.customQty}
-                                    onChange={(e) => updateCustomQty(item.product.id, Number(e.target.value))}
+                                    onChange={(e) =>
+                                      updateCustomQty(
+                                        item.product.id,
+                                        Number(e.target.value),
+                                      )
+                                    }
                                     className="w-16 text-center"
                                   />
-                                  <Button 
-                                    size="sm" 
+                                  <Button
+                                    size="sm"
                                     variant="outline"
-                                    onClick={() => updateCustomQty(item.product.id, item.customQty + 1)}
+                                    onClick={() =>
+                                      updateCustomQty(
+                                        item.product.id,
+                                        item.customQty + 1,
+                                      )
+                                    }
                                   >
                                     <Plus className="h-3 w-3" />
                                   </Button>
                                 </div>
                               </td>
-                              <td className="border p-2 text-right">₹{item.product.unitPrice.toLocaleString()}</td>
-                              <td className="border p-2 text-right font-medium">₹{item.totalAmount.toLocaleString()}</td>
+                              <td className="border p-2 text-right">
+                                ₹{item.product.unitPrice.toLocaleString()}
+                              </td>
+                              <td className="border p-2 text-right font-medium">
+                                ₹{item.totalAmount.toLocaleString()}
+                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -532,7 +702,8 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                             <span>₹{vendorTotal.toLocaleString()}</span>
                           </div>
                           <div className="text-sm text-muted-foreground mt-2">
-                            <strong>Amount in Words:</strong> {numberToWords(Math.floor(vendorTotal))} Rupees Only
+                            <strong>Amount in Words:</strong>{" "}
+                            {numberToWords(Math.floor(vendorTotal))} Rupees Only
                           </div>
                         </div>
                       </div>
@@ -545,7 +716,10 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                         <li>• Payment Terms: Net 30 days from delivery</li>
                         <li>• Delivery within 7-14 business days</li>
                         <li>• All items must match specifications exactly</li>
-                        <li>• Returns accepted within 48 hours of delivery for defective items</li>
+                        <li>
+                          • Returns accepted within 48 hours of delivery for
+                          defective items
+                        </li>
                       </ul>
                     </div>
 
@@ -553,14 +727,22 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                     <div className="mt-8 grid grid-cols-2 gap-8">
                       <div>
                         <div className="border-t pt-2 mt-12">
-                          <div className="text-sm font-medium">Authorized Signature</div>
-                          <div className="text-xs text-muted-foreground">{customCompany || "Uneora Company"}</div>
+                          <div className="text-sm font-medium">
+                            Authorized Signature
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {customCompany || "Uneora Company"}
+                          </div>
                         </div>
                       </div>
                       <div>
                         <div className="border-t pt-2 mt-12">
-                          <div className="text-sm font-medium">Vendor Acknowledgment</div>
-                          <div className="text-xs text-muted-foreground">{vendor}</div>
+                          <div className="text-sm font-medium">
+                            Vendor Acknowledgment
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {vendor}
+                          </div>
                         </div>
                       </div>
                     </div>

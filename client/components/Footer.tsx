@@ -13,9 +13,7 @@ export function Footer() {
                 alt="Uneora Logo"
                 className="h-8 w-8 object-contain"
               />
-              <span className="text-xl font-bold text-foreground">
-                Uneora
-              </span>
+              <span className="text-xl font-bold text-foreground">Uneora</span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs">
               India's first automation-native inventory management platform for

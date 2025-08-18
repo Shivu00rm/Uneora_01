@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { PermissionGate, SuperAdminOnly } from "./ProtectedRoute";
 import { useAuth, usePermissions } from "@/contexts/AuthContext";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
@@ -12,7 +18,7 @@ import {
   X,
   LogOut,
   Crown,
-  Activity
+  Activity,
 } from "lucide-react";
 
 export function Header() {
@@ -21,7 +27,6 @@ export function Header() {
   const { hasPermission } = usePermissions();
   const { isSuperAdmin } = useSuperAdmin();
   const location = useLocation();
-
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -38,63 +43,66 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation - Only show for non-tenant and non-super-admin routes */}
-          {user && !location.pathname.startsWith('/app') && !location.pathname.startsWith('/super-admin') && user.role !== "SUPER_ADMIN" && (
-            <nav className="hidden md:flex items-center space-x-6">
-              <PermissionGate module="dashboard" action="view">
-                <Link
-                  to="/dashboard"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Dashboard
-                </Link>
-              </PermissionGate>
+          {user &&
+            !location.pathname.startsWith("/app") &&
+            !location.pathname.startsWith("/super-admin") &&
+            user.role !== "SUPER_ADMIN" && (
+              <nav className="hidden md:flex items-center space-x-6">
+                <PermissionGate module="dashboard" action="view">
+                  <Link
+                    to="/dashboard"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                </PermissionGate>
 
-              <PermissionGate module="inventory" action="view">
-                <Link
-                  to="/inventory"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Inventory
-                </Link>
-              </PermissionGate>
+                <PermissionGate module="inventory" action="view">
+                  <Link
+                    to="/inventory"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Inventory
+                  </Link>
+                </PermissionGate>
 
-              <PermissionGate module="pos" action="view">
-                <Link
-                  to="/pos"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  POS
-                </Link>
-              </PermissionGate>
+                <PermissionGate module="pos" action="view">
+                  <Link
+                    to="/pos"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    POS
+                  </Link>
+                </PermissionGate>
 
-              <PermissionGate module="vendors" action="view">
-                <Link
-                  to="/vendors"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Vendors
-                </Link>
-              </PermissionGate>
+                <PermissionGate module="vendors" action="view">
+                  <Link
+                    to="/vendors"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Vendors
+                  </Link>
+                </PermissionGate>
 
-              <PermissionGate module="analytics" action="view">
-                <Link
-                  to="/analytics"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Analytics
-                </Link>
-              </PermissionGate>
+                <PermissionGate module="analytics" action="view">
+                  <Link
+                    to="/analytics"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Analytics
+                  </Link>
+                </PermissionGate>
 
-              <PermissionGate module="users" action="view">
-                <Link
-                  to="/users"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Users
-                </Link>
-              </PermissionGate>
-            </nav>
-          )}
+                <PermissionGate module="users" action="view">
+                  <Link
+                    to="/users"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Users
+                  </Link>
+                </PermissionGate>
+              </nav>
+            )}
 
           {/* Super Admin Navigation */}
           {user && user.role === "SUPER_ADMIN" && (
@@ -158,7 +166,10 @@ export function Header() {
                     </DropdownMenuItem>
                   </PermissionGate>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout} className="text-red-600 focus:text-red-600">
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="text-red-600 focus:text-red-600"
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     Sign Out
                   </DropdownMenuItem>
@@ -186,7 +197,11 @@ export function Header() {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
         </div>
 
@@ -196,7 +211,6 @@ export function Header() {
             <div className="px-2 pt-2 pb-3 space-y-1 border-t">
               {user ? (
                 <>
-
                   {/* Navigation Links - Hide for Super Admin */}
                   {user?.role !== "SUPER_ADMIN" && (
                     <>
@@ -283,9 +297,9 @@ export function Header() {
                   )}
 
                   <div className="border-t pt-4 space-y-2">
-                    <Button 
-                      variant="destructive" 
-                      size="sm" 
+                    <Button
+                      variant="destructive"
+                      size="sm"
                       className="w-full"
                       onClick={() => {
                         logout();

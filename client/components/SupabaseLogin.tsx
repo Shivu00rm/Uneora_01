@@ -18,7 +18,7 @@ export function SupabaseLogin() {
   const { login, signUp, loading, user, getDefaultRoute } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [isSignUp, setIsSignUp] = useState(location.pathname === '/signup');
+  const [isSignUp, setIsSignUp] = useState(location.pathname === "/signup");
   const [showSuperAdminSetup, setShowSuperAdminSetup] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -31,14 +31,14 @@ export function SupabaseLogin() {
 
   // Update isSignUp state when route changes
   useEffect(() => {
-    setIsSignUp(location.pathname === '/signup');
+    setIsSignUp(location.pathname === "/signup");
   }, [location.pathname]);
 
   // Redirect if user is already logged in
   useEffect(() => {
     if (user && !loading) {
       const defaultRoute = getDefaultRoute();
-      console.log('User is logged in, redirecting to:', defaultRoute);
+      console.log("User is logged in, redirecting to:", defaultRoute);
       navigate(defaultRoute, { replace: true });
     }
   }, [user, loading, navigate, getDefaultRoute]);
@@ -113,7 +113,7 @@ export function SupabaseLogin() {
       // Extract proper error message from error object
       let errorMessage = "Authentication failed";
 
-      if (err && typeof err === 'object') {
+      if (err && typeof err === "object") {
         if (err.message) {
           errorMessage = err.message;
         } else if (err.error_description) {
@@ -128,18 +128,22 @@ export function SupabaseLogin() {
           // Handle complex error objects by extracting meaningful info
           try {
             const errorStr = JSON.stringify(err);
-            if (errorStr !== '{}' && errorStr !== '[object Object]') {
+            if (errorStr !== "{}" && errorStr !== "[object Object]") {
               // Try to extract meaningful error info from JSON
               const parsed = JSON.parse(errorStr);
-              errorMessage = parsed.message || parsed.error || parsed.statusText || 'Authentication failed';
+              errorMessage =
+                parsed.message ||
+                parsed.error ||
+                parsed.statusText ||
+                "Authentication failed";
             }
           } catch {
-            errorMessage = 'Authentication failed';
+            errorMessage = "Authentication failed";
           }
         }
       } else if (typeof err === "string") {
         errorMessage = err;
-      } else if (err && err.toString && typeof err.toString === 'function') {
+      } else if (err && err.toString && typeof err.toString === "function") {
         const stringified = err.toString();
         if (stringified !== "[object Object]") {
           errorMessage = stringified;
@@ -176,8 +180,12 @@ export function SupabaseLogin() {
       }
 
       // Final safety check to ensure we never display [object Object]
-      if (errorMessage === '[object Object]' || !errorMessage || errorMessage.trim() === '') {
-        errorMessage = 'Authentication failed. Please try again.';
+      if (
+        errorMessage === "[object Object]" ||
+        !errorMessage ||
+        errorMessage.trim() === ""
+      ) {
+        errorMessage = "Authentication failed. Please try again.";
       }
 
       setError(errorMessage);
@@ -202,229 +210,233 @@ export function SupabaseLogin() {
         </div>
 
         <Card className="w-full">
-        <CardHeader>
-          <CardTitle>
-            {isSignUp ? "Create Account" : "Sign In"} - Uneora
-          </CardTitle>
-          <CardDescription>
-            {isSignUp
-              ? "Create your Uneora account to get started"
-              : "Sign in to your Uneora account"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+          <CardHeader>
+            <CardTitle>
+              {isSignUp ? "Create Account" : "Sign In"} - Uneora
+            </CardTitle>
+            <CardDescription>
+              {isSignUp
+                ? "Create your Uneora account to get started"
+                : "Sign in to your Uneora account"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                required
-              />
-            </div>
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium">
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
 
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password{" "}
-                {isSignUp && (
-                  <span className="text-xs text-gray-500">
-                    (min 6 characters)
-                  </span>
-                )}
-              </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder={
-                  isSignUp
-                    ? "Enter password (min 6 characters)"
-                    : "Enter your password"
-                }
-                required
-                minLength={isSignUp ? 6 : undefined}
-              />
-            </div>
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password{" "}
+                  {isSignUp && (
+                    <span className="text-xs text-gray-500">
+                      (min 6 characters)
+                    </span>
+                  )}
+                </label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder={
+                    isSignUp
+                      ? "Enter password (min 6 characters)"
+                      : "Enter your password"
+                  }
+                  required
+                  minLength={isSignUp ? 6 : undefined}
+                />
+              </div>
 
-            {isSignUp && (
-              <>
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium">
-                    Full Name
-                  </label>
-                  <Input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Enter your full name"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="role" className="text-sm font-medium">
-                    Role
-                  </label>
-                  <select
-                    id="role"
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  >
-                    <option value="ORG_USER">Organization User</option>
-                    <option value="ORG_ADMIN">Organization Admin</option>
-                  </select>
-                </div>
-
-                {(formData.role === "ORG_ADMIN" ||
-                  formData.role === "SUPER_ADMIN") && (
+              {isSignUp && (
+                <>
                   <div className="space-y-2">
-                    <label
-                      htmlFor="companyName"
-                      className="text-sm font-medium"
-                    >
-                      Company Name{" "}
-                      {formData.role === "ORG_ADMIN"
-                        ? "(Required)"
-                        : "(Optional)"}
+                    <label htmlFor="name" className="text-sm font-medium">
+                      Full Name
                     </label>
                     <Input
-                      id="companyName"
-                      name="companyName"
+                      id="name"
+                      name="name"
                       type="text"
-                      value={formData.companyName}
+                      value={formData.name}
                       onChange={handleChange}
-                      placeholder="Enter company name"
-                      required={formData.role === "ORG_ADMIN"}
+                      placeholder="Enter your full name"
+                      required
                     />
                   </div>
-                )}
-              </>
-            )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isSignUp ? "Creating Account..." : "Signing In..."}
+                  <div className="space-y-2">
+                    <label htmlFor="role" className="text-sm font-medium">
+                      Role
+                    </label>
+                    <select
+                      id="role"
+                      name="role"
+                      value={formData.role}
+                      onChange={handleChange}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="ORG_USER">Organization User</option>
+                      <option value="ORG_ADMIN">Organization Admin</option>
+                    </select>
+                  </div>
+
+                  {(formData.role === "ORG_ADMIN" ||
+                    formData.role === "SUPER_ADMIN") && (
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="companyName"
+                        className="text-sm font-medium"
+                      >
+                        Company Name{" "}
+                        {formData.role === "ORG_ADMIN"
+                          ? "(Required)"
+                          : "(Optional)"}
+                      </label>
+                      <Input
+                        id="companyName"
+                        name="companyName"
+                        type="text"
+                        value={formData.companyName}
+                        onChange={handleChange}
+                        placeholder="Enter company name"
+                        required={formData.role === "ORG_ADMIN"}
+                      />
+                    </div>
+                  )}
                 </>
-              ) : isSignUp ? (
-                "Create Account"
-              ) : (
-                "Sign In"
               )}
-            </Button>
 
-            <div className="text-center space-y-2">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-sm"
-              >
-                {isSignUp
-                  ? "Already have an account? Sign in"
-                  : "Don't have an account? Sign up"}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {isSignUp ? "Creating Account..." : "Signing In..."}
+                  </>
+                ) : isSignUp ? (
+                  "Create Account"
+                ) : (
+                  "Sign In"
+                )}
               </Button>
 
-              {!isSignUp && (
-                <div className="border-t pt-3">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowSuperAdminSetup(true)}
-                    className="text-xs flex items-center gap-1"
-                  >
-                    <Shield className="h-3 w-3" />
-                    Setup Super Admin
-                  </Button>
-                </div>
-              )}
-            </div>
+              <div className="text-center space-y-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="text-sm"
+                >
+                  {isSignUp
+                    ? "Already have an account? Sign in"
+                    : "Don't have an account? Sign up"}
+                </Button>
 
-            {/* Demo Accounts Section - Show for both login and signup */}
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-800 font-medium mb-2">
-                💡 Demo Accounts:
-              </p>
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFormData(prev => ({
-                      ...prev,
-                      email: "admin@uneora.com",
-                      password: "admin123"
-                    }));
-                  }}
-                  className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
-                >
-                  <div className="text-xs text-blue-700">
-                    <strong>Super Admin:</strong> admin@uneora.com / admin123
-                    <div className="text-gray-600">Full platform access</div>
+                {!isSignUp && (
+                  <div className="border-t pt-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowSuperAdminSetup(true)}
+                      className="text-xs flex items-center gap-1"
+                    >
+                      <Shield className="h-3 w-3" />
+                      Setup Super Admin
+                    </Button>
                   </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFormData(prev => ({
-                      ...prev,
-                      email: "admin@techcorp.com",
-                      password: "admin123"
-                    }));
-                  }}
-                  className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
-                >
-                  <div className="text-xs text-blue-700">
-                    <strong>Org Admin:</strong> admin@techcorp.com / admin123
-                    <div className="text-gray-600">Organization management</div>
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFormData(prev => ({
-                      ...prev,
-                      email: "user@techcorp.com",
-                      password: "user123"
-                    }));
-                  }}
-                  className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
-                >
-                  <div className="text-xs text-blue-700">
-                    <strong>Org User:</strong> user@techcorp.com / user123
-                    <div className="text-gray-600">Basic inventory access</div>
-                  </div>
-                </button>
+                )}
               </div>
-              {isSignUp && (
-                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
-                  <strong>✅ Super Admin Setup:</strong>{" "}
-                  superadmin@uneora.com / SuperAdmin123!
+
+              {/* Demo Accounts Section - Show for both login and signup */}
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-800 font-medium mb-2">
+                  💡 Demo Accounts:
+                </p>
+                <div className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        email: "admin@uneora.com",
+                        password: "admin123",
+                      }));
+                    }}
+                    className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="text-xs text-blue-700">
+                      <strong>Super Admin:</strong> admin@uneora.com / admin123
+                      <div className="text-gray-600">Full platform access</div>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        email: "admin@techcorp.com",
+                        password: "admin123",
+                      }));
+                    }}
+                    className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="text-xs text-blue-700">
+                      <strong>Org Admin:</strong> admin@techcorp.com / admin123
+                      <div className="text-gray-600">
+                        Organization management
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        email: "user@techcorp.com",
+                        password: "user123",
+                      }));
+                    }}
+                    className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="text-xs text-blue-700">
+                      <strong>Org User:</strong> user@techcorp.com / user123
+                      <div className="text-gray-600">
+                        Basic inventory access
+                      </div>
+                    </div>
+                  </button>
                 </div>
-              )}
-            </div>
-          </form>
-        </CardContent>
+                {isSignUp && (
+                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
+                    <strong>✅ Super Admin Setup:</strong> superadmin@uneora.com
+                    / SuperAdmin123!
+                  </div>
+                )}
+              </div>
+            </form>
+          </CardContent>
         </Card>
       </div>
     </div>

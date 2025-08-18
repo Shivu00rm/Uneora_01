@@ -269,7 +269,11 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error: any) {
       console.error("Login error:", error?.message || error?.error || error);
-      const errorMessage = error?.message || error?.error_description || error?.error || "Login failed";
+      const errorMessage =
+        error?.message ||
+        error?.error_description ||
+        error?.error ||
+        "Login failed";
       setError(errorMessage);
       throw error;
     } finally {
@@ -295,7 +299,11 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       setSession(null);
     } catch (error: any) {
       console.error("Logout error:", error?.message || error?.error || error);
-      const errorMessage = error?.message || error?.error_description || error?.error || "Logout failed";
+      const errorMessage =
+        error?.message ||
+        error?.error_description ||
+        error?.error ||
+        "Logout failed";
       setError(errorMessage);
       throw error;
     } finally {
@@ -336,7 +344,11 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error: any) {
       console.error("Sign up error:", error?.message || error?.error || error);
-      const errorMessage = error?.message || error?.error_description || error?.error || "Sign up failed";
+      const errorMessage =
+        error?.message ||
+        error?.error_description ||
+        error?.error ||
+        "Sign up failed";
       setError(errorMessage);
       throw error;
     } finally {

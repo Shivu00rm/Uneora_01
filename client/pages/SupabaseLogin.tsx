@@ -19,7 +19,9 @@ interface SupabaseLoginProps {
   defaultSignUp?: boolean;
 }
 
-export default function SupabaseLogin({ defaultSignUp = false }: SupabaseLoginProps) {
+export default function SupabaseLogin({
+  defaultSignUp = false,
+}: SupabaseLoginProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -96,9 +98,7 @@ export default function SupabaseLogin({ defaultSignUp = false }: SupabaseLoginPr
               alt="Uneora Logo"
               className="h-10 w-10 object-contain"
             />
-            <span className="text-2xl font-bold text-foreground">
-              Uneora
-            </span>
+            <span className="text-2xl font-bold text-foreground">Uneora</span>
           </Link>
           <p className="text-muted-foreground">Sign in to your account</p>
         </div>

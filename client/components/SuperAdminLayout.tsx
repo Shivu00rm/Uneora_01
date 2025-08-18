@@ -24,13 +24,16 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
                   <Shield className="h-8 w-8 text-destructive" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold mb-2">Super Admin Access Required</h2>
+              <h2 className="text-2xl font-bold mb-2">
+                Super Admin Access Required
+              </h2>
               <p className="text-muted-foreground mb-6">
                 This area is restricted to Uneora platform administrators only.
               </p>
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  If you're a regular user, you can access your organization dashboard:
+                  If you're a regular user, you can access your organization
+                  dashboard:
                 </p>
                 <Button variant="outline" asChild>
                   <a href="/app/dashboard">
@@ -57,7 +60,9 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
                 <Crown className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h1 className="font-semibold text-primary">Uneora Platform Administration</h1>
+                <h1 className="font-semibold text-primary">
+                  Uneora Platform Administration
+                </h1>
                 <p className="text-xs text-muted-foreground">
                   Logged in as Super Admin • {user.name}
                 </p>
@@ -74,18 +79,21 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
       <Alert className="mx-4 sm:mx-6 lg:mx-8 mt-6 mb-6 border-blue-200 bg-blue-50">
         <Shield className="h-4 w-4 text-blue-600" />
         <AlertDescription className="text-blue-800">
-          <strong>Platform Mode:</strong> You're in the super admin console. Organization-specific features are available through the{" "}
-          <Button variant="link" className="p-0 h-auto text-blue-600 underline" asChild>
+          <strong>Platform Mode:</strong> You're in the super admin console.
+          Organization-specific features are available through the{" "}
+          <Button
+            variant="link"
+            className="p-0 h-auto text-blue-600 underline"
+            asChild
+          >
             <a href="/org-flows">Organization Health Monitor</a>
-          </Button>
-          {" "}where you can access individual organization dashboards when needed.
+          </Button>{" "}
+          where you can access individual organization dashboards when needed.
         </AlertDescription>
       </Alert>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {children}
-      </div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
     </div>
   );
 }
