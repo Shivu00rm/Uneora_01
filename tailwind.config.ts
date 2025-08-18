@@ -57,7 +57,7 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // FlowStock brand colors
+        // Uneora brand colors
         brand: {
           50: "#f0f9ff",
           100: "#e0f2fe",
