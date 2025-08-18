@@ -106,7 +106,7 @@ export function APIIntegrations() {
         syncInterval: "hourly",
         credentials: {
           apiKey: "sk_****_****_****_1234",
-          webhook: "https://api.flowstock.io/webhooks/shopify",
+          webhook: "https://api.uneora.com/webhooks/shopify",
         },
         permissions: ["read_orders", "read_products", "read_customers"],
       },
