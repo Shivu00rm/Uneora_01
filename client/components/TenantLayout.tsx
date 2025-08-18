@@ -13,7 +13,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { GlobalSearch } from "./GlobalSearch";
 import { NotificationCenter } from "./NotificationCenter";
 import {
-  Package,
   BarChart3,
   ShoppingCart,
   Users,
