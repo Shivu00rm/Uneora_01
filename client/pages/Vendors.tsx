@@ -304,7 +304,7 @@ export default function Vendors() {
           className="space-y-6"
           style={{ position: "relative" }}
         >
-          {/* FlowStock Watermark */}
+          {/* Uneora Watermark */}
           <div
             style={{
               position: "absolute",
@@ -320,7 +320,7 @@ export default function Vendors() {
               fontFamily: "system-ui",
             }}
           >
-            FlowStock
+            Uneora
           </div>
           {/* Filters */}
           <Card>
@@ -458,7 +458,7 @@ export default function Vendors() {
           className="space-y-6"
           style={{ position: "relative" }}
         >
-          {/* FlowStock Watermark */}
+          {/* Uneora Watermark */}
           <div
             style={{
               position: "absolute",
@@ -474,7 +474,7 @@ export default function Vendors() {
               fontFamily: "system-ui",
             }}
           >
-            FlowStock
+            Uneora
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Top Performing Vendors */}
@@ -544,7 +544,7 @@ export default function Vendors() {
           className="space-y-6"
           style={{ position: "relative" }}
         >
-          {/* FlowStock Watermark */}
+          {/* Uneora Watermark */}
           <div
             style={{
               position: "absolute",
@@ -560,7 +560,7 @@ export default function Vendors() {
               fontFamily: "system-ui",
             }}
           >
-            FlowStock
+            Uneora
           </div>
           <Card>
             <CardHeader>
