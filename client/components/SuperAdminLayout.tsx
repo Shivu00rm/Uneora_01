@@ -26,7 +26,7 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
               </div>
               <h2 className="text-2xl font-bold mb-2">Super Admin Access Required</h2>
               <p className="text-muted-foreground mb-6">
-                This area is restricted to FlowStock platform administrators only.
+                This area is restricted to Uneora platform administrators only.
               </p>
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">
@@ -57,7 +57,7 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
                 <Crown className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h1 className="font-semibold text-primary">FlowStock Platform Administration</h1>
+                <h1 className="font-semibold text-primary">Uneora Platform Administration</h1>
                 <p className="text-xs text-muted-foreground">
                   Logged in as Super Admin • {user.name}
                 </p>
