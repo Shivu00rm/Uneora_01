@@ -6,7 +6,6 @@ import { PermissionGate, SuperAdminOnly } from "./ProtectedRoute";
 import { useAuth, usePermissions } from "@/contexts/AuthContext";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
 import {
-  Package,
   BarChart3,
   Settings,
   Menu,
