@@ -28,6 +28,11 @@ export function SupabaseLogin() {
   });
   const [error, setError] = useState<string | null>(null);
 
+  // Update isSignUp state when route changes
+  useEffect(() => {
+    setIsSignUp(location.pathname === '/signup');
+  }, [location.pathname]);
+
   if (showSuperAdminSetup) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
