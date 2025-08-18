@@ -342,7 +342,7 @@ export function GlobalSearch({ trigger }: GlobalSearchProps) {
         <DialogHeader className="px-4 pb-0 pt-4">
           <DialogTitle className="flex items-center gap-2 text-lg">
             <Search className="h-5 w-5" />
-            Search FlowStock
+            Search Uneora
             <Badge variant="outline" className="text-xs">
               {user?.role?.replace("_", " ")}
             </Badge>
