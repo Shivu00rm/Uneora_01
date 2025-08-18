@@ -17,8 +17,10 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, userData: any) => Promise<void>;
+  logout: () => Promise<void>;
+  loading: boolean;
   hasPermission: (module: string, action?: string) => boolean;
   isSuperAdmin: () => boolean;
   isOrgAdmin: () => boolean;
@@ -113,9 +115,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return legacyPermissions;
   }
 
-  const login = async (userData: User) => {
-    // This is now handled by Supabase auth
-    console.warn("Legacy login called - use Supabase auth instead");
+  const login = async (email: string, password: string) => {
+    return supabaseAuth.login(email, password);
+  };
+
+  const signUp = async (email: string, password: string, userData: any) => {
+    return supabaseAuth.signUp(email, password, userData);
   };
 
   const logout = async () => {
