@@ -114,7 +114,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     let organizationName = "TechCorp Solutions";
 
     // Determine role based on email
-    if (email === "admin@flowstock.com") {
+    if (email === "admin@uneora.com") {
       role = "SUPER_ADMIN";
       organizationId = null;
       organizationName = undefined;
