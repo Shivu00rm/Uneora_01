@@ -7,7 +7,7 @@ import {
   Integration,
 } from "./supabase";
 
-// Database service layer for FlowStock
+// Database service layer for Uneora
 export class DatabaseService {
   // Organization operations (renamed from Company)
   static async getOrganizations(): Promise<Organization[]> {
