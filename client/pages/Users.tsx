@@ -140,7 +140,7 @@ const mockUsers = [
   {
     id: 1,
     name: "Rajesh Sharma",
-    email: "rajesh@flowstock.in",
+    email: "rajesh@uneora.com",
     role: "owner",
     status: "active",
     lastLogin: "2 hours ago",
@@ -150,7 +150,7 @@ const mockUsers = [
   {
     id: 2,
     name: "Priya Patel",
-    email: "priya@flowstock.in", 
+    email: "priya@uneora.com", 
     role: "manager",
     status: "active",
     lastLogin: "1 day ago",
@@ -160,7 +160,7 @@ const mockUsers = [
   {
     id: 3,
     name: "Amit Kumar",
-    email: "amit@flowstock.in",
+    email: "amit@uneora.com",
     role: "cashier",
     status: "active", 
     lastLogin: "5 minutes ago",
@@ -170,7 +170,7 @@ const mockUsers = [
   {
     id: 4,
     name: "Sunita Singh",
-    email: "sunita@flowstock.in",
+    email: "sunita@uneora.com",
     role: "staff",
     status: "inactive",
     lastLogin: "3 days ago",
