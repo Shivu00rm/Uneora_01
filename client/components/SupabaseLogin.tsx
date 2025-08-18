@@ -96,7 +96,7 @@ export function SupabaseLogin() {
         await login(formData.email, formData.password);
       }
     } catch (err: any) {
-      console.error("Login error:", err);
+      console.error("Login error:", err?.message || err?.error || err);
 
       // Extract proper error message from error object
       let errorMessage = "Authentication failed";
