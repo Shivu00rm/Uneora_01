@@ -294,8 +294,9 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setSession(null);
     } catch (error: any) {
-      console.error("Logout error:", error);
-      setError(error.message || "Logout failed");
+      console.error("Logout error:", error?.message || error?.error || error);
+      const errorMessage = error?.message || error?.error_description || error?.error || "Logout failed";
+      setError(errorMessage);
       throw error;
     } finally {
       setLoading(false);
