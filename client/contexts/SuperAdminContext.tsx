@@ -159,7 +159,7 @@ const mockSystemMetrics: SystemMetrics = {
 const mockSuperAdminUser: SuperAdminUser = {
   id: "sa-1",
   name: "System Owner",
-  email: "owner@flowstock.com",
+  email: "owner@uneora.com",
   role: "super_admin", 
   permissions: ["all"],
   lastLogin: "2024-01-15T12:00:00Z"
