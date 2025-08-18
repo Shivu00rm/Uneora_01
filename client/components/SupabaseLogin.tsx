@@ -34,6 +34,14 @@ export function SupabaseLogin() {
     setIsSignUp(location.pathname === '/signup');
   }, [location.pathname]);
 
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user && !loading) {
+      const defaultRoute = getDefaultRoute();
+      navigate(defaultRoute, { replace: true });
+    }
+  }, [user, loading, navigate, getDefaultRoute]);
+
   if (showSuperAdminSetup) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -95,6 +103,8 @@ export function SupabaseLogin() {
         }
       } else {
         await login(formData.email, formData.password);
+        // After successful login, redirect to appropriate dashboard
+        // Note: The redirect will be handled by the useEffect above when user state updates
       }
     } catch (err: any) {
       console.error("Login error:", err?.message || err?.error || err);
