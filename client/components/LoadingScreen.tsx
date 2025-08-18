@@ -18,9 +18,11 @@ export function LoadingScreen({
       <div className="text-center space-y-4">
         {/* Logo */}
         <div className="flex items-center justify-center space-x-2 mb-6">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-            <Package className="h-7 w-7 text-primary-foreground" />
-          </div>
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets%2Fb7155483f4aa4218b0fd455934ead78a%2F70167a20be274a39b7819818c11d0910?format=webp&width=800"
+            alt="Uneora Logo"
+            className="h-12 w-12 object-contain"
+          />
           <span className="text-3xl font-bold text-foreground">Uneora</span>
         </div>
 
