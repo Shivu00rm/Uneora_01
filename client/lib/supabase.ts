@@ -80,6 +80,54 @@ if (hasValidSupabaseConfig) {
           };
         }
       },
+      signUp: async ({
+        email,
+        password,
+      }: {
+        email: string;
+        password: string;
+      }) => {
+        // Simulate network delay
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        console.log(`Mock signUp attempt for ${email}`);
+
+        // For super admin setup, simulate successful signup
+        if (email === "superadmin@uneora.com") {
+          const mockSuperAdminUser = {
+            id: "00000000-0000-0000-0000-000000000000",
+            email: "superadmin@uneora.com",
+            user_metadata: { name: "Uneora Super Admin" },
+          };
+
+          return {
+            data: {
+              user: mockSuperAdminUser,
+              session: {
+                access_token: "mock-token",
+                refresh_token: "mock-refresh-token",
+                user: mockSuperAdminUser,
+              },
+            },
+            error: null,
+          };
+        }
+
+        // For other signups, simulate success but require email confirmation
+        const newMockUser = {
+          id: `mock-${Date.now()}`,
+          email,
+          user_metadata: { name: "New User" },
+        };
+
+        return {
+          data: {
+            user: newMockUser,
+            session: null, // No session until email confirmed
+          },
+          error: null,
+        };
+      },
       signOut: async () => {
         return { error: null };
       },
