@@ -722,7 +722,7 @@ export default function Inventory() {
 
         <TabsContent
           value="inventory"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           {/* Filters */}
           <Card>
@@ -856,7 +856,7 @@ export default function Inventory() {
 
         <TabsContent
           value="alerts"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           <Card>
             <CardHeader>
@@ -928,7 +928,7 @@ export default function Inventory() {
 
         <TabsContent
           value="movements"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           <Card>
             <CardHeader>
