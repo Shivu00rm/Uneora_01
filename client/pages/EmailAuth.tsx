@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Package, Mail, Shield, ArrowLeft, RefreshCw } from "lucide-react";
+import { Mail, Shield, ArrowLeft, RefreshCw } from "lucide-react";
 
 export default function EmailAuth() {
   const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: Success
