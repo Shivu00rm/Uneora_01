@@ -268,8 +268,9 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         setSession(data.session);
       }
     } catch (error: any) {
-      console.error("Login error:", error);
-      setError(error.message || "Login failed");
+      console.error("Login error:", error?.message || error?.error || error);
+      const errorMessage = error?.message || error?.error_description || error?.error || "Login failed";
+      setError(errorMessage);
       throw error;
     } finally {
       setLoading(false);
