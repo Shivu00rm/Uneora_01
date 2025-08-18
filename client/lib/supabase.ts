@@ -173,29 +173,87 @@ if (hasValidSupabaseConfig) {
         return { data: { subscription: mockListener } };
       },
     },
-    from: (table: string) => ({
-      select: () => ({
-        eq: () => ({
-          single: async () => ({
-            data: null,
-            error: {
-              message: "Mock database - configure Supabase for real data",
+    from: (table: string) => {
+      if (table === "profiles") {
+        return {
+          select: (columns?: string) => ({
+            eq: (column: string, value: any) => {
+              if (column === "email" && value === "superadmin@uneora.com") {
+                return {
+                  single: async () => ({
+                    data: null, // No super admin exists initially
+                    error: { message: "No rows found" },
+                  }),
+                  eq: (column2: string, value2: any) => ({
+                    single: async () => ({
+                      data: null,
+                      error: { message: "No rows found" },
+                    }),
+                  }),
+                };
+              }
+              return {
+                single: async () => ({
+                  data: null,
+                  error: { message: "No rows found" },
+                }),
+              };
             },
           }),
-        }),
-      }),
-      insert: () => ({
+          insert: (data: any) => ({
+            select: () => ({
+              single: async () => {
+                console.log("Mock: Creating profile for", data.email);
+                return {
+                  data: {
+                    id: data.id,
+                    email: data.email,
+                    name: data.name,
+                    role: data.role,
+                    organization_id: data.organization_id,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                  },
+                  error: null,
+                };
+              },
+            }),
+          }),
+          upsert: (data: any) => ({
+            select: () => ({
+              single: async () => {
+                console.log("Mock: Upserting profile for", data.email);
+                return {
+                  data: {
+                    id: data.id,
+                    email: data.email,
+                    name: data.name,
+                    role: data.role,
+                    organization_id: data.organization_id,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                  },
+                  error: null,
+                };
+              },
+            }),
+          }),
+        };
+      }
+
+      // Default mock for other tables
+      return {
         select: () => ({
-          single: async () => ({
-            data: null,
-            error: {
-              message: "Mock database - configure Supabase for real data",
-            },
+          eq: () => ({
+            single: async () => ({
+              data: null,
+              error: {
+                message: "Mock database - configure Supabase for real data",
+              },
+            }),
           }),
         }),
-      }),
-      update: () => ({
-        eq: () => ({
+        insert: () => ({
           select: () => ({
             single: async () => ({
               data: null,
@@ -205,11 +263,23 @@ if (hasValidSupabaseConfig) {
             }),
           }),
         }),
-      }),
-      delete: () => ({
-        eq: () => ({ error: null }),
-      }),
-    }),
+        update: () => ({
+          eq: () => ({
+            select: () => ({
+              single: async () => ({
+                data: null,
+                error: {
+                  message: "Mock database - configure Supabase for real data",
+                },
+              }),
+            }),
+          }),
+        }),
+        delete: () => ({
+          eq: () => ({ error: null }),
+        }),
+      };
+    },
   };
 }
 
