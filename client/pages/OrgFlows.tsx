@@ -40,7 +40,7 @@ const mockFlowData = [
         status: "success",
         details: { productId: "iPhone-14", oldStock: 25, newStock: 20, reason: "Sale" },
         ip: "192.168.1.100",
-        userAgent: "FlowStock/Mobile"
+        userAgent: "Uneora/Mobile"
       },
       {
         id: "flow-2", 
@@ -51,7 +51,7 @@ const mockFlowData = [
         status: "success",
         details: { amount: 25000, items: 3, paymentMethod: "UPI" },
         ip: "192.168.1.101",
-        userAgent: "FlowStock/POS"
+        userAgent: "Uneora/POS"
       },
       {
         id: "flow-3",
@@ -84,7 +84,7 @@ const mockFlowData = [
         status: "failed",
         details: { endpoint: "/api/shopify/sync", error: "Rate limit exceeded" },
         ip: "192.168.1.105",
-        userAgent: "FlowStock/API"
+        userAgent: "Uneora/API"
       }
     ]
   },
@@ -101,7 +101,7 @@ const mockFlowData = [
         status: "success", 
         details: { syncedProducts: 156, updatedStock: 89 },
         ip: "192.168.2.100",
-        userAgent: "FlowStock/Sync"
+        userAgent: "Uneora/Sync"
       },
       {
         id: "flow-7",
@@ -112,7 +112,7 @@ const mockFlowData = [
         status: "success",
         details: { product: "Nike Shoes", currentStock: 3, threshold: 10 },
         ip: "192.168.2.101", 
-        userAgent: "FlowStock/Alerts"
+        userAgent: "Uneora/Alerts"
       }
     ]
   }
