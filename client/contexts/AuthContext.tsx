@@ -158,7 +158,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = {
     user: legacyUser,
     login,
+    signUp,
     logout,
+    loading: supabaseAuth.loading,
     hasPermission,
     isSuperAdmin,
     isOrgAdmin,
