@@ -66,7 +66,7 @@ if (hasValidSupabaseConfig) {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const mockUser = mockUsers[email as keyof typeof mockUsers];
-        if (mockUser && (password === "admin123" || password === "user123")) {
+        if (mockUser && (password === "admin123" || password === "user123" || password === "SuperAdmin123!")) {
           return {
             data: {
               user: mockUser,
