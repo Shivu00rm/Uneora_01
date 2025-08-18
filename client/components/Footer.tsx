@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Package } from "lucide-react";
 
 export function Footer() {
   return (
