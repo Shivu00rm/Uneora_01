@@ -17,7 +17,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
-import SupabaseLogin from "./pages/SupabaseLogin";
+import { SupabaseLogin } from "./components/SupabaseLogin";
 import EmailAuth from "./pages/EmailAuth";
 import Users from "./pages/Users";
 import Inventory from "./pages/Inventory";
@@ -95,7 +95,7 @@ function AuthenticatedApp() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<SupabaseLogin />} />
-          <Route path="/signup" element={<SupabaseLogin defaultSignUp={true} />} />
+          <Route path="/signup" element={<SupabaseLogin />} />
           <Route path="/email-auth" element={<EmailAuth />} />
 
           {/* Solution Pages */}
