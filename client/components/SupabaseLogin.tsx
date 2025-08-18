@@ -38,6 +38,7 @@ export function SupabaseLogin() {
   useEffect(() => {
     if (user && !loading) {
       const defaultRoute = getDefaultRoute();
+      console.log('User is logged in, redirecting to:', defaultRoute);
       navigate(defaultRoute, { replace: true });
     }
   }, [user, loading, navigate, getDefaultRoute]);
