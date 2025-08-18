@@ -21,7 +21,7 @@ export function LoadingScreen({
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
             <Package className="h-7 w-7 text-primary-foreground" />
           </div>
-          <span className="text-3xl font-bold text-foreground">FlowStock</span>
+          <span className="text-3xl font-bold text-foreground">Uneora</span>
         </div>
 
         {/* Loading Spinner */}
