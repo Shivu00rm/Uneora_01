@@ -15,11 +15,16 @@ import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
 import { hasValidSupabaseConfig } from "@/lib/supabase";
 import { Eye, EyeOff, Loader2, AlertCircle, Info } from "lucide-react";
 
-export default function SupabaseLogin() {
+interface SupabaseLoginProps {
+  defaultSignUp?: boolean;
+}
+
+export default function SupabaseLogin({ defaultSignUp = false }: SupabaseLoginProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(defaultSignUp);
 
   const { login, loading, error } = useSupabaseAuth();
   const navigate = useNavigate();
