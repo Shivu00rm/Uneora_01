@@ -206,9 +206,9 @@
     z-index: 1;
   }
 
-  /* FlowStock Logo Watermark */
-  .flowstock-watermark::before {
-    content: "FlowStock";
+  /* Uneora Logo Watermark */
+  .uneora-watermark::before {
+    content: "Uneora";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -263,7 +263,7 @@
 
   /* Watermark styling */
   .vendor-watermark::before {
-    content: "FlowStock";
+    content: "Uneora";
     position: absolute;
     top: 50%;
     left: 50%;
