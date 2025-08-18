@@ -13,7 +13,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
 import { hasValidSupabaseConfig } from "@/lib/supabase";
-import { Package, Eye, EyeOff, Loader2, AlertCircle, Info } from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertCircle, Info } from "lucide-react";
 
 export default function SupabaseLogin() {
   const [email, setEmail] = useState("");
