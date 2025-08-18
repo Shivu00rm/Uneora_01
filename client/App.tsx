@@ -95,6 +95,7 @@ function AuthenticatedApp() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<SupabaseLogin />} />
+          <Route path="/signup" element={<SupabaseLogin defaultSignUp={true} />} />
           <Route path="/email-auth" element={<EmailAuth />} />
 
           {/* Solution Pages */}
