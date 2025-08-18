@@ -331,7 +331,7 @@ export default function OrganizationMonitor() {
 
         <TabsContent
           value="overview"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           <Card>
             <CardHeader>
@@ -425,7 +425,7 @@ export default function OrganizationMonitor() {
                           </Button>
                           <Button variant="ghost" size="sm" asChild>
                             <a
-                              href={`https://${org.id}.flowstock.com`}
+                              href={`https://${org.id}.uneora.com`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -444,7 +444,7 @@ export default function OrganizationMonitor() {
 
         <TabsContent
           value="performance"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {orgHealthData.map((org) => (
@@ -505,7 +505,7 @@ export default function OrganizationMonitor() {
 
         <TabsContent
           value="errors"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
@@ -612,7 +612,7 @@ export default function OrganizationMonitor() {
 
         <TabsContent
           value="incidents"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           <Card>
             <CardHeader>
@@ -852,7 +852,7 @@ export default function OrganizationMonitor() {
               <div className="flex gap-2">
                 <Button asChild>
                   <a
-                    href={`https://${selectedOrgForMonitoring.id}.flowstock.com/app/dashboard`}
+                    href={`https://${selectedOrgForMonitoring.id}.uneora.com/app/dashboard`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
