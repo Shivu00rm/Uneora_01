@@ -67,7 +67,7 @@ export default function Index() {
           </h1>
 
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
-            FlowStock revolutionizes inventory management with AI-powered
+            Uneora revolutionizes inventory management with AI-powered
             automation, GST compliance, real-time e-commerce sync, and
             intelligent analytics. Built for India's growing businesses.
           </p>
@@ -87,7 +87,7 @@ export default function Index() {
             <div>
               <div className="text-3xl font-bold text-primary">10K+</div>
               <div className="text-sm text-muted-foreground">
-                Businesses Trust FlowStock
+                Businesses Trust Uneora
               </div>
             </div>
             <div>
@@ -117,7 +117,7 @@ export default function Index() {
               Everything Your Business Needs
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From inventory tracking to AI analytics, FlowStock provides a
+              From inventory tracking to AI analytics, Uneora provides a
               complete ecosystem for modern business operations.
             </p>
           </div>
@@ -341,7 +341,7 @@ export default function Index() {
             Ready to Transform Your Business?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Join thousands of Indian businesses already using FlowStock to
+            Join thousands of Indian businesses already using Uneora to
             streamline their operations and boost growth.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
