@@ -78,7 +78,7 @@ export default function AppSettings() {
     sessionTimeout: "8",
     passwordRequirement: "strong",
     apiAccess: true,
-    webhookUrl: "https://api.techcorp.com/webhooks/flowstock",
+    webhookUrl: "https://api.techcorp.com/webhooks/uneora",
   });
 
   const handleSaveSettings = async (section: string) => {
@@ -578,7 +578,7 @@ export default function AppSettings() {
                             webhookUrl: e.target.value,
                           }))
                         }
-                        placeholder="https://your-domain.com/webhooks/flowstock"
+                        placeholder="https://your-domain.com/webhooks/uneora"
                       />
                       <Button variant="outline" size="sm">
                         Test
