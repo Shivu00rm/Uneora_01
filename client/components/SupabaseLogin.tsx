@@ -163,6 +163,11 @@ export function SupabaseLogin() {
           "Account creation failed. Please try again or contact support.";
       }
 
+      // Final safety check to ensure we never display [object Object]
+      if (errorMessage === '[object Object]' || !errorMessage || errorMessage.trim() === '') {
+        errorMessage = 'Authentication failed. Please try again.';
+      }
+
       setError(errorMessage);
     }
   };
