@@ -335,8 +335,9 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         }
       }
     } catch (error: any) {
-      console.error("Sign up error:", error);
-      setError(error.message || "Sign up failed");
+      console.error("Sign up error:", error?.message || error?.error || error);
+      const errorMessage = error?.message || error?.error_description || error?.error || "Sign up failed";
+      setError(errorMessage);
       throw error;
     } finally {
       setLoading(false);
