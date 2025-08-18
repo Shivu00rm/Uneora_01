@@ -74,7 +74,7 @@ export function InvoiceTemplate({
               <Building2 className="h-7 w-7 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-blue-600">FlowStock</h1>
+              <h1 className="text-3xl font-bold text-blue-600">Uneora</h1>
               <p className="text-sm text-gray-600">Smart Inventory Management Platform</p>
             </div>
           </div>
@@ -85,7 +85,7 @@ export function InvoiceTemplate({
             </div>
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4" />
-              <span>billing@flowstock.com</span>
+              <span>billing@uneora.com</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4" />
@@ -93,7 +93,7 @@ export function InvoiceTemplate({
             </div>
             <div className="flex items-center gap-2">
               <Globe className="h-4 w-4" />
-              <span>www.flowstock.com</span>
+              <span>www.uneora.com</span>
             </div>
           </div>
         </div>
@@ -203,14 +203,14 @@ export function InvoiceTemplate({
           <div><strong>Payment Methods:</strong> Razorpay, UPI, Bank Transfer, Credit/Debit Cards</div>
           <div><strong>Payment Terms:</strong> Net 15 days from invoice date</div>
           <div><strong>Late Payment:</strong> 2% per month on overdue amounts</div>
-          <div><strong>Support:</strong> Contact billing@flowstock.com for payment queries</div>
+          <div><strong>Support:</strong> Contact billing@uneora.com for payment queries</div>
         </CardContent>
       </Card>
 
       {/* Footer */}
       <div className="text-center text-sm text-gray-500 border-t pt-6">
-        <p className="mb-2">Thank you for choosing FlowStock for your inventory management needs!</p>
-        <p>This is a system-generated invoice. For support, contact us at support@flowstock.com</p>
+        <p className="mb-2">Thank you for choosing Uneora for your inventory management needs!</p>
+        <p>This is a system-generated invoice. For support, contact us at support@uneora.com</p>
         <p className="mt-2">
           <strong>GST Number:</strong> 29ABCDE1234F1Z5 | <strong>PAN:</strong> ABCDE1234F
         </p>
