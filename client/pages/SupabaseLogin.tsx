@@ -51,7 +51,7 @@ export default function SupabaseLogin() {
   const getDemoAccounts = () => [
     {
       role: "Super Admin",
-      email: "admin@flowstock.com",
+      email: "admin@uneora.com",
       password: "admin123",
       description: "Full platform access",
       variant: "destructive" as const,
@@ -90,7 +90,7 @@ export default function SupabaseLogin() {
               <Package className="h-6 w-6 text-primary-foreground" />
             </div>
             <span className="text-2xl font-bold text-foreground">
-              FlowStock
+              Uneora
             </span>
           </Link>
           <p className="text-muted-foreground">Sign in to your account</p>
@@ -100,7 +100,7 @@ export default function SupabaseLogin() {
           <CardHeader>
             <CardTitle>Welcome Back</CardTitle>
             <CardDescription>
-              Enter your credentials to access your FlowStock dashboard
+              Enter your credentials to access your Uneora dashboard
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
