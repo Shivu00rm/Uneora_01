@@ -424,7 +424,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                         <div className="mt-2 space-y-1">
                           <div className="flex items-center gap-2">
                             <Building2 className="h-4 w-4" />
-                            <span className="font-medium">{customCompany || "FlowStock Company"}</span>
+                            <span className="font-medium">{customCompany || "Uneora Company"}</span>
                           </div>
                           <div className="text-sm text-muted-foreground">
                             123 Business Street, Mumbai, Maharashtra 400001
@@ -554,7 +554,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                       <div>
                         <div className="border-t pt-2 mt-12">
                           <div className="text-sm font-medium">Authorized Signature</div>
-                          <div className="text-xs text-muted-foreground">{customCompany || "FlowStock Company"}</div>
+                          <div className="text-xs text-muted-foreground">{customCompany || "Uneora Company"}</div>
                         </div>
                       </div>
                       <div>
