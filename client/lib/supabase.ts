@@ -30,9 +30,9 @@ if (hasValidSupabaseConfig) {
 
   // Mock user data for development
   const mockUsers = {
-    "admin@flowstock.com": {
+    "admin@uneora.com": {
       id: "00000000-0000-0000-0000-000000000001",
-      email: "admin@flowstock.com",
+      email: "admin@uneora.com",
       user_metadata: { name: "System Owner" },
     },
     "admin@techcorp.com": {
