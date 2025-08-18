@@ -339,7 +339,7 @@ export function SupabaseLogin() {
                 </div>
                 <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
                   <strong>✅ Super Admin Ready:</strong>{" "}
-                  superadmin@flowstock.com / SuperAdmin123!
+                  superadmin@uneora.com / SuperAdmin123!
                 </div>
               </div>
             )}
