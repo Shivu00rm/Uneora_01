@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
@@ -15,7 +16,8 @@ import { SuperAdminSetup } from "./SuperAdminSetup";
 
 export function SupabaseLogin() {
   const { login, signUp, loading } = useAuth();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const location = useLocation();
+  const [isSignUp, setIsSignUp] = useState(location.pathname === '/signup');
   const [showSuperAdminSetup, setShowSuperAdminSetup] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
