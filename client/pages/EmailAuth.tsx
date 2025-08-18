@@ -104,7 +104,7 @@ export default function EmailAuth() {
               <Package className="h-6 w-6 text-primary-foreground" />
             </div>
             <span className="text-2xl font-bold text-foreground">
-              FlowStock
+              Uneora
             </span>
           </Link>
           <p className="text-muted-foreground">
@@ -281,7 +281,7 @@ export default function EmailAuth() {
                   Authentication Successful!
                 </CardTitle>
                 <CardDescription>
-                  You have been securely signed in to FlowStock
+                  You have been securely signed in to Uneora
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -290,7 +290,7 @@ export default function EmailAuth() {
                     <Shield className="h-8 w-8 text-emerald-600" />
                   </div>
                   <p className="text-muted-foreground">
-                    Welcome to FlowStock! Redirecting to your dashboard...
+                    Welcome to Uneora! Redirecting to your dashboard...
                   </p>
                 </div>
 
