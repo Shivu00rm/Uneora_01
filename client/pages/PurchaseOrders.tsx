@@ -359,7 +359,7 @@ export default function PurchaseOrders() {
 
         <TabsContent
           value="orders"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           {/* Filters */}
           <Card>
@@ -488,7 +488,7 @@ export default function PurchaseOrders() {
 
         <TabsContent
           value="pending"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           <Card>
             <CardHeader>
@@ -542,7 +542,7 @@ export default function PurchaseOrders() {
 
         <TabsContent
           value="tracking"
-          className="space-y-6 tab-content-watermark flowstock-watermark"
+          className="space-y-6 tab-content-watermark uneora-watermark"
         >
           <Card>
             <CardHeader>
