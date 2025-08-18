@@ -98,19 +98,40 @@ export function SupabaseLogin() {
     } catch (err: any) {
       console.error("Login error:", err);
 
-      // Extract proper error message from Supabase error object
+      // Extract proper error message from error object
       let errorMessage = "Authentication failed";
 
-      if (err.message) {
-        errorMessage = err.message;
-      } else if (err.error_description) {
-        errorMessage = err.error_description;
-      } else if (err.msg) {
-        errorMessage = err.msg;
+      if (err && typeof err === 'object') {
+        if (err.message) {
+          errorMessage = err.message;
+        } else if (err.error_description) {
+          errorMessage = err.error_description;
+        } else if (err.error && err.error.message) {
+          errorMessage = err.error.message;
+        } else if (err.msg) {
+          errorMessage = err.msg;
+        } else if (err.details) {
+          errorMessage = err.details;
+        } else {
+          // Handle complex error objects by extracting meaningful info
+          try {
+            const errorStr = JSON.stringify(err);
+            if (errorStr !== '{}' && errorStr !== '[object Object]') {
+              // Try to extract meaningful error info from JSON
+              const parsed = JSON.parse(errorStr);
+              errorMessage = parsed.message || parsed.error || parsed.statusText || 'Authentication failed';
+            }
+          } catch {
+            errorMessage = 'Authentication failed';
+          }
+        }
       } else if (typeof err === "string") {
         errorMessage = err;
-      } else if (err.toString && err.toString() !== "[object Object]") {
-        errorMessage = err.toString();
+      } else if (err && err.toString && typeof err.toString === 'function') {
+        const stringified = err.toString();
+        if (stringified !== "[object Object]") {
+          errorMessage = stringified;
+        }
       }
 
       // Handle specific Supabase errors
