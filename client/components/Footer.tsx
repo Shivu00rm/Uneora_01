@@ -13,7 +13,7 @@ export function Footer() {
                 <Package className="h-5 w-5 text-primary-foreground" />
               </div>
               <span className="text-xl font-bold text-foreground">
-                FlowStock
+                Uneora
               </span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs">
@@ -150,7 +150,7 @@ export function Footer() {
 
         <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 FlowStock. All rights reserved.
+            © 2024 Uneora. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link
