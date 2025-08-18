@@ -28,7 +28,7 @@ export function SuperAdminSetup() {
       const { data, error } = await supabase
         .from("profiles")
         .select("id, role")
-        .eq("email", "superadmin@flowstock.com")
+        .eq("email", "superadmin@uneora.com")
         .eq("role", "super_admin")
         .single();
 
@@ -50,7 +50,7 @@ export function SuperAdminSetup() {
     try {
       // Create the super admin account through Supabase Auth
       const { data, error: signUpError } = await supabase.auth.signUp({
-        email: "superadmin@flowstock.com",
+        email: "superadmin@uneora.com",
         password: "SuperAdmin123!",
       });
 
@@ -70,7 +70,7 @@ export function SuperAdminSetup() {
             // Try to sign in to get the user ID
             const { data: signInData, error: signInError } =
               await supabase.auth.signInWithPassword({
-                email: "superadmin@flowstock.com",
+                email: "superadmin@uneora.com",
                 password: "SuperAdmin123!",
               });
 
@@ -80,8 +80,8 @@ export function SuperAdminSetup() {
               await DatabaseService.upsertProfile({
                 id: signInData.user.id,
                 organization_id: null,
-                email: "superadmin@flowstock.com",
-                name: "FlowStock Super Admin",
+                email: "superadmin@uneora.com",
+                name: "Uneora Super Admin",
                 role: "super_admin",
               });
 
@@ -108,8 +108,8 @@ export function SuperAdminSetup() {
         await DatabaseService.upsertProfile({
           id: data.user.id,
           organization_id: null,
-          email: "superadmin@flowstock.com",
-          name: "FlowStock Super Admin",
+          email: "superadmin@uneora.com",
+          name: "Uneora Super Admin",
           role: "super_admin",
         });
 
@@ -166,7 +166,7 @@ export function SuperAdminSetup() {
           <div className="space-y-3">
             <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
               <p className="text-sm text-green-800">
-                <strong>Email:</strong> superadmin@flowstock.com
+                <strong>Email:</strong> superadmin@uneora.com
                 <br />
                 <strong>Password:</strong> SuperAdmin123!
               </p>
@@ -189,7 +189,7 @@ export function SuperAdminSetup() {
           Setup Super Admin
         </CardTitle>
         <CardDescription>
-          Create the super admin account for FlowStock management.
+          Create the super admin account for Uneora management.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -206,7 +206,7 @@ export function SuperAdminSetup() {
               This will create a super admin account with full system access:
             </p>
             <ul className="text-xs text-blue-700 mt-2 space-y-1">
-              <li>• Email: superadmin@flowstock.com</li>
+              <li>• Email: superadmin@uneora.com</li>
               <li>• Password: SuperAdmin123!</li>
               <li>• Full system administration rights</li>
               <li>• Access to all organizations</li>
