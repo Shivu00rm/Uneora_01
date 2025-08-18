@@ -159,12 +159,12 @@ export function SupabaseLogin() {
         <Card className="w-full">
         <CardHeader>
           <CardTitle>
-            {isSignUp ? "Create Account" : "Sign In"} - FlowStock
+            {isSignUp ? "Create Account" : "Sign In"} - Uneora
           </CardTitle>
           <CardDescription>
             {isSignUp
-              ? "Create your FlowStock account to get started"
-              : "Sign in to your FlowStock account"}
+              ? "Create your Uneora account to get started"
+              : "Sign in to your Uneora account"}
           </CardDescription>
         </CardHeader>
         <CardContent>
