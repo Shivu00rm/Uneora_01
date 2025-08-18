@@ -349,26 +349,68 @@ export function SupabaseLogin() {
               )}
             </div>
 
-            {isSignUp && (
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-sm text-blue-800 font-medium mb-2">
-                  💡 Quick Start Examples:
-                </p>
-                <div className="text-xs text-blue-700 space-y-1">
-                  <div>
-                    <strong>Org Admin:</strong> manager@acme.com / password123 +
-                    "ACME Corp"
+            {/* Demo Accounts Section - Show for both login and signup */}
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-800 font-medium mb-2">
+                💡 Demo Accounts:
+              </p>
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData(prev => ({
+                      ...prev,
+                      email: "admin@uneora.com",
+                      password: "admin123"
+                    }));
+                  }}
+                  className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
+                >
+                  <div className="text-xs text-blue-700">
+                    <strong>Super Admin:</strong> admin@uneora.com / admin123
+                    <div className="text-gray-600">Full platform access</div>
                   </div>
-                  <div>
-                    <strong>Org User:</strong> user@acme.com / password123
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData(prev => ({
+                      ...prev,
+                      email: "admin@techcorp.com",
+                      password: "admin123"
+                    }));
+                  }}
+                  className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
+                >
+                  <div className="text-xs text-blue-700">
+                    <strong>Org Admin:</strong> admin@techcorp.com / admin123
+                    <div className="text-gray-600">Organization management</div>
                   </div>
-                </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData(prev => ({
+                      ...prev,
+                      email: "user@techcorp.com",
+                      password: "user123"
+                    }));
+                  }}
+                  className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
+                >
+                  <div className="text-xs text-blue-700">
+                    <strong>Org User:</strong> user@techcorp.com / user123
+                    <div className="text-gray-600">Basic inventory access</div>
+                  </div>
+                </button>
+              </div>
+              {isSignUp && (
                 <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
-                  <strong>✅ Super Admin Ready:</strong>{" "}
+                  <strong>✅ Super Admin Setup:</strong>{" "}
                   superadmin@uneora.com / SuperAdmin123!
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </form>
         </CardContent>
         </Card>
