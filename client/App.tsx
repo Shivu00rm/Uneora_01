@@ -29,6 +29,7 @@ import Analytics from "./pages/Analytics";
 import Files from "./pages/Files";
 import Settings from "./pages/Settings";
 import SuperAdmin from "./pages/SuperAdmin";
+import SuperAdminConsole from "./pages/SuperAdminConsole";
 import OrganizationMonitor from "./pages/OrganizationMonitor";
 import AppDashboard from "./pages/app/AppDashboard";
 import TeamManagement from "./pages/app/TeamManagement";
