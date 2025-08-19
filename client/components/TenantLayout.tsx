@@ -74,12 +74,95 @@ export function TenantLayout({ children }: TenantLayoutProps) {
 
             {/* Centered Desktop Navigation */}
             <nav className="hidden md:flex items-center justify-center flex-1 space-x-6">
-              <Link
-                to="/app/dashboard"
-                className={navLinkClass("/app/dashboard")}
-              >
-                Dashboard
-              </Link>
+              {/* Dynamic Dashboard Link based on Role */}
+              {user?.role === "ORG_ADMIN" ? (
+                <Link
+                  to="/app/org-dashboard"
+                  className={navLinkClass("/app/org-dashboard")}
+                >
+                  Overview
+                </Link>
+              ) : (
+                <Link
+                  to="/app/dashboard"
+                  className={navLinkClass("/app/dashboard")}
+                >
+                  Dashboard
+                </Link>
+              )}
+
+              {/* Multi-Store Navigation for Org Admin */}
+              {user?.role === "ORG_ADMIN" && (
+                <>
+                  <PermissionGate module="stores" action="view">
+                    <Link
+                      to="/app/stores"
+                      className={navLinkClass("/app/stores")}
+                    >
+                      Stores
+                    </Link>
+                  </PermissionGate>
+
+                  <PermissionGate module="ecommerce" action="view">
+                    <Link
+                      to="/app/ecommerce"
+                      className={navLinkClass("/app/ecommerce")}
+                    >
+                      E-commerce
+                    </Link>
+                  </PermissionGate>
+
+                  <PermissionGate module="multi_store_analytics" action="view">
+                    <Link
+                      to="/app/multi-store-analytics"
+                      className={navLinkClass("/app/multi-store-analytics")}
+                    >
+                      Analytics
+                    </Link>
+                  </PermissionGate>
+                </>
+              )}
+
+              {/* E-commerce Manager Navigation */}
+              {user?.role === "ONLINE_OPS_MANAGER" && (
+                <PermissionGate module="ecommerce" action="view">
+                  <Link
+                    to="/app/ecommerce"
+                    className={navLinkClass("/app/ecommerce")}
+                  >
+                    E-commerce
+                  </Link>
+                </PermissionGate>
+              )}
+
+              {/* Standard Navigation for other roles */}
+              {user?.role !== "ORG_ADMIN" && (
+                <>
+                  <PermissionGate module="inventory" action="view">
+                    <Link
+                      to="/app/inventory"
+                      className={navLinkClass("/app/inventory")}
+                    >
+                      Inventory
+                    </Link>
+                  </PermissionGate>
+
+                  <PermissionGate module="pos" action="view">
+                    <Link to="/app/pos" className={navLinkClass("/app/pos")}>
+                      POS
+                    </Link>
+                  </PermissionGate>
+
+                  <PermissionGate module="analytics" action="view">
+                    <Link
+                      to="/app/analytics"
+                      className={navLinkClass("/app/analytics")}
+                    >
+                      Analytics
+                    </Link>
+                  </PermissionGate>
+                </>
+              )}
 
               <PermissionGate module="inventory" action="view">
                 <Link
