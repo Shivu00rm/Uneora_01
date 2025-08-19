@@ -24,6 +24,9 @@ import {
   FileText,
   Truck,
   TrendingUp,
+  Store,
+  Globe,
+  Target,
 } from "lucide-react";
 
 interface TenantLayoutProps {
