@@ -21,6 +21,19 @@ interface User {
   permissions: Record<string, any>;
   lastLogin?: string;
   avatarUrl?: string;
+  // Multi-store support
+  storeAccess?: Array<{
+    storeId: string;
+    storeName: string;
+    role: UserRole;
+    permissions: string[];
+    isActive: boolean;
+  }>;
+  defaultStoreId?: string;
+  ecommerceAccess?: {
+    platforms: string[];
+    permissions: string[];
+  };
 }
 
 interface AuthContextType {
