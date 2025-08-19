@@ -274,7 +274,17 @@ function AuthenticatedApp() {
             element={
               <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
                 <SuperAdminLayout>
-                  <SuperAdmin />
+                  <SuperAdminConsole />
+                </SuperAdminLayout>
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/super-admin/console"
+            element={
+              <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
+                <SuperAdminLayout>
+                  <SuperAdminConsole />
                 </SuperAdminLayout>
               </RoleRoute>
             }
