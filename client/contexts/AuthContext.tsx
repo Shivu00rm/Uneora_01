@@ -157,6 +157,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return supabaseAuth.canManageStore(storeId);
   };
 
+  const canManageEcommerce = (): boolean => {
+    return supabaseAuth.canManageEcommerce();
+  };
+
   const getDefaultRoute = (): string => {
     return supabaseAuth.getDefaultRoute();
   };
