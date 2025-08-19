@@ -1,10 +1,21 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Card, CardContent } from "./ui/card";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { Crown, Shield, ExternalLink, Building2 } from "lucide-react";
+import {
+  Crown,
+  Shield,
+  ExternalLink,
+  Building2,
+  BarChart3,
+  Monitor,
+  Activity,
+  Users,
+  Settings
+} from "lucide-react";
 
 interface SuperAdminLayoutProps {
   children: React.ReactNode;
