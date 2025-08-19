@@ -28,8 +28,8 @@ import {
 import type { Store as StoreType } from "@shared/api";
 
 interface StoreFormProps {
-  store?: Store | null;
-  onSave: (storeData: Partial<Store>) => void;
+  store?: StoreType | null;
+  onSave: (storeData: Partial<StoreType>) => void;
   onCancel: () => void;
   isLoading?: boolean;
 }
