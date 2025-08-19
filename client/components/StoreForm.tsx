@@ -482,7 +482,7 @@ export function StoreForm({ store, onSave, onCancel, isLoading = false }: StoreF
                               <div className="w-20 text-sm font-medium">{day.label}</div>
                               <div className="flex items-center gap-2">
                                 <Select
-                                  value={formData.settings?.operatingHours[day.key as keyof typeof formData.settings.operatingHours]?.open || "09:00"}
+                                  value={(formData.settings?.operatingHours as any)?.[day.key]?.open || "09:00"}
                                   onValueChange={(value) => handleOperatingHoursChange(day.key, 'open', value)}
                                 >
                                   <SelectTrigger className="w-24">
@@ -496,7 +496,7 @@ export function StoreForm({ store, onSave, onCancel, isLoading = false }: StoreF
                                 </Select>
                                 <span className="text-sm text-gray-500">to</span>
                                 <Select
-                                  value={formData.settings?.operatingHours[day.key as keyof typeof formData.settings.operatingHours]?.close || "18:00"}
+                                  value={(formData.settings?.operatingHours as any)?.[day.key]?.close || "18:00"}
                                   onValueChange={(value) => handleOperatingHoursChange(day.key, 'close', value)}
                                 >
                                   <SelectTrigger className="w-24">
@@ -511,7 +511,7 @@ export function StoreForm({ store, onSave, onCancel, isLoading = false }: StoreF
                                 <label className="flex items-center gap-2">
                                   <input
                                     type="checkbox"
-                                    checked={formData.settings?.operatingHours[day.key as keyof typeof formData.settings.operatingHours]?.closed || false}
+                                    checked={(formData.settings?.operatingHours as any)?.[day.key]?.closed || false}
                                     onChange={(e) => handleOperatingHoursChange(day.key, 'closed', e.target.checked)}
                                   />
                                   <span className="text-sm text-gray-600">Closed</span>
