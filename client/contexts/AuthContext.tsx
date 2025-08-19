@@ -178,6 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     canManageUsers,
     canAccessOrganizationData,
     canManageStore,
+    canManageEcommerce,
     getDefaultRoute,
   };
 
