@@ -154,7 +154,7 @@ export default function StoreManagement() {
     store.address.city.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const getStatusColor = (status: Store['status']) => {
+  const getStatusColor = (status: StoreType['status']) => {
     switch (status) {
       case 'active': return 'bg-green-500';
       case 'inactive': return 'bg-gray-500';
@@ -163,7 +163,7 @@ export default function StoreManagement() {
     }
   };
 
-  const getTypeIcon = (type: Store['type']) => {
+  const getTypeIcon = (type: StoreType['type']) => {
     switch (type) {
       case 'physical': return <Store className="h-4 w-4" />;
       case 'online': return <BarChart3 className="h-4 w-4" />;
