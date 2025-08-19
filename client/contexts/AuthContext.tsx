@@ -27,6 +27,7 @@ interface AuthContextType {
   isOrgUser: () => boolean;
   canManageUsers: () => boolean;
   canAccessOrganizationData: (orgId: string) => boolean;
+  canManageStore: (storeId: string) => boolean;
   getDefaultRoute: () => string;
 }
 
