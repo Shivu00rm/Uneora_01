@@ -144,7 +144,7 @@ const mockStores: StoreType[] = [
 
 export default function StoreManagement() {
   const { hasPermission, canManageStore } = useAuth();
-  const [stores, setStores] = useState<Store[]>(mockStores);
+  const [stores, setStores] = useState<StoreType[]>(mockStores);
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateForm, setShowCreateForm] = useState(false);
 
