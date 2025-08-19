@@ -548,6 +548,17 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       case "SUPER_ADMIN":
         return "/super-admin";
       case "ORG_ADMIN":
+        return "/app/multi-store-dashboard";
+      case "STORE_MANAGER":
+        // Redirect to their default store or first accessible store
+        const defaultStore = user.defaultStoreId || user.storeAccess?.[0]?.storeId;
+        return defaultStore ? `/app/store/${defaultStore}/dashboard` : "/app/dashboard";
+      case "CASHIER":
+        // Cashiers go directly to POS
+        const cashierStore = user.defaultStoreId || user.storeAccess?.[0]?.storeId;
+        return cashierStore ? `/app/store/${cashierStore}/pos` : "/app/pos";
+      case "ONLINE_OPS_MANAGER":
+        return "/app/ecommerce/dashboard";
       case "ORG_USER":
         return "/app/dashboard";
       default:
