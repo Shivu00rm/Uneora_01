@@ -178,6 +178,40 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
           users: ["view", "create", "edit", "delete"],
           files: ["view", "upload", "delete"],
           settings: ["view", "edit"],
+          stores: ["view", "create", "edit", "delete", "manage"],
+          ecommerce: ["view", "create", "edit", "delete", "sync", "manage"],
+          multi_store_analytics: ["view", "export"],
+        };
+      case "STORE_MANAGER":
+        return {
+          dashboard: ["view"],
+          inventory: ["view", "create", "edit", "delete", "export"],
+          stock_movements: ["view", "create", "edit"],
+          pos: ["view", "create", "refund"],
+          vendors: ["view", "create", "edit"],
+          purchase_orders: ["view", "create", "edit", "approve"],
+          analytics: ["view", "export"],
+          users: ["view", "create", "edit"], // Store-level only
+          files: ["view", "upload", "delete"],
+          settings: ["view", "edit"], // Store-level only
+          ecommerce: ["view", "sync"], // Limited e-commerce access
+        };
+      case "CASHIER":
+        return {
+          dashboard: ["view"],
+          inventory: ["view"],
+          pos: ["view", "create"],
+          stock_movements: ["view"],
+          files: ["view"],
+        };
+      case "ONLINE_OPS_MANAGER":
+        return {
+          dashboard: ["view"],
+          inventory: ["view", "edit"],
+          stock_movements: ["view", "create"],
+          analytics: ["view"],
+          ecommerce: ["view", "create", "edit", "sync", "manage"],
+          files: ["view", "upload"],
         };
       case "ORG_USER":
         return {
