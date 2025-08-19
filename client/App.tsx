@@ -36,6 +36,10 @@ import AppSettings from "./pages/app/AppSettings";
 import Manufacturing from "./pages/solutions/Manufacturing";
 import Retail from "./pages/solutions/Retail";
 import Wholesale from "./pages/solutions/Wholesale";
+import About from "./pages/About";
+import Pricing from "./pages/Pricing";
+import Contact from "./pages/Contact";
+import Support from "./pages/Support";
 import { TenantLayout } from "./components/TenantLayout";
 import { SuperAdminLayout } from "./components/SuperAdminLayout";
 import { RoleRoute } from "./components/SupabaseProtectedRoute";
@@ -102,6 +106,12 @@ function AuthenticatedApp() {
           <Route path="/solutions/manufacturing" element={<Manufacturing />} />
           <Route path="/solutions/retail" element={<Retail />} />
           <Route path="/solutions/wholesale" element={<Wholesale />} />
+
+          {/* Public Pages */}
+          <Route path="/about" element={<About />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/support" element={<Support />} />
 
           {/* Legacy Protected Routes - Redirect to role-appropriate routes */}
           <Route
