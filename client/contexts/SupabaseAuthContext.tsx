@@ -548,7 +548,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       case "SUPER_ADMIN":
         return "/super-admin";
       case "ORG_ADMIN":
-        return "/app/multi-store-dashboard";
+        return "/app/org-dashboard";
       case "STORE_MANAGER":
         // Redirect to their default store or first accessible store
         const defaultStore = user.defaultStoreId || user.storeAccess?.[0]?.storeId;
