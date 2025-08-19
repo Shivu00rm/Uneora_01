@@ -450,8 +450,69 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     return user?.role === "ORG_USER" || false;
   };
 
+  const isStoreManager = (): boolean => {
+    return user?.role === "STORE_MANAGER" || false;
+  };
+
+  const isCashier = (): boolean => {
+    return user?.role === "CASHIER" || false;
+  };
+
+  const isOnlineOpsManager = (): boolean => {
+    return user?.role === "ONLINE_OPS_MANAGER" || false;
+  };
+
   const canManageUsers = (): boolean => {
     return isSuperAdmin() || (isOrgAdmin() && hasPermission("users", "create"));
+  };
+
+  const canAccessStore = (storeId: string): boolean => {
+    if (!user) return false;
+
+    // Super admin and Org admin can access all stores
+    if (user.role === "SUPER_ADMIN" || user.role === "ORG_ADMIN") return true;
+
+    // Check if user has access to this specific store
+    return user.storeAccess?.some(access => access.storeId === storeId && access.isActive) || false;
+  };
+
+  const canManageStore = (storeId: string): boolean => {
+    if (!user) return false;
+
+    // Super admin and Org admin can manage all stores
+    if (user.role === "SUPER_ADMIN" || user.role === "ORG_ADMIN") return true;
+
+    // Store managers can manage their assigned stores
+    if (user.role === "STORE_MANAGER") {
+      return user.storeAccess?.some(access =>
+        access.storeId === storeId && access.role === "STORE_MANAGER" && access.isActive
+      ) || false;
+    }
+
+    return false;
+  };
+
+  const canManageEcommerce = (): boolean => {
+    if (!user) return false;
+
+    return (
+      user.role === "SUPER_ADMIN" ||
+      user.role === "ORG_ADMIN" ||
+      user.role === "ONLINE_OPS_MANAGER" ||
+      hasPermission("ecommerce", "manage")
+    );
+  };
+
+  const getUserStores = (): Array<{storeId: string; storeName: string; role: UserRole}> => {
+    if (!user?.storeAccess) return [];
+
+    return user.storeAccess
+      .filter(access => access.isActive)
+      .map(access => ({
+        storeId: access.storeId,
+        storeName: access.storeName,
+        role: access.role
+      }));
   };
 
   const canAccessOrganizationData = (orgId: string): boolean => {
