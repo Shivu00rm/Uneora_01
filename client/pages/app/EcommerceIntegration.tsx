@@ -502,9 +502,9 @@ export default function EcommerceIntegration() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-2 pt-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="flex-1"
                       onClick={() => handleRunSync(platform.id)}
                       disabled={isRunningSync || platform.status === "syncing"}
@@ -512,7 +512,7 @@ export default function EcommerceIntegration() {
                       {platform.status === "syncing" ? (
                         <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                       ) : (
-                        <Sync className="h-4 w-4 mr-2" />
+                        <RefreshCw className="h-4 w-4 mr-2" />
                       )}
                       Sync
                     </Button>
