@@ -293,10 +293,111 @@ function AuthenticatedApp() {
           <Route
             path="/app/*"
             element={
-              <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER"]}>
+              <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER", "STORE_MANAGER", "CASHIER", "ONLINE_OPS_MANAGER"]}>
                 <TenantLayout>
                   <Routes>
                     <Route path="dashboard" element={<AppDashboard />} />
+
+                    {/* Multi-Store Routes */}
+                    <Route
+                      path="org-dashboard"
+                      element={
+                        <ProtectedRoute allowedRoles={["ORG_ADMIN"]}>
+                          <OrgAdminDashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="stores"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="stores"
+                          requiredAction="view"
+                        >
+                          <StoreManagement />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="ecommerce"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="ecommerce"
+                          requiredAction="view"
+                        >
+                          <EcommerceIntegration />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="multi-store-analytics"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="multi_store_analytics"
+                          requiredAction="view"
+                        >
+                          <MultiStoreAnalytics />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* Store-specific routes */}
+                    <Route
+                      path="store/:storeId/dashboard"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="dashboard"
+                          requiredAction="view"
+                        >
+                          <AppDashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="store/:storeId/inventory"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="inventory"
+                          requiredAction="view"
+                        >
+                          <Inventory />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="store/:storeId/pos"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="pos"
+                          requiredAction="view"
+                        >
+                          <POS />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="store/:storeId/analytics"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="analytics"
+                          requiredAction="view"
+                        >
+                          <Analytics />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* E-commerce specific routes */}
+                    <Route
+                      path="ecommerce/dashboard"
+                      element={
+                        <ProtectedRoute
+                          allowedRoles={["ONLINE_OPS_MANAGER", "ORG_ADMIN"]}
+                        >
+                          <EcommerceIntegration />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route
                       path="inventory"
                       element={
