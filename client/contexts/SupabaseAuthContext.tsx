@@ -419,12 +419,28 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const hasPermission = (module: string, action?: string): boolean => {
+  const hasPermission = (module: string, action?: string, storeId?: string): boolean => {
     if (!user) return false;
 
     // Super admin has all permissions
     if (user.role === "SUPER_ADMIN") return true;
 
+    // If storeId is provided, check store-specific permissions
+    if (storeId && user.storeAccess) {
+      const storeAccess = user.storeAccess.find(access =>
+        access.storeId === storeId && access.isActive
+      );
+
+      if (storeAccess) {
+        // Check store-specific permissions
+        if (!action) {
+          return storeAccess.permissions.some(permission => permission.startsWith(module));
+        }
+        return storeAccess.permissions.includes(`${module}.${action}`);
+      }
+    }
+
+    // Fall back to global permissions
     const permissions = user.permissions || {};
     const modulePermissions = permissions[module] || [];
 
