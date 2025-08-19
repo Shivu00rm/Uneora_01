@@ -172,6 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isOrgUser,
     canManageUsers,
     canAccessOrganizationData,
+    canManageStore,
     getDefaultRoute,
   };
 
