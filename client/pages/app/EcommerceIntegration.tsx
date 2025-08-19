@@ -261,15 +261,15 @@ export default function EcommerceIntegration() {
           <p className="text-gray-600">Manage multi-channel sync for inventory, orders, and pricing</p>
         </div>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => handleRunSync()}
             disabled={isRunningSync}
           >
             {isRunningSync ? (
               <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
             ) : (
-              <Sync className="h-4 w-4 mr-2" />
+              <RefreshCw className="h-4 w-4 mr-2" />
             )}
             Sync All
           </Button>
