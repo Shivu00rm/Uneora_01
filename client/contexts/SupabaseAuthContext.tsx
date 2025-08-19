@@ -8,7 +8,7 @@ import React, {
 import { User as SupabaseUser, Session } from "@supabase/supabase-js";
 import { supabase, Tables } from "@/lib/supabase";
 
-export type UserRole = "SUPER_ADMIN" | "ORG_ADMIN" | "ORG_USER";
+export type UserRole = "SUPER_ADMIN" | "ORG_ADMIN" | "STORE_MANAGER" | "CASHIER" | "ONLINE_OPS_MANAGER" | "ORG_USER";
 
 interface User {
   id: string;
