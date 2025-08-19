@@ -28,6 +28,7 @@ interface AuthContextType {
   canManageUsers: () => boolean;
   canAccessOrganizationData: (orgId: string) => boolean;
   canManageStore: (storeId: string) => boolean;
+  canManageEcommerce: () => boolean;
   getDefaultRoute: () => string;
 }
 
