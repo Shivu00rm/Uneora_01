@@ -50,7 +50,7 @@ const daysOfWeek = [
 ];
 
 export function StoreForm({ store, onSave, onCancel, isLoading = false }: StoreFormProps) {
-  const [formData, setFormData] = useState<Partial<Store>>({
+  const [formData, setFormData] = useState<Partial<StoreType>>({
     name: store?.name || "",
     code: store?.code || "",
     type: store?.type || "physical",
