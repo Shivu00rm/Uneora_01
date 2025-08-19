@@ -44,12 +44,19 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signUp: (email: string, password: string, userData: any) => Promise<void>;
-  hasPermission: (module: string, action?: string) => boolean;
+  hasPermission: (module: string, action?: string, storeId?: string) => boolean;
   isSuperAdmin: () => boolean;
   isOrgAdmin: () => boolean;
   isOrgUser: () => boolean;
+  isStoreManager: () => boolean;
+  isCashier: () => boolean;
+  isOnlineOpsManager: () => boolean;
   canManageUsers: () => boolean;
   canAccessOrganizationData: (orgId: string) => boolean;
+  canAccessStore: (storeId: string) => boolean;
+  canManageStore: (storeId: string) => boolean;
+  canManageEcommerce: () => boolean;
+  getUserStores: () => Array<{storeId: string; storeName: string; role: UserRole}>;
   getDefaultRoute: () => string;
   refreshUser: () => Promise<void>;
 }
