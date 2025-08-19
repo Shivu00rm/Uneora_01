@@ -21,7 +21,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import type { Store as StoreType } from "@shared/api";
 
 // Mock data for demonstration
-const mockStores: Store[] = [
+const mockStores: StoreType[] = [
   {
     id: "store-1",
     organizationId: "org-1",
