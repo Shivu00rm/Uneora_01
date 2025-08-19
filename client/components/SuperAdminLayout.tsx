@@ -99,20 +99,27 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
         </div>
       </div>
 
-      {/* Navigation Notice */}
+      {/* Navigation */}
+      <div className="border-b">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center space-x-6 py-4">
+            <Link to="/super-admin" className={navLinkClass("/super-admin")}>
+              <BarChart3 className="h-4 w-4" />
+              Admin Console
+            </Link>
+            <Link to="/org-flows" className={navLinkClass("/org-flows")}>
+              <Activity className="h-4 w-4" />
+              Health Monitor
+            </Link>
+          </nav>
+        </div>
+      </div>
+
+      {/* Status Notice */}
       <Alert className="mx-4 sm:mx-6 lg:mx-8 mt-6 mb-6 border-blue-200 bg-blue-50">
         <Shield className="h-4 w-4 text-blue-600" />
         <AlertDescription className="text-blue-800">
-          <strong>Platform Mode:</strong> You're in the super admin console.
-          Organization-specific features are available through the{" "}
-          <Button
-            variant="link"
-            className="p-0 h-auto text-blue-600 underline"
-            asChild
-          >
-            <a href="/org-flows">Organization Health Monitor</a>
-          </Button>{" "}
-          where you can access individual organization dashboards when needed.
+          <strong>Platform Mode:</strong> You have complete visibility and control across all organizations, stores, and integrations in the Uneora platform.
         </AlertDescription>
       </Alert>
 
