@@ -164,47 +164,28 @@ export function TenantLayout({ children }: TenantLayoutProps) {
                 </>
               )}
 
-              <PermissionGate module="inventory" action="view">
-                <Link
-                  to="/app/inventory"
-                  className={navLinkClass("/app/inventory")}
-                >
-                  Inventory
-                </Link>
-              </PermissionGate>
+              {/* Vendors and Orders available to all non-Org-Admin roles */}
+              {user?.role !== "ORG_ADMIN" && (
+                <>
+                  <PermissionGate module="vendors" action="view">
+                    <Link
+                      to="/app/vendors"
+                      className={navLinkClass("/app/vendors")}
+                    >
+                      Vendors
+                    </Link>
+                  </PermissionGate>
 
-              <PermissionGate module="pos" action="view">
-                <Link to="/app/pos" className={navLinkClass("/app/pos")}>
-                  POS
-                </Link>
-              </PermissionGate>
-
-              <PermissionGate module="vendors" action="view">
-                <Link
-                  to="/app/vendors"
-                  className={navLinkClass("/app/vendors")}
-                >
-                  Vendors
-                </Link>
-              </PermissionGate>
-
-              <PermissionGate module="purchase_orders" action="view">
-                <Link
-                  to="/app/purchase-orders"
-                  className={navLinkClass("/app/purchase-orders")}
-                >
-                  Orders
-                </Link>
-              </PermissionGate>
-
-              <PermissionGate module="analytics" action="view">
-                <Link
-                  to="/app/analytics"
-                  className={navLinkClass("/app/analytics")}
-                >
-                  Analytics
-                </Link>
-              </PermissionGate>
+                  <PermissionGate module="purchase_orders" action="view">
+                    <Link
+                      to="/app/purchase-orders"
+                      className={navLinkClass("/app/purchase-orders")}
+                    >
+                      Orders
+                    </Link>
+                  </PermissionGate>
+                </>
+              )}
 
               <OrgAdminOnly>
                 <PermissionGate module="users" action="view">
