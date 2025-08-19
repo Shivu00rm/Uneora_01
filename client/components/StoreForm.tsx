@@ -129,7 +129,7 @@ export function StoreForm({ store, onSave, onCancel, isLoading = false }: StoreF
         operatingHours: {
           ...prev.settings!.operatingHours,
           [day]: {
-            ...prev.settings!.operatingHours[day as keyof typeof prev.settings!.operatingHours],
+            ...(prev.settings!.operatingHours as any)[day],
             [type]: value
           }
         }
