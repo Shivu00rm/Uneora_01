@@ -25,7 +25,7 @@ import {
   Save,
   X
 } from "lucide-react";
-import type { Store } from "@shared/api";
+import type { Store as StoreType } from "@shared/api";
 
 interface StoreFormProps {
   store?: Store | null;
