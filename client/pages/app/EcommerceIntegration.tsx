@@ -370,7 +370,7 @@ export default function EcommerceIntegration() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Button variant="outline" className="h-20 flex flex-col gap-2">
-                  <Sync className="h-6 w-6" />
+                  <RefreshCw className="h-6 w-6" />
                   <span>Sync Inventory</span>
                 </Button>
                 <Button variant="outline" className="h-20 flex flex-col gap-2">
