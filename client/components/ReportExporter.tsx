@@ -72,6 +72,15 @@ export function ReportExporter({
     to: new Date(),
   });
 
+  // Update selectedFields when availableFields changes
+  useEffect(() => {
+    if (availableFields && availableFields.length > 0) {
+      setSelectedFields(
+        availableFields.map(field => ({ ...field, enabled: field.required || field.enabled }))
+      );
+    }
+  }, [availableFields]);
+
   const handleFieldToggle = (fieldId: string, enabled: boolean) => {
     setSelectedFields(prev =>
       prev.map(field =>
