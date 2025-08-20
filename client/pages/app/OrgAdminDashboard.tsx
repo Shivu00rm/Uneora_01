@@ -365,13 +365,13 @@ export default function OrgAdminDashboard() {
                           {store.type === "physical" ? <Store className="h-5 w-5" /> : <Globe className="h-5 w-5" />}
                           {store.name}
                         </CardTitle>
-                        <CardDescription className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <span>{store.code}</span>
                           {getStoreStatusIcon(store.status)}
                           <Badge variant="outline" className="capitalize">
                             {store.type}
                           </Badge>
-                        </CardDescription>
+                        </div>
                       </div>
                     </div>
                     <Button variant="ghost" size="sm" asChild>
@@ -469,14 +469,14 @@ export default function OrgAdminDashboard() {
                       {getPlatformIcon(platform.platform)}
                       <div>
                         <CardTitle className="text-lg">{platform.name}</CardTitle>
-                        <CardDescription className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <span className="capitalize">{platform.platform}</span>
-                          <Badge 
+                          <Badge
                             variant={platform.status === "connected" ? "default" : "destructive"}
                           >
                             {platform.status}
                           </Badge>
-                        </CardDescription>
+                        </div>
                       </div>
                     </div>
                     <Button variant="ghost" size="sm">
