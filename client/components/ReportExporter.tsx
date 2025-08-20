@@ -324,8 +324,8 @@ export function ReportExporter({
             <Alert>
               <FileText className="h-4 w-4" />
               <AlertDescription>
-                <strong>Export Summary:</strong> {selectedFields.filter(f => f.enabled).length} fields 
-                will be exported as {exportFormat.toUpperCase()} format for the period 
+                <strong>Export Summary:</strong> {selectedFields?.filter(f => f.enabled).length || 0} fields
+                will be exported as {exportFormat.toUpperCase()} format for the period
                 from {format(dateRange.from, "MMM dd, yyyy")} to {format(dateRange.to, "MMM dd, yyyy")}.
               </AlertDescription>
             </Alert>
