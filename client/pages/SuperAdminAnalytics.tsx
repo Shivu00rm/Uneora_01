@@ -294,7 +294,7 @@ export default function SuperAdminAnalytics() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => fetchAnalyticsData()}
+            onClick={handleRefresh}
             disabled={loading}
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
