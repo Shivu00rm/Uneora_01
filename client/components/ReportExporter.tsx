@@ -1,529 +1,391 @@
 import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DatePickerWithRange } from "@/components/ui/date-picker";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Checkbox } from "./ui/checkbox";
-import { useAuth } from "@/contexts/AuthContext";
-import {
-  Download,
-  FileText,
-  FileSpreadsheet,
-  Calendar,
-  Filter,
-  Package,
-  Users,
-  BarChart3,
-  DollarSign,
-  Clock,
-  CheckCircle,
-  Building2,
-  TrendingUp,
-} from "lucide-react";
+} from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { Download, FileText, FileSpreadsheet, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { format } from "date-fns";
 
-interface ReportConfig {
-  type: string;
-  name: string;
-  description: string;
-  icon: any;
-  fields: string[];
-  formats: string[];
-  roleRequired?: string[];
+export interface ExportField {
+  id: string;
+  label: string;
+  enabled: boolean;
+  required?: boolean;
 }
 
-export function ReportExporter() {
-  const { user } = useAuth();
-  const [selectedReport, setSelectedReport] = useState<string>("");
-  const [selectedFormat, setSelectedFormat] = useState<string>("csv");
-  const [dateRange, setDateRange] = useState<string>("last_30_days");
-  const [customStartDate, setCustomStartDate] = useState<string>("");
-  const [customEndDate, setCustomEndDate] = useState<string>("");
-  const [selectedFields, setSelectedFields] = useState<string[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+export interface ExportOptions {
+  format: "csv" | "pdf" | "excel";
+  dateRange: { from: Date; to: Date };
+  fields: ExportField[];
+  filters: Record<string, any>;
+}
 
-  const reportConfigs: ReportConfig[] = [
-    {
-      type: "inventory",
-      name: "Inventory Report",
-      description: "Products, stock levels, and valuations",
-      icon: Package,
-      fields: [
-        "product_name",
-        "sku",
-        "current_stock",
-        "unit_price",
-        "total_value",
-        "low_stock_threshold",
-      ],
-      formats: ["csv", "pdf", "excel"],
-    },
-    {
-      type: "sales",
-      name: "Sales Report",
-      description: "Transaction history and revenue analysis",
-      icon: DollarSign,
-      fields: [
-        "date",
-        "transaction_id",
-        "product",
-        "quantity",
-        "unit_price",
-        "total_amount",
-        "customer",
-      ],
-      formats: ["csv", "pdf", "excel"],
-    },
-    {
-      type: "purchase_orders",
-      name: "Purchase Orders",
-      description: "PO history and vendor analysis",
-      icon: BarChart3,
-      fields: [
-        "po_number",
-        "vendor",
-        "date_created",
-        "total_amount",
-        "status",
-        "delivery_date",
-      ],
-      formats: ["csv", "pdf"],
-    },
-    {
-      type: "analytics",
-      name: "Business Analytics",
-      description: "KPIs and performance metrics",
-      icon: TrendingUp,
-      fields: [
-        "metric",
-        "current_value",
-        "previous_value",
-        "change_percent",
-        "trend",
-      ],
-      formats: ["pdf", "excel"],
-    },
-  ];
+interface ReportExporterProps {
+  title: string;
+  description?: string;
+  availableFields: ExportField[];
+  onExport: (options: ExportOptions) => Promise<void>;
+  children?: React.ReactNode;
+  defaultFormat?: "csv" | "pdf" | "excel";
+  showFormatSelector?: boolean;
+  showFieldSelector?: boolean;
+  showDateRange?: boolean;
+  disabled?: boolean;
+}
 
-  // Role-specific reports
-  const orgAdminReports: ReportConfig[] = [
-    {
-      type: "team_activity",
-      name: "Team Activity Report",
-      description: "User actions and performance",
-      icon: Users,
-      fields: ["user", "action", "timestamp", "entity", "details"],
-      formats: ["csv", "pdf"],
-      roleRequired: ["ORG_ADMIN"],
-    },
-    {
-      type: "audit_trail",
-      name: "Audit Trail",
-      description: "Security and access logs",
-      icon: FileText,
-      fields: [
-        "timestamp",
-        "user",
-        "action",
-        "ip_address",
-        "user_agent",
-        "resource",
-      ],
-      formats: ["csv", "pdf"],
-      roleRequired: ["ORG_ADMIN"],
-    },
-  ];
-
-  const superAdminReports: ReportConfig[] = [
-    {
-      type: "organization_overview",
-      name: "Organization Overview",
-      description: "All organizations and their metrics",
-      icon: Building2,
-      fields: [
-        "organization",
-        "plan",
-        "users",
-        "monthly_revenue",
-        "status",
-        "health",
-      ],
-      formats: ["csv", "pdf", "excel"],
-      roleRequired: ["SUPER_ADMIN"],
-    },
-    {
-      type: "platform_revenue",
-      name: "Platform Revenue",
-      description: "Cross-organization revenue analysis",
-      icon: DollarSign,
-      fields: [
-        "organization",
-        "plan",
-        "monthly_fee",
-        "annual_value",
-        "payment_status",
-        "last_payment",
-      ],
-      formats: ["csv", "pdf", "excel"],
-      roleRequired: ["SUPER_ADMIN"],
-    },
-    {
-      type: "system_health",
-      name: "System Health Report",
-      description: "Platform performance and usage",
-      icon: TrendingUp,
-      fields: ["metric", "value", "threshold", "status", "last_updated"],
-      formats: ["pdf"],
-      roleRequired: ["SUPER_ADMIN"],
-    },
-  ];
-
-  const getAvailableReports = (): ReportConfig[] => {
-    let reports = [...reportConfigs];
-
-    if (user?.role === "ORG_ADMIN") {
-      reports = [...reports, ...orgAdminReports];
-    }
-
-    if (user?.role === "SUPER_ADMIN") {
-      reports = [...reports, ...superAdminReports];
-    }
-
-    return reports.filter(
-      (report) =>
-        !report.roleRequired || report.roleRequired.includes(user?.role || ""),
-    );
-  };
-
-  const selectedReportConfig = getAvailableReports().find(
-    (r) => r.type === selectedReport,
+export function ReportExporter({
+  title,
+  description,
+  availableFields,
+  onExport,
+  children,
+  defaultFormat = "csv",
+  showFormatSelector = true,
+  showFieldSelector = true,
+  showDateRange = true,
+  disabled = false,
+}: ReportExporterProps) {
+  const { toast } = useToast();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
+  const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | "excel">(defaultFormat);
+  const [selectedFields, setSelectedFields] = useState<ExportField[]>(
+    availableFields.map(field => ({ ...field, enabled: field.required || field.enabled }))
   );
+  const [dateRange, setDateRange] = useState({
+    from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+    to: new Date(),
+  });
 
-  const handleFieldToggle = (field: string) => {
-    setSelectedFields((prev) =>
-      prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field],
+  const handleFieldToggle = (fieldId: string, enabled: boolean) => {
+    setSelectedFields(prev =>
+      prev.map(field =>
+        field.id === fieldId ? { ...field, enabled } : field
+      )
     );
   };
 
-  const generateReport = async () => {
-    if (!selectedReportConfig) return;
-
-    setIsGenerating(true);
-
-    // Simulate report generation
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // In a real app, this would make an API call
-      const mockData = generateMockData(selectedReport, selectedFields);
-
-      if (selectedFormat === "csv") {
-        downloadCSV(
-          mockData,
-          `${selectedReportConfig.name}_${new Date().toISOString().split("T")[0]}`,
-        );
-      } else if (selectedFormat === "pdf") {
-        downloadPDF(selectedReportConfig.name, mockData);
-      } else if (selectedFormat === "excel") {
-        downloadExcel(
-          mockData,
-          `${selectedReportConfig.name}_${new Date().toISOString().split("T")[0]}`,
-        );
-      }
-
-      setIsDialogOpen(false);
-    } catch (error) {
-      console.error("Report generation failed:", error);
-    } finally {
-      setIsGenerating(false);
+  const handleExport = async () => {
+    const enabledFields = selectedFields.filter(field => field.enabled);
+    
+    if (enabledFields.length === 0) {
+      toast({
+        title: "No fields selected",
+        description: "Please select at least one field to export.",
+        variant: "destructive",
+      });
+      return;
     }
-  };
 
-  const generateMockData = (reportType: string, fields: string[]) => {
-    // Mock data generation based on report type
-    const mockDataMap: Record<string, any[]> = {
-      inventory: [
-        {
-          product_name: "iPhone 14 Pro",
-          sku: "IP14P-128",
-          current_stock: 25,
-          unit_price: 79999,
-          total_value: 1999975,
-          low_stock_threshold: 10,
-        },
-        {
-          product_name: "Samsung Galaxy S23",
-          sku: "SGS23-256",
-          current_stock: 15,
-          unit_price: 69999,
-          total_value: 1049985,
-          low_stock_threshold: 5,
-        },
-      ],
-      sales: [
-        {
-          date: "2024-01-15",
-          transaction_id: "TXN-001",
-          product: "iPhone 14 Pro",
-          quantity: 2,
-          unit_price: 79999,
-          total_amount: 159998,
-          customer: "John Doe",
-        },
-        {
-          date: "2024-01-14",
-          transaction_id: "TXN-002",
-          product: "Samsung Galaxy S23",
-          quantity: 1,
-          unit_price: 69999,
-          total_amount: 69999,
-          customer: "Jane Smith",
-        },
-      ],
-    };
+    setIsExporting(true);
+    setExportProgress(0);
 
-    return mockDataMap[reportType] || [];
-  };
+    try {
+      // Simulate progress
+      const progressInterval = setInterval(() => {
+        setExportProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
+          }
+          return prev + 10;
+        });
+      }, 200);
 
-  const downloadCSV = (data: any[], filename: string) => {
-    if (data.length === 0) return;
+      const exportOptions: ExportOptions = {
+        format: exportFormat,
+        dateRange,
+        fields: enabledFields,
+        filters: {},
+      };
 
-    const headers =
-      selectedFields.length > 0 ? selectedFields : Object.keys(data[0]);
-    const csv = [
-      headers.join(","),
-      ...data.map((row) => headers.map((field) => row[field] || "").join(",")),
-    ].join("\n");
+      await onExport(exportOptions);
+      
+      clearInterval(progressInterval);
+      setExportProgress(100);
 
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${filename}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
+      // Show success briefly before closing
+      setTimeout(() => {
+        setIsOpen(false);
+        setIsExporting(false);
+        setExportProgress(0);
+      }, 1000);
 
-  const downloadPDF = (reportName: string, data: any[]) => {
-    // In a real app, this would generate a proper PDF
-    alert(
-      `PDF generation for ${reportName} would be implemented with a library like jsPDF or server-side generation`,
-    );
-  };
+      toast({
+        title: "Export successful",
+        description: `${title} exported successfully as ${exportFormat.toUpperCase()}.`,
+      });
 
-  const downloadExcel = (data: any[], filename: string) => {
-    // In a real app, this would use a library like xlsx
-    alert(`Excel generation would be implemented with a library like xlsx`);
+    } catch (error) {
+      setIsExporting(false);
+      setExportProgress(0);
+      
+      console.error("Export failed:", error);
+      toast({
+        title: "Export failed",
+        description: "Failed to export data. Please try again or contact support.",
+        variant: "destructive",
+      });
+    }
   };
 
   const getFormatIcon = (format: string) => {
     switch (format) {
+      case "csv":
+        return <FileSpreadsheet className="h-4 w-4" />;
       case "pdf":
         return <FileText className="h-4 w-4" />;
       case "excel":
         return <FileSpreadsheet className="h-4 w-4" />;
       default:
-        return <FileSpreadsheet className="h-4 w-4" />;
+        return <Download className="h-4 w-4" />;
     }
   };
 
+  const formatOptions = [
+    { value: "csv", label: "CSV", description: "Comma-separated values, great for spreadsheets" },
+    { value: "pdf", label: "PDF", description: "Formatted document, ready for sharing" },
+    { value: "excel", label: "Excel", description: "Excel workbook with formatting" },
+  ];
+
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="gap-2">
-          <Download className="h-4 w-4" />
-          Export Reports
-        </Button>
+        {children || (
+          <Button variant="outline" size="sm" disabled={disabled}>
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
+        )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Generate & Export Reports</DialogTitle>
-          <DialogDescription>
-            Create customizable reports based on your role and data access
-          </DialogDescription>
+          <DialogTitle className="flex items-center gap-2">
+            <Download className="h-5 w-5" />
+            Export {title}
+          </DialogTitle>
+          {description && (
+            <DialogDescription>{description}</DialogDescription>
+          )}
         </DialogHeader>
 
-        <div className="space-y-6">
-          {/* Report Type Selection */}
-          <div className="space-y-3">
-            <Label>Report Type</Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {getAvailableReports().map((report) => {
-                const ReportIcon = report.icon;
-                return (
-                  <Card
-                    key={report.type}
-                    className={`cursor-pointer transition-all hover:shadow-md ${
-                      selectedReport === report.type
-                        ? "ring-2 ring-primary"
-                        : ""
-                    }`}
-                    onClick={() => {
-                      setSelectedReport(report.type);
-                      setSelectedFields(report.fields.slice(0, 4)); // Select first 4 fields by default
-                    }}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <ReportIcon className="h-4 w-4 text-primary" />
+        {isExporting ? (
+          <div className="space-y-4">
+            <div className="text-center">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <h3 className="font-medium mb-2">Preparing your export...</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                This may take a few moments for large datasets
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Progress</span>
+                <span>{exportProgress}%</span>
+              </div>
+              <Progress value={exportProgress} className="w-full" />
+            </div>
+
+            {exportProgress === 100 && (
+              <Alert className="border-green-200 bg-green-50">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-800">
+                  Export completed successfully! Download should start automatically.
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Format Selection */}
+            {showFormatSelector && (
+              <div className="space-y-3">
+                <Label className="text-base font-medium">Export Format</Label>
+                <div className="grid grid-cols-1 gap-3">
+                  {formatOptions.map((format) => (
+                    <Card 
+                      key={format.value}
+                      className={`cursor-pointer transition-colors ${
+                        exportFormat === format.value 
+                          ? "border-primary bg-primary/5" 
+                          : "hover:bg-muted/50"
+                      }`}
+                      onClick={() => setExportFormat(format.value as any)}
+                    >
+                      <CardContent className="flex items-center space-x-3 p-4">
+                        <div className={`p-2 rounded-md ${
+                          exportFormat === format.value 
+                            ? "bg-primary/10" 
+                            : "bg-muted"
+                        }`}>
+                          {getFormatIcon(format.value)}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm">
-                            {report.name}
+                        <div className="flex-1">
+                          <div className="font-medium">{format.label}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {format.description}
                           </div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {report.description}
-                          </div>
-                          {report.roleRequired && (
-                            <Badge variant="outline" className="text-xs mt-2">
-                              {report.roleRequired
-                                .join(", ")
-                                .replace(/_/g, " ")}
-                            </Badge>
+                        </div>
+                        <div className={`w-4 h-4 rounded-full border-2 ${
+                          exportFormat === format.value
+                            ? "border-primary bg-primary"
+                            : "border-muted-foreground"
+                        }`}>
+                          {exportFormat === format.value && (
+                            <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5" />
                           )}
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-
-          {selectedReportConfig && (
-            <>
-              {/* Format Selection */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Export Format</Label>
-                  <Select
-                    value={selectedFormat}
-                    onValueChange={setSelectedFormat}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {selectedReportConfig.formats.map((format) => (
-                        <SelectItem key={format} value={format}>
-                          <div className="flex items-center gap-2">
-                            {getFormatIcon(format)}
-                            {format.toUpperCase()}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Date Range</Label>
-                  <Select value={dateRange} onValueChange={setDateRange}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="last_7_days">Last 7 days</SelectItem>
-                      <SelectItem value="last_30_days">Last 30 days</SelectItem>
-                      <SelectItem value="last_90_days">Last 90 days</SelectItem>
-                      <SelectItem value="last_year">Last year</SelectItem>
-                      <SelectItem value="custom">Custom range</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {dateRange === "custom" && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="start-date">Start Date</Label>
-                    <Input
-                      id="start-date"
-                      type="date"
-                      value={customStartDate}
-                      onChange={(e) => setCustomStartDate(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="end-date">End Date</Label>
-                    <Input
-                      id="end-date"
-                      type="date"
-                      value={customEndDate}
-                      onChange={(e) => setCustomEndDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Field Selection */}
-              <div className="space-y-3">
-                <Label>Fields to Include</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  {selectedReportConfig.fields.map((field) => (
-                    <div key={field} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={field}
-                        checked={selectedFields.includes(field)}
-                        onCheckedChange={() => handleFieldToggle(field)}
-                      />
-                      <Label htmlFor={field} className="text-sm">
-                        {field
-                          .replace(/_/g, " ")
-                          .replace(/\b\w/g, (l) => l.toUpperCase())}
-                      </Label>
-                    </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               </div>
+            )}
 
-              {/* Generate Button */}
-              <div className="flex gap-2 pt-4 border-t">
-                <Button
-                  onClick={generateReport}
-                  disabled={isGenerating || selectedFields.length === 0}
-                  className="flex-1"
-                >
-                  {isGenerating ? (
-                    <>
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent mr-2" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Download className="mr-2 h-4 w-4" />
-                      Generate Report
-                    </>
-                  )}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
+            {/* Date Range Selection */}
+            {showDateRange && (
+              <div className="space-y-3">
+                <Label className="text-base font-medium">Date Range</Label>
+                <DatePickerWithRange
+                  date={dateRange}
+                  onDateChange={(range) => range && setDateRange(range)}
+                />
               </div>
+            )}
+
+            {/* Field Selection */}
+            {showFieldSelector && (
+              <div className="space-y-3">
+                <Label className="text-base font-medium">
+                  Select Fields ({selectedFields.filter(f => f.enabled).length} selected)
+                </Label>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto">
+                      {selectedFields.map((field) => (
+                        <div key={field.id} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={field.id}
+                            checked={field.enabled}
+                            onCheckedChange={(checked) => 
+                              handleFieldToggle(field.id, checked as boolean)
+                            }
+                            disabled={field.required}
+                          />
+                          <Label 
+                            htmlFor={field.id}
+                            className={`flex-1 ${field.required ? 'text-muted-foreground' : ''}`}
+                          >
+                            {field.label}
+                            {field.required && (
+                              <span className="text-xs ml-1">(required)</span>
+                            )}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Export Summary */}
+            <Alert>
+              <FileText className="h-4 w-4" />
+              <AlertDescription>
+                <strong>Export Summary:</strong> {selectedFields.filter(f => f.enabled).length} fields 
+                will be exported as {exportFormat.toUpperCase()} format for the period 
+                from {format(dateRange.from, "MMM dd, yyyy")} to {format(dateRange.to, "MMM dd, yyyy")}.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
+        <DialogFooter>
+          {!isExporting && (
+            <>
+              <Button variant="outline" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleExport}>
+                <Download className="h-4 w-4 mr-2" />
+                Export {exportFormat.toUpperCase()}
+              </Button>
             </>
           )}
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
+}
+
+// Utility function to generate CSV
+export function generateCSV(data: any[], filename?: string): void {
+  if (data.length === 0) return;
+  
+  const headers = Object.keys(data[0]);
+  const csvContent = [
+    headers.join(","),
+    ...data.map(row => 
+      headers.map(header => {
+        const value = row[header];
+        // Escape commas and quotes in CSV
+        if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        return value;
+      }).join(",")
+    )
+  ].join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename || `export-${format(new Date(), "yyyy-MM-dd")}.csv`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// Utility function for formatting export data
+export function formatExportData(
+  data: any[],
+  fields: ExportField[],
+  formatters?: Record<string, (value: any) => string>
+): any[] {
+  const enabledFieldIds = fields.filter(f => f.enabled).map(f => f.id);
+  
+  return data.map(item => {
+    const formattedItem: any = {};
+    
+    enabledFieldIds.forEach(fieldId => {
+      const field = fields.find(f => f.id === fieldId);
+      if (field) {
+        const value = item[fieldId];
+        formattedItem[field.label] = formatters?.[fieldId] 
+          ? formatters[fieldId](value)
+          : value;
+      }
+    });
+    
+    return formattedItem;
+  });
 }
