@@ -117,57 +117,10 @@ export default function SuperAdminAnalytics() {
     refetch: refetchAuditLogs,
   } = useAuditLogs(auditFilters);
 
-  // Data fetching functions
-  const fetchAnalyticsData = async () => {
-    setLoading(true);
-    try {
-      // Simulate API calls
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In real implementation, fetch data based on filters
-      // const response = await fetch('/api/super-admin/analytics', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ dateRange, store: selectedStore, channel: selectedChannel })
-      // });
-      
-      setRetryCount(0);
-    } catch (error) {
-      console.error("Failed to fetch analytics data:", error);
-      toast({
-        title: "Failed to load analytics",
-        description: "Please try again or contact support if the issue persists.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchAuditLogs = async () => {
-    try {
-      // Simulate API call for audit logs
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Apply filters to audit logs
-      let filteredLogs = auditLogs;
-      
-      if (auditFilters.search) {
-        filteredLogs = filteredLogs.filter(log =>
-          log.userName.toLowerCase().includes(auditFilters.search.toLowerCase()) ||
-          log.action.toLowerCase().includes(auditFilters.search.toLowerCase()) ||
-          log.module.toLowerCase().includes(auditFilters.search.toLowerCase())
-        );
-      }
-      
-      if (auditFilters.role !== "all") {
-        filteredLogs = filteredLogs.filter(log => log.role === auditFilters.role);
-      }
-      
-      // In real implementation, this would be server-side filtering
-      
-    } catch (error) {
-      console.error("Failed to fetch audit logs:", error);
-    }
+  // Refresh function
+  const handleRefresh = () => {
+    refetchAnalytics();
+    refetchAuditLogs();
   };
 
   // Export functions
