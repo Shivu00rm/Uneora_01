@@ -111,6 +111,10 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
               <Activity className="h-4 w-4" />
               Health Monitor
             </Link>
+            <Link to="/super-admin/analytics" className={navLinkClass("/super-admin/analytics")}>
+              <Monitor className="h-4 w-4" />
+              Analytics & Insights
+            </Link>
           </nav>
         </div>
       </div>
