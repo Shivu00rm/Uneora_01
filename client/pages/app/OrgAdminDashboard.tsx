@@ -559,7 +559,7 @@ export default function OrgAdminDashboard() {
                   <div key={activity.id} className="flex items-start gap-4 p-4 border rounded-lg">
                     {getActivityIcon(activity.type)}
                     <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.message}</p>
+                      <div className="text-sm font-medium">{activity.message}</div>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-xs text-gray-500">
                           {new Date(activity.timestamp).toLocaleString()}
