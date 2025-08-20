@@ -606,7 +606,7 @@ export default function SuperAdminAnalytics() {
                   <Eye className="h-5 w-5" />
                   Audit Logs
                 </span>
-                <Badge variant="outline">{auditLogs.length} entries</Badge>
+                <Badge variant="outline">{auditTotalCount} entries</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
