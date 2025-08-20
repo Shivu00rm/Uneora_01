@@ -282,12 +282,12 @@ export function ReportExporter({
             {showFieldSelector && (
               <div className="space-y-3">
                 <Label className="text-base font-medium">
-                  Select Fields ({selectedFields.filter(f => f.enabled).length} selected)
+                  Select Fields ({selectedFields?.filter(f => f.enabled).length || 0} selected)
                 </Label>
                 <Card>
                   <CardContent className="p-4">
                     <div className="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto">
-                      {selectedFields.map((field) => (
+                      {selectedFields?.map((field) => (
                         <div key={field.id} className="flex items-center space-x-2">
                           <Checkbox
                             id={field.id}
