@@ -183,14 +183,19 @@ export default function SuperAdminAnalytics() {
     }
   };
 
-  // Effects
-  useEffect(() => {
-    fetchAnalyticsData();
-  }, [dateRange, selectedStore, selectedChannel]);
-
-  useEffect(() => {
-    fetchAuditLogs();
-  }, [auditFilters]);
+  // Handle error state
+  if (error && !loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <Alert variant="destructive">
+          <XCircle className="h-4 w-4" />
+          <AlertDescription>
+            Failed to load analytics data. Please try refreshing the page or contact support if the issue persists.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   // Custom tooltip components
   const CustomTooltip = ({ active, payload, label }: any) => {
