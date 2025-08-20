@@ -31,6 +31,7 @@ import Settings from "./pages/Settings";
 import SuperAdmin from "./pages/SuperAdmin";
 import SuperAdminConsole from "./pages/SuperAdminConsole";
 import OrganizationMonitor from "./pages/OrganizationMonitor";
+import SuperAdminAnalytics from "./pages/SuperAdminAnalytics";
 import AppDashboard from "./pages/app/AppDashboard";
 import TeamManagement from "./pages/app/TeamManagement";
 import AppSettings from "./pages/app/AppSettings";
