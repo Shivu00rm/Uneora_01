@@ -65,7 +65,7 @@ export function ReportExporter({
   const [exportProgress, setExportProgress] = useState(0);
   const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | "excel">(defaultFormat);
   const [selectedFields, setSelectedFields] = useState<ExportField[]>(
-    availableFields.map(field => ({ ...field, enabled: field.required || field.enabled }))
+    availableFields?.map(field => ({ ...field, enabled: field.required || field.enabled })) || []
   );
   const [dateRange, setDateRange] = useState({
     from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
