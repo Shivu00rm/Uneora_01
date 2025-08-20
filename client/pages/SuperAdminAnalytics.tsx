@@ -79,7 +79,6 @@ const SEVERITY_COLORS = {
 
 export default function SuperAdminAnalytics() {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [dateRange, setDateRange] = useState({
     from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
@@ -95,105 +94,28 @@ export default function SuperAdminAnalytics() {
     dateTo: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const [retryCount, setRetryCount] = useState(0);
 
-  // Mock data - replace with actual API calls
-  const [salesMetrics, setSalesMetrics] = useState<SalesMetrics>({
-    daily: 45000,
-    weekly: 285000,
-    monthly: 1245000,
-    growth: { daily: 12.5, weekly: 8.3, monthly: 15.7 },
+  // Use custom hooks for data
+  const {
+    loading,
+    error,
+    salesMetrics,
+    revenueData,
+    inventoryAlerts,
+    activeUsers,
+    refetch: refetchAnalytics,
+  } = useAnalyticsData({
+    dateRange,
+    store: selectedStore,
+    channel: selectedChannel,
   });
 
-  const [revenueData, setRevenueData] = useState<RevenueData[]>([
-    { date: "2024-01-01", revenue: 42000, orders: 156 },
-    { date: "2024-01-02", revenue: 38000, orders: 142 },
-    { date: "2024-01-03", revenue: 51000, orders: 189 },
-    { date: "2024-01-04", revenue: 47000, orders: 167 },
-    { date: "2024-01-05", revenue: 54000, orders: 203 },
-    { date: "2024-01-06", revenue: 62000, orders: 234 },
-    { date: "2024-01-07", revenue: 59000, orders: 221 },
-  ]);
-
-  const [inventoryAlerts, setInventoryAlerts] = useState<InventoryAlert[]>([
-    {
-      id: "1",
-      productName: "Samsung Galaxy A54",
-      sku: "SAM-A54-128",
-      currentStock: 5,
-      reorderLevel: 20,
-      storeId: "store-001",
-      storeName: "Delhi Main Store",
-      severity: "critical",
-    },
-    {
-      id: "2",
-      productName: "Apple iPhone 15",
-      sku: "APL-IP15-256",
-      currentStock: 12,
-      reorderLevel: 25,
-      storeId: "store-002",
-      storeName: "Mumbai Central",
-      severity: "warning",
-    },
-    {
-      id: "3",
-      productName: "OnePlus 11",
-      sku: "OPL-11-256",
-      currentStock: 8,
-      reorderLevel: 15,
-      storeId: "store-001",
-      storeName: "Delhi Main Store",
-      severity: "low",
-    },
-  ]);
-
-  const [activeUsers, setActiveUsers] = useState<ActiveUserMetrics[]>([
-    { role: "Super Admin", count: 12, lastActive: "2 minutes ago", growth: 5.2 },
-    { role: "Org Admin", count: 156, lastActive: "5 minutes ago", growth: 12.8 },
-    { role: "Store Manager", count: 489, lastActive: "1 minute ago", growth: 8.1 },
-    { role: "Cashier", count: 1247, lastActive: "30 seconds ago", growth: 15.3 },
-    { role: "Online Ops", count: 78, lastActive: "3 minutes ago", growth: -2.1 },
-  ]);
-
-  const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([
-    {
-      id: "1",
-      userId: "user-001",
-      userName: "John Smith",
-      role: "Org Admin",
-      action: "CREATE_STORE",
-      module: "Store Management",
-      details: "Created new store: Bangalore Tech Hub",
-      timestamp: "2024-01-15T10:30:00Z",
-      organizationId: "org-001",
-      organizationName: "TechCorp Solutions",
-    },
-    {
-      id: "2",
-      userId: "user-002",
-      userName: "Sarah Johnson",
-      role: "Super Admin",
-      action: "SUSPEND_ORGANIZATION",
-      module: "Organization Management",
-      details: "Suspended organization due to payment failure",
-      timestamp: "2024-01-15T09:45:00Z",
-      organizationId: "org-002",
-      organizationName: "RetailCorp Inc",
-    },
-    {
-      id: "3",
-      userId: "user-003",
-      userName: "Mike Chen",
-      role: "Store Manager",
-      action: "INVENTORY_ADJUSTMENT",
-      module: "Inventory Management",
-      details: "Adjusted stock for iPhone 15: +50 units",
-      timestamp: "2024-01-15T09:15:00Z",
-      organizationId: "org-001",
-      organizationName: "TechCorp Solutions",
-    },
-  ]);
+  const {
+    loading: auditLoading,
+    auditLogs,
+    totalCount: auditTotalCount,
+    refetch: refetchAuditLogs,
+  } = useAuditLogs(auditFilters);
 
   // Data fetching functions
   const fetchAnalyticsData = async () => {
