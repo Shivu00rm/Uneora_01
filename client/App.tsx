@@ -300,6 +300,16 @@ function AuthenticatedApp() {
               </RoleRoute>
             }
           />
+          <Route
+            path="/super-admin/analytics"
+            element={
+              <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
+                <SuperAdminLayout>
+                  <SuperAdminAnalytics />
+                </SuperAdminLayout>
+              </RoleRoute>
+            }
+          />
 
           {/* Tenant App Routes */}
           <Route
