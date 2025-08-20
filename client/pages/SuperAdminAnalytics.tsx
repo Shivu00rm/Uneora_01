@@ -45,59 +45,18 @@ import {
   Calendar,
   BarChart3,
 } from "lucide-react";
-import { useSuperAdminData } from "@/hooks/useSuperAdminData";
+import {
+  useAnalyticsData,
+  useAuditLogs,
+  exportAnalyticsCSV,
+  exportAuditLogsCSV,
+  type SalesMetrics,
+  type RevenueData,
+  type InventoryAlert,
+  type ActiveUserMetrics,
+  type AuditLogEntry,
+} from "@/hooks/useAnalyticsData";
 import { format } from "date-fns";
-
-// Types for analytics data
-interface SalesMetrics {
-  daily: number;
-  weekly: number;
-  monthly: number;
-  growth: {
-    daily: number;
-    weekly: number;
-    monthly: number;
-  };
-}
-
-interface RevenueData {
-  date: string;
-  revenue: number;
-  orders: number;
-  store?: string;
-  channel?: string;
-}
-
-interface InventoryAlert {
-  id: string;
-  productName: string;
-  sku: string;
-  currentStock: number;
-  reorderLevel: number;
-  storeId: string;
-  storeName: string;
-  severity: "critical" | "warning" | "low";
-}
-
-interface ActiveUserMetrics {
-  role: string;
-  count: number;
-  lastActive: string;
-  growth: number;
-}
-
-interface AuditLogEntry {
-  id: string;
-  userId: string;
-  userName: string;
-  role: string;
-  action: string;
-  module: string;
-  details: string;
-  timestamp: string;
-  organizationId: string;
-  organizationName: string;
-}
 
 // Color schemes for charts
 const CHART_COLORS = {
