@@ -127,28 +127,10 @@ export default function SuperAdminAnalytics() {
   const exportAnalyticsData = async (format: "csv" | "pdf") => {
     setExporting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing
-      
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing
+
       if (format === "csv") {
-        // Generate CSV
-        const csvData = revenueData.map(item => ({
-          Date: item.date,
-          Revenue: item.revenue,
-          Orders: item.orders,
-        }));
-        
-        const csv = [
-          Object.keys(csvData[0]).join(","),
-          ...csvData.map(row => Object.values(row).join(","))
-        ].join("\n");
-        
-        const blob = new Blob([csv], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `analytics-${format(new Date(), "yyyy-MM-dd")}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        exportAnalyticsCSV(revenueData, `analytics-${format(new Date(), "yyyy-MM-dd")}.csv`);
       } else {
         // For PDF, you would typically use a library like jsPDF
         toast({
@@ -156,7 +138,7 @@ export default function SuperAdminAnalytics() {
           description: "PDF export functionality would be implemented here with jsPDF or similar library.",
         });
       }
-      
+
       toast({
         title: "Export successful",
         description: `Analytics data exported to ${format.toUpperCase()}.`,
@@ -176,33 +158,16 @@ export default function SuperAdminAnalytics() {
     setExporting(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       if (format === "csv") {
-        const csvData = auditLogs.map(log => ({
-          "User ID": log.userId,
-          "User Name": log.userName,
-          Role: log.role,
-          Action: log.action,
-          Module: log.module,
-          Details: log.details,
-          Timestamp: log.timestamp,
-          Organization: log.organizationName,
-        }));
-        
-        const csv = [
-          Object.keys(csvData[0]).join(","),
-          ...csvData.map(row => Object.values(row).map(v => `"${v}"`).join(","))
-        ].join("\n");
-        
-        const blob = new Blob([csv], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `audit-logs-${format(new Date(), "yyyy-MM-dd")}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        exportAuditLogsCSV(auditLogs, `audit-logs-${format(new Date(), "yyyy-MM-dd")}.csv`);
+      } else {
+        toast({
+          title: "PDF Export",
+          description: "PDF export functionality would be implemented here with jsPDF or similar library.",
+        });
       }
-      
+
       toast({
         title: "Audit logs exported",
         description: `Audit logs exported to ${format.toUpperCase()}.`,
