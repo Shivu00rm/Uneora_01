@@ -287,27 +287,33 @@ export function ReportExporter({
                 <Card>
                   <CardContent className="p-4">
                     <div className="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto">
-                      {selectedFields?.map((field) => (
-                        <div key={field.id} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={field.id}
-                            checked={field.enabled}
-                            onCheckedChange={(checked) => 
-                              handleFieldToggle(field.id, checked as boolean)
-                            }
-                            disabled={field.required}
-                          />
-                          <Label 
-                            htmlFor={field.id}
-                            className={`flex-1 ${field.required ? 'text-muted-foreground' : ''}`}
-                          >
-                            {field.label}
-                            {field.required && (
-                              <span className="text-xs ml-1">(required)</span>
-                            )}
-                          </Label>
+                      {selectedFields && selectedFields.length > 0 ? (
+                        selectedFields.map((field) => (
+                          <div key={field.id} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={field.id}
+                              checked={field.enabled}
+                              onCheckedChange={(checked) =>
+                                handleFieldToggle(field.id, checked as boolean)
+                              }
+                              disabled={field.required}
+                            />
+                            <Label
+                              htmlFor={field.id}
+                              className={`flex-1 ${field.required ? 'text-muted-foreground' : ''}`}
+                            >
+                              {field.label}
+                              {field.required && (
+                                <span className="text-xs ml-1">(required)</span>
+                              )}
+                            </Label>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center text-muted-foreground py-4">
+                          No fields available for export
                         </div>
-                      ))}
+                      )}
                     </div>
                   </CardContent>
                 </Card>
