@@ -653,7 +653,7 @@ export default function SuperAdminAnalytics() {
               {/* Pagination */}
               <div className="flex items-center justify-between mt-4">
                 <div className="text-sm text-muted-foreground">
-                  Showing 1 to {auditLogs.length} of {auditLogs.length} entries
+                  Showing 1 to {auditLogs.length} of {auditTotalCount} entries
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button variant="outline" size="sm" disabled>
