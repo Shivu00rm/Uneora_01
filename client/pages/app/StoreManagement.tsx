@@ -247,15 +247,15 @@ export default function StoreManagement() {
                   {getTypeIcon(store.type)}
                   <div>
                     <CardTitle className="text-lg">{store.name}</CardTitle>
-                    <CardDescription className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <span>{store.code}</span>
-                      <Badge 
-                        variant="outline" 
+                      <Badge
+                        variant="outline"
                         className={`${getStatusColor(store.status)} text-white border-none`}
                       >
                         {store.status}
                       </Badge>
-                    </CardDescription>
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-1">
