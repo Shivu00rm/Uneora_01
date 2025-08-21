@@ -459,14 +459,6 @@ export default function SuperAdminAnalytics() {
                         fillOpacity={0.3}
                         name="Churned Organizations"
                       />
-                      <Line
-                        type="monotone"
-                        dataKey="retentionRate"
-                        stroke="#8B5CF6"
-                        strokeWidth={3}
-                        name="Retention Rate (%)"
-                        yAxisId="right"
-                      />
                     </AreaChart>
                   </ResponsiveContainer>
                 )}
