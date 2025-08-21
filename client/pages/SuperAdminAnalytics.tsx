@@ -499,29 +499,60 @@ export default function SuperAdminAnalytics() {
               </CardContent>
             </Card>
 
-            {/* Inventory Alerts */}
+            {/* Platform Health Insights */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
-                  Inventory Alerts
+                  <Activity className="h-5 w-5" />
+                  Platform Health Insights
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {inventoryAlerts.map((alert) => (
-                    <div key={alert.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="font-medium">{alert.productName}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {alert.storeName} • Stock: {alert.currentStock}
-                        </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="font-medium">Integration Success Rate</div>
+                      <div className="text-sm text-muted-foreground">
+                        Shopify, WooCommerce, Amazon • Last 24h
                       </div>
-                      <Badge variant={SEVERITY_COLORS[alert.severity]}>
-                        {alert.severity}
-                      </Badge>
                     </div>
-                  ))}
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                      98.7%
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="font-medium">Database Performance</div>
+                      <div className="text-sm text-muted-foreground">
+                        Average query time • Current load
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                      45ms
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="font-medium">API Rate Limit Usage</div>
+                      <div className="text-sm text-muted-foreground">
+                        Peak usage across all organizations
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                      73%
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="font-medium">Feature Rollout Status</div>
+                      <div className="text-sm text-muted-foreground">
+                        Multi-store analytics deployment
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                      85% Complete
+                    </Badge>
+                  </div>
                 </div>
               </CardContent>
             </Card>
