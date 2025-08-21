@@ -44,6 +44,10 @@ import {
   Eye,
   Calendar,
   BarChart3,
+  Database,
+  Zap,
+  Activity,
+  XCircle,
 } from "lucide-react";
 import {
   useAnalyticsData,
