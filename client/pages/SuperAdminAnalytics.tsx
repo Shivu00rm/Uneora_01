@@ -378,37 +378,37 @@ export default function SuperAdminAnalytics() {
             </CardContent>
           </Card>
 
-          {/* Key Metrics */}
+          {/* Strategic Platform Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {renderMetricCard(
-              "Daily Sales",
-              `₹${salesMetrics.daily.toLocaleString()}`,
-              salesMetrics.growth.daily,
-              <DollarSign className="h-4 w-4 text-green-600" />,
+              "Customer Lifetime Value",
+              "₹18,450",
+              12.8,
+              <Users className="h-4 w-4 text-blue-600" />,
+              "blue",
+              loading
+            )}
+            {renderMetricCard(
+              "API Performance Score",
+              "97.2%",
+              2.1,
+              <Zap className="h-4 w-4 text-green-600" />,
               "green",
               loading
             )}
             {renderMetricCard(
-              "Weekly Revenue",
-              `₹${salesMetrics.weekly.toLocaleString()}`,
-              salesMetrics.growth.weekly,
-              <TrendingUp className="h-4 w-4 text-green-600" />,
-              "green",
+              "Data Storage Growth",
+              "2.4TB",
+              15.6,
+              <Database className="h-4 w-4 text-purple-600" />,
+              "purple",
               loading
             )}
             {renderMetricCard(
-              "Monthly Revenue",
-              `₹${salesMetrics.monthly.toLocaleString()}`,
-              salesMetrics.growth.monthly,
-              <ShoppingCart className="h-4 w-4 text-green-600" />,
-              "green",
-              loading
-            )}
-            {renderMetricCard(
-              "Low Stock Alerts",
-              inventoryAlerts.length,
-              -5.2,
-              <AlertTriangle className="h-4 w-4 text-orange-600" />,
+              "Feature Adoption Rate",
+              "78.3%",
+              8.4,
+              <BarChart3 className="h-4 w-4 text-orange-600" />,
               "orange",
               loading
             )}
