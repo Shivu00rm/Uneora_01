@@ -105,11 +105,62 @@ const statusConfig = {
 } as const;
 
 export default function PurchaseOrders() {
+  const [orders, setOrders] = useState(initialPurchaseOrders);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [isCreatePOOpen, setIsCreatePOOpen] = useState(false);
 
-  const filteredOrders = mockPurchaseOrders.filter((order) => {
+  // Create PO form state
+  const [poVendor, setPoVendor] = useState("");
+  const [poExpected, setPoExpected] = useState("");
+  const [poReference, setPoReference] = useState("");
+  const [poPriority, setPoPriority] = useState("");
+  const [poNotes, setPoNotes] = useState("");
+  const [poItems, setPoItems] = useState<{ product: string; qty: number; price: number }[]>([
+    { product: "", qty: 0, price: 0 },
+  ]);
+
+  const addItemRow = () => setPoItems((prev) => [...prev, { product: "", qty: 0, price: 0 }]);
+  const updateItem = (idx: number, patch: Partial<{ product: string; qty: number; price: number }>) => {
+    setPoItems((prev) => prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)));
+  };
+  const removeEmptyTrailing = () => setPoItems((prev)=> prev.filter((it, i, arr)=> i< arr.length-1 || it.product || it.qty || it.price));
+
+  const lineTotal = (it: { qty: number; price: number }) => (Number(it.qty) || 0) * (Number(it.price) || 0);
+  const grandTotal = poItems.reduce((sum, it) => sum + lineTotal(it), 0);
+  const totalQty = poItems.reduce((sum, it) => sum + (Number(it.qty) || 0), 0);
+
+  const canCreate = poVendor && poExpected && totalQty > 0 && grandTotal > 0;
+
+  const resetForm = () => {
+    setPoVendor("");
+    setPoExpected("");
+    setPoReference("");
+    setPoPriority("");
+    setPoNotes("");
+    setPoItems([{ product: "", qty: 0, price: 0 }]);
+  };
+
+  const handleCreatePO = () => {
+    if (!canCreate) return;
+    const nextId = `PO-${new Date().getFullYear()}-${String(orders.length + 1).padStart(3, "0")}`;
+    const newOrder = {
+      id: nextId,
+      vendor: poVendor,
+      date: new Date().toISOString().slice(0, 10),
+      expectedDelivery: poExpected,
+      status: "pending",
+      items: totalQty,
+      totalAmount: grandTotal,
+      approvedBy: "",
+      progress: 0,
+    } as any;
+    setOrders((prev) => [newOrder, ...prev]);
+    resetForm();
+    setIsCreatePOOpen(false);
+  };
+
+  const filteredOrders = orders.filter((order) => {
     const matchesSearch =
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.vendor.toLowerCase().includes(searchQuery.toLowerCase());
