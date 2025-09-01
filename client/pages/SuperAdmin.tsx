@@ -32,6 +32,10 @@ import { Separator } from "@/components/ui/separator";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
 import { InvoiceTemplate } from "@/components/InvoiceTemplate";
 import { PlatformAlerts } from "@/components/PlatformAlerts";
+import AdminUsers from "@/components/super-admin/AdminUsers";
+import TenantIntegrations from "@/components/super-admin/TenantIntegrations";
+import AuditCenter from "@/components/super-admin/AuditCenter";
+import ErrorCenter from "@/components/super-admin/ErrorCenter";
 import {
   Shield,
   Users,
@@ -282,7 +286,7 @@ export default function SuperAdmin() {
 
       {/* Main Content */}
       <Tabs defaultValue="organizations" className="space-y-6 enhanced-tabs">
-        <TabsList className="grid w-full grid-cols-4 bg-slate-100">
+        <TabsList className="grid w-full grid-cols-8 bg-slate-100">
           <TabsTrigger
             value="organizations"
             className="tab-organizations text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
@@ -312,6 +316,10 @@ export default function SuperAdmin() {
           >
             Admin Team
           </TabsTrigger>
+          <TabsTrigger value="users" className="tab-team">Users</TabsTrigger>
+          <TabsTrigger value="integrations" className="tab-team">Integrations</TabsTrigger>
+          <TabsTrigger value="audit" className="tab-errors">Audit</TabsTrigger>
+          <TabsTrigger value="errors" className="tab-errors">Errors</TabsTrigger>
         </TabsList>
 
         <TabsContent
@@ -602,6 +610,11 @@ export default function SuperAdmin() {
             </Card>
           </div>
         </TabsContent>
+
+        <TabsContent value="users" className="space-y-6"><AdminUsers/></TabsContent>
+        <TabsContent value="integrations" className="space-y-6"><TenantIntegrations/></TabsContent>
+        <TabsContent value="audit" className="space-y-6"><AuditCenter/></TabsContent>
+        <TabsContent value="errors" className="space-y-6"><ErrorCenter/></TabsContent>
 
         <TabsContent
           value="api-keys"
