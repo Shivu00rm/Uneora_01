@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import {
   SupabaseAuthProvider,
   useSupabaseAuth,
@@ -33,6 +33,7 @@ import OrganizationMonitor from "./pages/OrganizationMonitor";
 import AppDashboard from "./pages/app/AppDashboard";
 import TeamManagement from "./pages/app/TeamManagement";
 import AppSettings from "./pages/app/AppSettings";
+import Billing from "./pages/app/Billing";
 import Manufacturing from "./pages/solutions/Manufacturing";
 import Retail from "./pages/solutions/Retail";
 import Wholesale from "./pages/solutions/Wholesale";
@@ -93,7 +94,7 @@ function AuthenticatedApp() {
       <ConditionalHeader />
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<SupabaseLogin />} />
           <Route path="/signup" element={<SupabaseLogin />} />
           <Route path="/email-auth" element={<EmailAuth />} />
@@ -380,6 +381,14 @@ function AuthenticatedApp() {
                           requiredAction="view"
                         >
                           <AppSettings />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="billing"
+                      element={
+                        <ProtectedRoute allowedRoles={["ORG_ADMIN"]}>
+                          <Billing />
                         </ProtectedRoute>
                       }
                     />
