@@ -248,7 +248,7 @@ export default function Inventory() {
     }
 
     // Check if SKU already exists
-    const existingSKU = mockInventory.find(
+    const existingSKU = inventory.find(
       (item) => item.sku.toLowerCase() === newProduct.sku.toLowerCase(),
     );
 
@@ -940,7 +940,7 @@ export default function Inventory() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockInventory.flatMap((item) =>
+                {inventory.flatMap((item) =>
                   item.movements.map((movement, index) => (
                     <div
                       key={`${item.id}-${index}`}
