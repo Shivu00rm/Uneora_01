@@ -48,7 +48,7 @@ import {
   Send,
 } from "lucide-react";
 
-const mockPurchaseOrders = [
+const initialPurchaseOrders = [
   {
     id: "PO-2024-001",
     vendor: "TechSupply India Pvt Ltd",
