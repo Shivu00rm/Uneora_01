@@ -46,7 +46,7 @@ import {
 import { ExcelImportExport } from "@/components/ExcelImportExport";
 import { POGenerator } from "@/components/POGenerator";
 
-const mockInventory = [
+const initialInventory = [
   {
     id: 1,
     sku: "APL-IP14-128",
