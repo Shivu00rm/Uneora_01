@@ -42,6 +42,9 @@ import { SuperAdminLayout } from "./components/SuperAdminLayout";
 import { RoleRoute } from "./components/SupabaseProtectedRoute";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Security from "./pages/Security";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -103,6 +106,9 @@ function AuthenticatedApp() {
           <Route path="/login" element={<SupabaseLogin />} />
           <Route path="/signup" element={<SupabaseLogin />} />
           <Route path="/email-auth" element={<EmailAuth />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/security" element={<Security />} />
 
           {/* Solution Pages */}
           <Route path="/solutions/manufacturing" element={<Manufacturing />} />
