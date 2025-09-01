@@ -74,7 +74,12 @@ function ConditionalHeader() {
   const location = useLocation();
 
   // Don't render header on tenant routes since TenantLayout provides its own header
-  if (location.pathname.startsWith("/app/") || location.pathname === "/login") {
+  if (
+    location.pathname.startsWith("/app/") ||
+    location.pathname === "/login" ||
+    location.pathname.startsWith("/super-admin") ||
+    location.pathname.startsWith("/org-flows")
+  ) {
     return null;
   }
 
