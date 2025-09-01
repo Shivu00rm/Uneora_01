@@ -28,7 +28,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
 import { InvoiceTemplate } from "@/components/InvoiceTemplate";
@@ -695,7 +694,7 @@ export default function SuperAdmin() {
                   <Input
                     id="openai-key"
                     type="password"
-                    placeholder="••••••••••••••••"
+                    placeholder="•••••••••••��••••"
                     defaultValue="sk-abc123"
                   />
                 </div>
