@@ -196,7 +196,7 @@ export default function Inventory() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const filteredInventory = mockInventory.filter((item) => {
+  const filteredInventory = inventory.filter((item) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.sku.toLowerCase().includes(searchQuery.toLowerCase());
@@ -208,13 +208,13 @@ export default function Inventory() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const lowStockItems = mockInventory.filter(
+  const lowStockItems = inventory.filter(
     (item) => item.currentStock <= item.reorderLevel,
   );
-  const outOfStockItems = mockInventory.filter(
+  const outOfStockItems = inventory.filter(
     (item) => item.currentStock === 0,
   );
-  const totalValue = mockInventory.reduce(
+  const totalValue = inventory.reduce(
     (sum, item) => sum + item.currentStock * item.unitPrice,
     0,
   );
@@ -262,7 +262,7 @@ export default function Inventory() {
     try {
       // Create new product object
       const productToAdd = {
-        id: mockInventory.length + 1,
+        id: inventory.length + 1,
         sku: newProduct.sku.toUpperCase(),
         name: newProduct.name.trim(),
         category: newProduct.category,
@@ -296,7 +296,7 @@ export default function Inventory() {
       // await addProductAPI(productToAdd);
 
       // For demo purposes, we'll add to the mock array
-      mockInventory.push(productToAdd);
+      setInventory((prev) => [...prev, productToAdd]);
 
       // Reset form
       setNewProduct({
@@ -356,7 +356,7 @@ export default function Inventory() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <POGenerator inventory={mockInventory} />
+          <POGenerator inventory={inventory} />
           <ExcelImportExport />
           <Dialog
             open={isStockMovementOpen}
@@ -383,7 +383,7 @@ export default function Inventory() {
                       <SelectValue placeholder="Select product" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockInventory.map((item) => (
+                      {inventory.map((item) => (
                         <SelectItem key={item.id} value={item.sku}>
                           {item.name} - {item.sku}
                         </SelectItem>
@@ -645,7 +645,7 @@ export default function Inventory() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockInventory.length}</div>
+            <div className="text-2xl font-bold">{inventory.length}</div>
             <p className="text-xs text-muted-foreground">Active SKUs</p>
           </CardContent>
         </Card>
