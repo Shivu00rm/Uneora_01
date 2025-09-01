@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -22,6 +22,7 @@ import { Checkbox } from "./ui/checkbox";
 import { Badge } from "./ui/badge";
 import { getVendorContact, upsertVendorContact } from "@/lib/vendorContacts";
 import { Separator } from "./ui/separator";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   FileText,
   Calculator,
@@ -67,12 +68,17 @@ interface POGeneratorProps {
 }
 
 export function POGenerator({ inventory }: POGeneratorProps) {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [generationType, setGenerationType] = useState<"single" | "all">("all");
   const [selectedVendor, setSelectedVendor] = useState("");
   const [orderFrequency, setOrderFrequency] = useState("weekly");
   const [includeAlmostLow, setIncludeAlmostLow] = useState(true);
   const [customCompany, setCustomCompany] = useState("");
+  const orgName = user?.organizationName || "";
+  useEffect(() => {
+    if (!customCompany && orgName) setCustomCompany(orgName);
+  }, [orgName]);
   const [gstRate, setGstRate] = useState(18);
   const [sgstRate, setSgstRate] = useState(9);
   const [cgstRate, setCgstRate] = useState(9);
@@ -303,7 +309,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
     const vendorSGST = vendorSubtotal * (sgstRate / 100);
     const vendorCGST = vendorSubtotal * (cgstRate / 100);
     const vendorTotal = vendorSubtotal + vendorGST + vendorSGST + vendorCGST;
-    return `<!doctype html><html><head><meta charset=\"utf-8\"/><title>PO-${new Date().getFullYear()}-${vendor.replace(/\s+/g, "").substring(0,3).toUpperCase()}</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:24px}h1{margin:0 0 8px}table{border-collapse:collapse;width:100%;margin-top:16px}td,th{border:1px solid #ddd;padding:8px;text-align:left}small{color:#555}</style></head><body><h1>Purchase Order</h1><small>Date: ${new Date().toLocaleDateString()}</small><div style=\"margin-top:12px\"><strong>Vendor:</strong> ${vendor}</div><div style=\"margin-top:4px\"><strong>Company:</strong> ${customCompany || "Uneora Company"}</div><table><thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead><tbody>${items
+    return `<!doctype html><html><head><meta charset=\"utf-8\"/><title>PO-${new Date().getFullYear()}-${vendor.replace(/\s+/g, "").substring(0,3).toUpperCase()}</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:24px}h1{margin:0 0 8px}table{border-collapse:collapse;width:100%;margin-top:16px}td,th{border:1px solid #ddd;padding:8px;text-align:left}small{color:#555}</style></head><body><h1>Purchase Order</h1><small>Date: ${new Date().toLocaleDateString()}</small><div style=\"margin-top:12px\"><strong>Vendor:</strong> ${vendor}</div><div style=\"margin-top:4px\"><strong>Company:</strong> ${customCompany || orgName || ""}</div><table><thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead><tbody>${items
       .map(
         (it) => `<tr><td>${it.product.name}</td><td>${it.customQty}</td><td>₹${it.product.unitPrice.toLocaleString()}</td><td>₹${(it.customQty * it.product.unitPrice).toLocaleString()}</td></tr>`,
       )
@@ -637,7 +643,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                           <div className="flex items-center gap-2">
                             <Building2 className="h-4 w-4" />
                             <span className="font-medium">
-                              {customCompany || "Uneora Company"}
+                              {customCompany || orgName}
                             </span>
                           </div>
                           <div className="text-sm text-muted-foreground">
@@ -816,7 +822,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                             Authorized Signature
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {customCompany || "Uneora Company"}
+                            {customCompany || orgName}
                           </div>
                         </div>
                       </div>
