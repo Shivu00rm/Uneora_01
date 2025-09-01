@@ -5,6 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import { PLAN_FEATURES, type Feature, type Plan } from "@/lib/planFeatures";
 
 interface Organization {
   id: string;
