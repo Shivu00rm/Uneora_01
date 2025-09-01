@@ -175,6 +175,7 @@ const getStockStatus = (currentStock: number, reorderLevel: number) => {
 };
 
 export default function Inventory() {
+  const [inventory, setInventory] = useState(initialInventory);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
