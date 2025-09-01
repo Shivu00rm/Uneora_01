@@ -211,9 +211,7 @@ export default function Inventory() {
   const lowStockItems = inventory.filter(
     (item) => item.currentStock <= item.reorderLevel,
   );
-  const outOfStockItems = inventory.filter(
-    (item) => item.currentStock === 0,
-  );
+  const outOfStockItems = inventory.filter((item) => item.currentStock === 0);
   const totalValue = inventory.reduce(
     (sum, item) => sum + item.currentStock * item.unitPrice,
     0,

@@ -23,7 +23,9 @@ function saveStore(store: Record<string, VendorContact>) {
   } catch {}
 }
 
-export function getVendorContact(vendorName: string): VendorContact | undefined {
+export function getVendorContact(
+  vendorName: string,
+): VendorContact | undefined {
   const store = loadStore();
   return store[vendorName];
 }

@@ -105,7 +105,7 @@ const statusConfig = {
   cancelled: { color: "destructive", icon: XCircle, label: "Cancelled" },
 } as const;
 
-type Order = typeof initialPurchaseOrders[number];
+type Order = (typeof initialPurchaseOrders)[number];
 
 type SendMethod = "email" | "whatsapp";
 
@@ -125,9 +125,9 @@ export default function PurchaseOrders() {
   const [poReference, setPoReference] = useState("");
   const [poPriority, setPoPriority] = useState("");
   const [poNotes, setPoNotes] = useState("");
-  const [poItems, setPoItems] = useState<{ product: string; qty: number; price: number }[]>([
-    { product: "", qty: 0, price: 0 },
-  ]);
+  const [poItems, setPoItems] = useState<
+    { product: string; qty: number; price: number }[]
+  >([{ product: "", qty: 0, price: 0 }]);
   const [isCreatePOOpen, setIsCreatePOOpen] = useState(false);
 
   // Send flow state
@@ -137,17 +137,21 @@ export default function PurchaseOrders() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactWhatsApp, setContactWhatsApp] = useState("");
 
-  const addItemRow = () => setPoItems((prev) => [...prev, { product: "", qty: 0, price: 0 }]);
+  const addItemRow = () =>
+    setPoItems((prev) => [...prev, { product: "", qty: 0, price: 0 }]);
   const updateItem = (
     idx: number,
     patch: Partial<{ product: string; qty: number; price: number }>,
   ) => {
-    setPoItems((prev) => prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)));
+    setPoItems((prev) =>
+      prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
+    );
   };
   const removeItem = (idx: number) =>
     setPoItems((prev) => prev.filter((_, i) => i !== idx));
 
-  const lineTotal = (it: { qty: number; price: number }) => (Number(it.qty) || 0) * (Number(it.price) || 0);
+  const lineTotal = (it: { qty: number; price: number }) =>
+    (Number(it.qty) || 0) * (Number(it.price) || 0);
   const grandTotal = poItems.reduce((sum, it) => sum + lineTotal(it), 0);
   const totalQty = poItems.reduce((sum, it) => sum + (Number(it.qty) || 0), 0);
 
@@ -179,14 +183,18 @@ export default function PurchaseOrders() {
     setOrders((prev) => [newOrder, ...prev]);
     resetForm();
     setIsCreatePOOpen(false);
-    toast({ title: "PO created", description: `${nextId} created for ${poVendor}` });
+    toast({
+      title: "PO created",
+      description: `${nextId} created for ${poVendor}`,
+    });
   };
 
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.vendor.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = selectedStatus === "all" || order.status === selectedStatus;
+    const matchesStatus =
+      selectedStatus === "all" || order.status === selectedStatus;
     return matchesSearch && matchesStatus;
   });
 
@@ -204,7 +212,9 @@ export default function PurchaseOrders() {
   const getPriorityColor = (expectedDelivery: string) => {
     const deliveryDate = new Date(expectedDelivery);
     const today = new Date();
-    const diffDays = Math.ceil((deliveryDate.getTime() - today.getTime()) / (1000 * 3600 * 24));
+    const diffDays = Math.ceil(
+      (deliveryDate.getTime() - today.getTime()) / (1000 * 3600 * 24),
+    );
     if (diffDays < 0) return "text-destructive";
     if (diffDays <= 3) return "text-yellow-600";
     return "text-muted-foreground";
@@ -246,7 +256,10 @@ export default function PurchaseOrders() {
 
   function startSendFlow(order: Order) {
     if (!canSend) {
-      toast({ title: "Not allowed", description: "You don't have permission to send POs" });
+      toast({
+        title: "Not allowed",
+        description: "You don't have permission to send POs",
+      });
       return;
     }
     setSelectedOrder(order);
@@ -264,7 +277,10 @@ export default function PurchaseOrders() {
 
   function saveContactAndContinue() {
     if (!selectedOrder) return;
-    upsertVendorContact(selectedOrder.vendor, { email: contactEmail, whatsapp: contactWhatsApp });
+    upsertVendorContact(selectedOrder.vendor, {
+      email: contactEmail,
+      whatsapp: contactWhatsApp,
+    });
     setContactDialogOpen(false);
     setSendDialogOpen(true);
   }
@@ -277,10 +293,16 @@ export default function PurchaseOrders() {
     const body = `Hello,\n\nPlease find the attached Purchase Order ${selectedOrder.id} for ${selectedOrder.vendor}.\nTotal: ₹${selectedOrder.totalAmount.toLocaleString()} | Items: ${selectedOrder.items}.\nExpected Delivery: ${new Date(selectedOrder.expectedDelivery).toLocaleDateString()}.\n\nThank you.`;
     if (method === "email" && contactEmail) {
       openGmail(contactEmail, subject, body);
-      toast({ title: "Compose opened", description: "Gmail compose opened. Attach the downloaded PO." });
+      toast({
+        title: "Compose opened",
+        description: "Gmail compose opened. Attach the downloaded PO.",
+      });
     } else if (method === "whatsapp" && contactWhatsApp) {
       openWhatsApp(contactWhatsApp, `${subject}\n\n${body}`);
-      toast({ title: "WhatsApp opened", description: "Please send the message with the PO details." });
+      toast({
+        title: "WhatsApp opened",
+        description: "Please send the message with the PO details.",
+      });
     }
     setSendDialogOpen(false);
   }
@@ -290,8 +312,12 @@ export default function PurchaseOrders() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Purchase Orders</h1>
-          <p className="text-muted-foreground">Manage and track all purchase orders with real-time status updates</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Purchase Orders
+          </h1>
+          <p className="text-muted-foreground">
+            Manage and track all purchase orders with real-time status updates
+          </p>
         </div>
 
         <Dialog open={isCreatePOOpen} onOpenChange={setIsCreatePOOpen}>
@@ -304,7 +330,9 @@ export default function PurchaseOrders() {
           <DialogContent className="sm:max-w-3xl">
             <DialogHeader>
               <DialogTitle>Create Purchase Order</DialogTitle>
-              <DialogDescription>Generate a new purchase order with vendor and product details.</DialogDescription>
+              <DialogDescription>
+                Generate a new purchase order with vendor and product details.
+              </DialogDescription>
             </DialogHeader>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto">
               <div className="space-y-2">
@@ -324,11 +352,21 @@ export default function PurchaseOrders() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="po-delivery">Expected Delivery</Label>
-                <Input id="po-delivery" type="date" value={poExpected} onChange={(e) => setPoExpected(e.target.value)} />
+                <Input
+                  id="po-delivery"
+                  type="date"
+                  value={poExpected}
+                  onChange={(e) => setPoExpected(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="po-reference">Reference Number</Label>
-                <Input id="po-reference" placeholder="Internal reference" value={poReference} onChange={(e) => setPoReference(e.target.value)} />
+                <Input
+                  id="po-reference"
+                  placeholder="Internal reference"
+                  value={poReference}
+                  onChange={(e) => setPoReference(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="po-priority">Priority</Label>
@@ -346,7 +384,12 @@ export default function PurchaseOrders() {
               </div>
               <div className="md:col-span-2 space-y-2">
                 <Label htmlFor="po-notes">Notes</Label>
-                <Textarea id="po-notes" placeholder="Additional instructions or notes" value={poNotes} onChange={(e) => setPoNotes(e.target.value)} />
+                <Textarea
+                  id="po-notes"
+                  placeholder="Additional instructions or notes"
+                  value={poNotes}
+                  onChange={(e) => setPoNotes(e.target.value)}
+                />
               </div>
               <div className="md:col-span-2 space-y-4 border-t pt-4">
                 <div className="flex items-center justify-between">
@@ -363,30 +406,45 @@ export default function PurchaseOrders() {
                     <span className="col-span-2">Total</span>
                   </div>
                   {poItems.map((it, idx) => (
-                    <div key={idx} className="grid grid-cols-12 gap-2 items-center">
+                    <div
+                      key={idx}
+                      className="grid grid-cols-12 gap-2 items-center"
+                    >
                       <Input
                         className="col-span-6"
                         placeholder="Product name"
                         value={it.product}
-                        onChange={(e) => updateItem(idx, { product: e.target.value })}
+                        onChange={(e) =>
+                          updateItem(idx, { product: e.target.value })
+                        }
                       />
                       <Input
                         className="col-span-2"
                         type="number"
                         min={0}
                         value={it.qty}
-                        onChange={(e) => updateItem(idx, { qty: Number(e.target.value) })}
+                        onChange={(e) =>
+                          updateItem(idx, { qty: Number(e.target.value) })
+                        }
                       />
                       <Input
                         className="col-span-2"
                         type="number"
                         min={0}
                         value={it.price}
-                        onChange={(e) => updateItem(idx, { price: Number(e.target.value) })}
+                        onChange={(e) =>
+                          updateItem(idx, { price: Number(e.target.value) })
+                        }
                       />
-                      <div className="col-span-2 text-sm text-right">₹{lineTotal(it).toLocaleString()}</div>
+                      <div className="col-span-2 text-sm text-right">
+                        ₹{lineTotal(it).toLocaleString()}
+                      </div>
                       {poItems.length > 1 && (
-                        <Button variant="ghost" size="sm" onClick={() => removeItem(idx)}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeItem(idx)}
+                        >
                           <XCircle className="h-4 w-4" />
                         </Button>
                       )}
@@ -400,15 +458,24 @@ export default function PurchaseOrders() {
                   </div>
                   <div>
                     <div className="text-muted-foreground">Grand Total</div>
-                    <div className="font-medium">₹{grandTotal.toLocaleString()}</div>
+                    <div className="font-medium">
+                      ₹{grandTotal.toLocaleString()}
+                    </div>
                   </div>
                 </div>
               </div>
               <div className="md:col-span-2 flex gap-2 pt-2">
-                <Button className="flex-1" onClick={handleCreatePO} disabled={!canCreate}>
+                <Button
+                  className="flex-1"
+                  onClick={handleCreatePO}
+                  disabled={!canCreate}
+                >
                   Create Purchase Order
                 </Button>
-                <Button variant="outline" onClick={() => setIsCreatePOOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsCreatePOOpen(false)}
+                >
                   Cancel
                 </Button>
               </div>
@@ -432,11 +499,15 @@ export default function PurchaseOrders() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Approval</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Pending Approval
+            </CardTitle>
             <Clock className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{orders.filter((po) => po.status === "pending").length}</div>
+            <div className="text-2xl font-bold">
+              {orders.filter((po) => po.status === "pending").length}
+            </div>
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
         </Card>
@@ -447,7 +518,13 @@ export default function PurchaseOrders() {
             <Truck className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{orders.filter((po) => po.status === "approved" || po.status === "shipped").length}</div>
+            <div className="text-2xl font-bold">
+              {
+                orders.filter(
+                  (po) => po.status === "approved" || po.status === "shipped",
+                ).length
+              }
+            </div>
             <p className="text-xs text-muted-foreground">Being processed</p>
           </CardContent>
         </Card>
@@ -459,7 +536,11 @@ export default function PurchaseOrders() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ₹{(orders.reduce((sum, po) => sum + po.totalAmount, 0) / 100000).toFixed(1)}L
+              ₹
+              {(
+                orders.reduce((sum, po) => sum + po.totalAmount, 0) / 100000
+              ).toFixed(1)}
+              L
             </div>
             <p className="text-xs text-muted-foreground">This month</p>
           </CardContent>
@@ -469,18 +550,30 @@ export default function PurchaseOrders() {
       {/* Main Content */}
       <Tabs defaultValue="orders" className="space-y-6 enhanced-tabs">
         <TabsList className="grid w-full grid-cols-3 bg-slate-100">
-          <TabsTrigger value="orders" className="tab-orders text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">
+          <TabsTrigger
+            value="orders"
+            className="tab-orders text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
             All Orders
           </TabsTrigger>
-          <TabsTrigger value="pending" className="tab-pending text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">
+          <TabsTrigger
+            value="pending"
+            className="tab-pending text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
             Pending Approval
           </TabsTrigger>
-          <TabsTrigger value="tracking" className="tab-tracking text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold">
+          <TabsTrigger
+            value="tracking"
+            className="tab-tracking text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
+          >
             Delivery Tracking
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="orders" className="space-y-6 tab-content-watermark uneora-watermark">
+        <TabsContent
+          value="orders"
+          className="space-y-6 tab-content-watermark uneora-watermark"
+        >
           {/* Filters */}
           <Card>
             <CardContent className="pt-6">
@@ -494,7 +587,10 @@ export default function PurchaseOrders() {
                     className="pl-9"
                   />
                 </div>
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <Select
+                  value={selectedStatus}
+                  onValueChange={setSelectedStatus}
+                >
                   <SelectTrigger className="w-full sm:w-48">
                     <SelectValue placeholder="All Status" />
                   </SelectTrigger>
@@ -540,18 +636,28 @@ export default function PurchaseOrders() {
                             {new Date(order.date).toLocaleDateString()}
                           </div>
                           {order.approvedBy && (
-                            <div className="text-sm text-muted-foreground">Approved by: {order.approvedBy}</div>
+                            <div className="text-sm text-muted-foreground">
+                              Approved by: {order.approvedBy}
+                            </div>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="font-medium">{order.vendor}</div>
                       </TableCell>
-                      <TableCell>{getStatusBadge(order.status as keyof typeof statusConfig)}</TableCell>
                       <TableCell>
-                        <div className={`flex items-center gap-1 ${getPriorityColor(order.expectedDelivery)}`}>
+                        {getStatusBadge(
+                          order.status as keyof typeof statusConfig,
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div
+                          className={`flex items-center gap-1 ${getPriorityColor(order.expectedDelivery)}`}
+                        >
                           <Calendar className="h-3 w-3" />
-                          {new Date(order.expectedDelivery).toLocaleDateString()}
+                          {new Date(
+                            order.expectedDelivery,
+                          ).toLocaleDateString()}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -568,19 +674,44 @@ export default function PurchaseOrders() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => window.open(URL.createObjectURL(new Blob([buildPOHtml(order)], { type: "text/html" })), "_blank") }>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              window.open(
+                                URL.createObjectURL(
+                                  new Blob([buildPOHtml(order)], {
+                                    type: "text/html",
+                                  }),
+                                ),
+                                "_blank",
+                              )
+                            }
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm" onClick={() => downloadPO(order)}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => downloadPO(order)}
+                          >
                             <Download className="h-4 w-4" />
                           </Button>
                           {canSend && (
-                            <Button variant="ghost" size="sm" onClick={() => startSendFlow(order)}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => startSendFlow(order)}
+                            >
                               <Send className="h-4 w-4" />
                             </Button>
                           )}
                           {order.status === "pending" && (
-                            <Button variant="ghost" size="sm" className="text-emerald-600">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-emerald-600"
+                            >
                               <CheckCircle className="h-4 w-4" />
                             </Button>
                           )}
@@ -594,7 +725,10 @@ export default function PurchaseOrders() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="pending" className="space-y-6 tab-content-watermark uneora-watermark">
+        <TabsContent
+          value="pending"
+          className="space-y-6 tab-content-watermark uneora-watermark"
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -607,17 +741,41 @@ export default function PurchaseOrders() {
                 {orders
                   .filter((order) => order.status === "pending")
                   .map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={order.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="space-y-1">
                         <div className="font-medium">{order.id}</div>
-                        <div className="text-sm text-muted-foreground">{order.vendor}</div>
-                        <div className="text-sm text-muted-foreground">₹{order.totalAmount.toLocaleString()} • {order.items} items</div>
+                        <div className="text-sm text-muted-foreground">
+                          {order.vendor}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          ₹{order.totalAmount.toLocaleString()} • {order.items}{" "}
+                          items
+                        </div>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => window.open(URL.createObjectURL(new Blob([buildPOHtml(order)], { type: "text/html" })), "_blank")}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            window.open(
+                              URL.createObjectURL(
+                                new Blob([buildPOHtml(order)], {
+                                  type: "text/html",
+                                }),
+                              ),
+                              "_blank",
+                            )
+                          }
+                        >
                           <Eye className="h-4 w-4 mr-2" /> Review
                         </Button>
-                        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+                        <Button
+                          size="sm"
+                          className="bg-emerald-600 hover:bg-emerald-700"
+                        >
                           <CheckCircle className="h-4 w-4 mr-2" /> Approve
                         </Button>
                         <Button variant="destructive" size="sm">
@@ -631,7 +789,10 @@ export default function PurchaseOrders() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="tracking" className="space-y-6 tab-content-watermark uneora-watermark">
+        <TabsContent
+          value="tracking"
+          className="space-y-6 tab-content-watermark uneora-watermark"
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -642,22 +803,37 @@ export default function PurchaseOrders() {
             <CardContent>
               <div className="space-y-4">
                 {orders
-                  .filter((order) => order.status === "approved" || order.status === "shipped" || order.status === "delivered")
+                  .filter(
+                    (order) =>
+                      order.status === "approved" ||
+                      order.status === "shipped" ||
+                      order.status === "delivered",
+                  )
                   .map((order) => (
                     <div key={order.id} className="p-4 border rounded-lg">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <div className="font-medium">{order.id}</div>
-                          <div className="text-sm text-muted-foreground">{order.vendor}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {order.vendor}
+                          </div>
                         </div>
-                        {getStatusBadge(order.status as keyof typeof statusConfig)}
+                        {getStatusBadge(
+                          order.status as keyof typeof statusConfig,
+                        )}
                       </div>
                       <div className="w-full bg-muted rounded-full h-2 mb-2">
-                        <div className="bg-primary h-2 rounded-full transition-all duration-300" style={{ width: `${order.progress}%` }} />
+                        <div
+                          className="bg-primary h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${order.progress}%` }}
+                        />
                       </div>
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>
-                          Expected: {new Date(order.expectedDelivery).toLocaleDateString()}
+                          Expected:{" "}
+                          {new Date(
+                            order.expectedDelivery,
+                          ).toLocaleDateString()}
                         </span>
                         <span>{order.progress}% Complete</span>
                       </div>
@@ -681,17 +857,33 @@ export default function PurchaseOrders() {
           <div className="space-y-3">
             <div className="space-y-2">
               <Label htmlFor="vendor-email">Email</Label>
-              <Input id="vendor-email" type="email" placeholder="orders@vendor.com" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
+              <Input
+                id="vendor-email"
+                type="email"
+                placeholder="orders@vendor.com"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="vendor-wa">WhatsApp (digits only)</Label>
-              <Input id="vendor-wa" placeholder="919876543210" value={contactWhatsApp} onChange={(e) => setContactWhatsApp(e.target.value.replace(/\D+/g, ""))} />
+              <Input
+                id="vendor-wa"
+                placeholder="919876543210"
+                value={contactWhatsApp}
+                onChange={(e) =>
+                  setContactWhatsApp(e.target.value.replace(/\D+/g, ""))
+                }
+              />
             </div>
             <div className="flex gap-2 pt-2">
               <Button className="flex-1" onClick={saveContactAndContinue}>
                 Continue
               </Button>
-              <Button variant="outline" onClick={() => setContactDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setContactDialogOpen(false)}
+              >
                 Cancel
               </Button>
             </div>
@@ -705,14 +897,22 @@ export default function PurchaseOrders() {
           <DialogHeader>
             <DialogTitle>Send Purchase Order</DialogTitle>
             <DialogDescription>
-              Choose how you want to send PO {selectedOrder?.id} to {selectedOrder?.vendor}
+              Choose how you want to send PO {selectedOrder?.id} to{" "}
+              {selectedOrder?.vendor}
             </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <Button disabled={!contactEmail} onClick={() => handleSend("email")}>
+            <Button
+              disabled={!contactEmail}
+              onClick={() => handleSend("email")}
+            >
               <Send className="h-4 w-4 mr-2" /> Email via Gmail
             </Button>
-            <Button variant="outline" disabled={!contactWhatsApp} onClick={() => handleSend("whatsapp")}>
+            <Button
+              variant="outline"
+              disabled={!contactWhatsApp}
+              onClick={() => handleSend("whatsapp")}
+            >
               <Send className="h-4 w-4 mr-2" /> WhatsApp
             </Button>
           </div>

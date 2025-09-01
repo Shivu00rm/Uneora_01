@@ -309,11 +309,14 @@ export function POGenerator({ inventory }: POGeneratorProps) {
     const vendorSGST = vendorSubtotal * (sgstRate / 100);
     const vendorCGST = vendorSubtotal * (cgstRate / 100);
     const vendorTotal = vendorSubtotal + vendorGST + vendorSGST + vendorCGST;
-    return `<!doctype html><html><head><meta charset=\"utf-8\"/><title>PO-${new Date().getFullYear()}-${vendor.replace(/\s+/g, "").substring(0,3).toUpperCase()}</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:24px}h1{margin:0 0 8px}table{border-collapse:collapse;width:100%;margin-top:16px}td,th{border:1px solid #ddd;padding:8px;text-align:left}small{color:#555}</style></head><body><h1>Purchase Order</h1><small>Date: ${new Date().toLocaleDateString()}</small><div style=\"margin-top:12px\"><strong>Vendor:</strong> ${vendor}</div><div style=\"margin-top:4px\"><strong>Company:</strong> ${customCompany || orgName || ""}</div><table><thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead><tbody>${items
+    return `<!doctype html><html><head><meta charset=\"utf-8\"/><title>PO-${new Date().getFullYear()}-${vendor.replace(/\s+/g, "").substring(0, 3).toUpperCase()}</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:24px}h1{margin:0 0 8px}table{border-collapse:collapse;width:100%;margin-top:16px}td,th{border:1px solid #ddd;padding:8px;text-align:left}small{color:#555}</style></head><body><h1>Purchase Order</h1><small>Date: ${new Date().toLocaleDateString()}</small><div style=\"margin-top:12px\"><strong>Vendor:</strong> ${vendor}</div><div style=\"margin-top:4px\"><strong>Company:</strong> ${customCompany || orgName || ""}</div><table><thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead><tbody>${items
       .map(
-        (it) => `<tr><td>${it.product.name}</td><td>${it.customQty}</td><td>₹${it.product.unitPrice.toLocaleString()}</td><td>₹${(it.customQty * it.product.unitPrice).toLocaleString()}</td></tr>`,
+        (it) =>
+          `<tr><td>${it.product.name}</td><td>${it.customQty}</td><td>₹${it.product.unitPrice.toLocaleString()}</td><td>₹${(it.customQty * it.product.unitPrice).toLocaleString()}</td></tr>`,
       )
-      .join("")}</tbody></table><div style=\"margin-top:12px\"><div>Subtotal: ₹${vendorSubtotal.toLocaleString()}</div><div>GST (${gstRate}%): ₹${vendorGST.toLocaleString()}</div><div>SGST (${sgstRate}%): ₹${vendorSGST.toLocaleString()}</div><div>CGST (${cgstRate}%): ₹${vendorCGST.toLocaleString()}</div><div><strong>Total: ₹${vendorTotal.toLocaleString()}</strong></div></div></body></html>`;
+      .join(
+        "",
+      )}</tbody></table><div style=\"margin-top:12px\"><div>Subtotal: ₹${vendorSubtotal.toLocaleString()}</div><div>GST (${gstRate}%): ₹${vendorGST.toLocaleString()}</div><div>SGST (${sgstRate}%): ₹${vendorSGST.toLocaleString()}</div><div>CGST (${cgstRate}%): ₹${vendorCGST.toLocaleString()}</div><div><strong>Total: ₹${vendorTotal.toLocaleString()}</strong></div></div></body></html>`;
   };
   const downloadVendorPO = (vendor: string, items: POItem[]) => {
     const html = buildVendorPOHtml(vendor, items);
@@ -321,7 +324,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `PO-${new Date().getFullYear()}-${vendor.replace(/\s+/g, "").substring(0,3).toUpperCase()}.html`;
+    a.download = `PO-${new Date().getFullYear()}-${vendor.replace(/\s+/g, "").substring(0, 3).toUpperCase()}.html`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -359,7 +362,10 @@ export function POGenerator({ inventory }: POGeneratorProps) {
 
   const saveContact = () => {
     if (!sendVendor) return;
-    upsertVendorContact(sendVendor, { email: contactEmail, whatsapp: contactWhatsApp });
+    upsertVendorContact(sendVendor, {
+      email: contactEmail,
+      whatsapp: contactWhatsApp,
+    });
   };
 
   const handleSend = (method: "email" | "whatsapp") => {
@@ -843,48 +849,74 @@ export function POGenerator({ inventory }: POGeneratorProps) {
             })}
           </div>
         )}
-      {/* Send to Vendors Dialog */}
-      <Dialog open={sendDialogOpen} onOpenChange={setSendDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Send Purchase Order</DialogTitle>
-            <DialogDescription>Select vendor and sending method</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
-            <div className="space-y-2">
-              <Label>Vendor</Label>
-              <Select value={sendVendor} onValueChange={onVendorChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose vendor" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Array.from(groupedByVendor.keys()).map((v) => (
-                    <SelectItem key={v} value={v}>{v}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Send to Vendors Dialog */}
+        <Dialog open={sendDialogOpen} onOpenChange={setSendDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Send Purchase Order</DialogTitle>
+              <DialogDescription>
+                Select vendor and sending method
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3">
               <div className="space-y-2">
-                <Label>Email</Label>
-                <Input type="email" placeholder="orders@vendor.com" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
+                <Label>Vendor</Label>
+                <Select value={sendVendor} onValueChange={onVendorChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose vendor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from(groupedByVendor.keys()).map((v) => (
+                      <SelectItem key={v} value={v}>
+                        {v}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="space-y-2">
-                <Label>WhatsApp (digits only)</Label>
-                <Input placeholder="919876543210" value={contactWhatsApp} onChange={(e) => setContactWhatsApp(e.target.value.replace(/\D+/g, ""))} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label>Email</Label>
+                  <Input
+                    type="email"
+                    placeholder="orders@vendor.com"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>WhatsApp (digits only)</Label>
+                  <Input
+                    placeholder="919876543210"
+                    value={contactWhatsApp}
+                    onChange={(e) =>
+                      setContactWhatsApp(e.target.value.replace(/\D+/g, ""))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={saveContact}>
+                  Save Contact
+                </Button>
+                <div className="flex-1" />
+                <Button
+                  disabled={!contactEmail}
+                  onClick={() => handleSend("email")}
+                >
+                  Email via Gmail
+                </Button>
+                <Button
+                  variant="outline"
+                  disabled={!contactWhatsApp}
+                  onClick={() => handleSend("whatsapp")}
+                >
+                  WhatsApp
+                </Button>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={saveContact}>Save Contact</Button>
-              <div className="flex-1" />
-              <Button disabled={!contactEmail} onClick={() => handleSend("email")}>Email via Gmail</Button>
-              <Button variant="outline" disabled={!contactWhatsApp} onClick={() => handleSend("whatsapp")}>
-                WhatsApp
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
       </DialogContent>
     </Dialog>
   );
