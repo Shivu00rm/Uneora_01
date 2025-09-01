@@ -13,7 +13,15 @@ export function createServer() {
   app.use(attachRequestId);
 
   // Webhook must receive raw body for signature verification
-  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), stripeWebhook);
+  app.post(
+    "/api/stripe/webhook",
+    express.raw({ type: "application/json" }),
+    (req, _res, next) => {
+      (req as any).rawBody = req.body as Buffer;
+      next();
+    },
+    stripeWebhook,
+  );
 
   // JSON parsing for other routes
   app.use(express.json());
