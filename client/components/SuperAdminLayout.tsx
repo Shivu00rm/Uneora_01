@@ -4,7 +4,8 @@ import { Alert, AlertDescription } from "./ui/alert";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { Crown, Shield, ExternalLink, Building2 } from "lucide-react";
+import { Crown, Shield, Building2, ArrowLeft } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 interface SuperAdminLayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ interface SuperAdminLayoutProps {
 
 export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
   const { user } = useAuth();
+  const location = useLocation();
 
   if (!user || user.role !== "SUPER_ADMIN") {
     return (
