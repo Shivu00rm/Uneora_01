@@ -605,7 +605,7 @@ export default function PurchaseOrders() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockPurchaseOrders
+                {orders
                   .filter(
                     (order) =>
                       order.status === "approved" ||
