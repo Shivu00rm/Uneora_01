@@ -44,6 +44,21 @@ export function createServer() {
   app.get("/api/admin/audit/export", exportAuditCSV);
   app.post("/api/admin/impersonate", impersonate);
   app.post("/api/admin/errors/replay", replayError);
+  app.get("/api/admin/events/outbox", getOutbox);
+  app.get("/api/admin/dlq", getDLQ);
+  app.post("/api/admin/dlq/replay", dlqReplay);
+  app.get("/api/admin/feature-flags", getFeatureFlags);
+  app.post("/api/admin/feature-flags", setFeatureFlags);
+  app.get("/api/admin/config-changes", getConfigChanges);
+  app.get("/api/admin/stripe/events", listStripeEvents);
+  app.post("/api/admin/subscriptions/reconcile", reconcileSubscriptions);
+  app.post("/api/admin/invites/send", sendInvite);
+  app.post("/api/admin/rbac/update", rbacUpdate);
+  app.post("/api/admin/gdpr/export", gdprExport);
+  app.post("/api/admin/gdpr/delete", gdprDelete);
+  app.post("/api/admin/integrations/rotate", rotateKeys);
+  app.post("/api/admin/integrations/revoke", revokeKeys);
+  app.post("/api/admin/integrations/retry-syncs", retrySyncs);
 
   // Error handler last
   app.use(errorHandler);
