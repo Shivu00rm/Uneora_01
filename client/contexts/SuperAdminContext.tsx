@@ -68,6 +68,9 @@ interface SuperAdminContextType {
   reactivateOrganization: (orgId: string) => void;
   getOrganizationMetrics: (orgId: string) => any;
   hasSystemPermission: (permission: string) => boolean;
+  getPlanFeatures: (plan: Plan) => Feature[];
+  applyPlanDefaults: (orgId: string) => void;
+  setOrgFeature: (orgId: string, feature: Feature, enabled: boolean) => void;
 }
 
 const SuperAdminContext = createContext<SuperAdminContextType | undefined>(
