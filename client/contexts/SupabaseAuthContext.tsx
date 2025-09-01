@@ -285,7 +285,10 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         "Login failed";
 
       // If Supabase API key is invalid, switch to mock mode automatically
-      if (typeof errorMessage === "string" && errorMessage.includes("Invalid API key")) {
+      if (
+        typeof errorMessage === "string" &&
+        errorMessage.includes("Invalid API key")
+      ) {
         try {
           localStorage.setItem("USE_MOCK_SUPABASE", "1");
         } catch {}

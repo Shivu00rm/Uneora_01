@@ -4,9 +4,24 @@ import { Button } from "@/components/ui/button";
 import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
 
 const plans = [
-  { id: "starter", name: "Starter", price: "$0", features: ["Up to 3 users", "Community support" ] },
-  { id: "growth", name: "Growth", price: "$49/mo", features: ["Up to 25 users", "Priority support"] },
-  { id: "pro", name: "Pro", price: "$199/mo", features: ["Unlimited users", "SLA support"] },
+  {
+    id: "starter",
+    name: "Starter",
+    price: "$0",
+    features: ["Up to 3 users", "Community support"],
+  },
+  {
+    id: "growth",
+    name: "Growth",
+    price: "$49/mo",
+    features: ["Up to 25 users", "Priority support"],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    price: "$199/mo",
+    features: ["Unlimited users", "SLA support"],
+  },
 ];
 
 export default function Billing() {
@@ -58,7 +73,9 @@ export default function Billing() {
     <div className="container mx-auto py-8">
       <h1 className="text-2xl font-semibold mb-6">Billing</h1>
       {error && (
-        <div className="mb-4 text-sm text-red-600 border border-red-200 bg-red-50 rounded p-2">{error}</div>
+        <div className="mb-4 text-sm text-red-600 border border-red-200 bg-red-50 rounded p-2">
+          {error}
+        </div>
       )}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {plans.map((p) => (
@@ -75,7 +92,11 @@ export default function Billing() {
                   <li key={f}>{f}</li>
                 ))}
               </ul>
-              <Button className="w-full" disabled={loading === p.id} onClick={() => startCheckout(p.id)}>
+              <Button
+                className="w-full"
+                disabled={loading === p.id}
+                onClick={() => startCheckout(p.id)}
+              >
                 {loading === p.id ? "Starting…" : "Choose Plan"}
               </Button>
             </CardContent>
@@ -88,7 +109,11 @@ export default function Billing() {
             <CardTitle>Manage Subscription</CardTitle>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" onClick={openPortal} disabled={loading === "portal"}>
+            <Button
+              variant="outline"
+              onClick={openPortal}
+              disabled={loading === "portal"}
+            >
               {loading === "portal" ? "Opening…" : "Open Customer Portal"}
             </Button>
           </CardContent>

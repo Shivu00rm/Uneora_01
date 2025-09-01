@@ -84,7 +84,8 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
           {location.pathname.startsWith("/org-flows") ? (
             <div className="flex items-center justify-between gap-4">
               <div>
-                <strong>Organization Health Monitor:</strong> View fleet-wide status and incidents.
+                <strong>Organization Health Monitor:</strong> View fleet-wide
+                status and incidents.
               </div>
               <Button variant="outline" size="sm" asChild>
                 <Link to="/super-admin">
@@ -94,11 +95,17 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
             </div>
           ) : (
             <>
-              <strong>Platform Mode:</strong> You're in the super admin console. Organization-specific features are available through the{" "}
-              <Button variant="link" className="p-0 h-auto text-blue-600 underline" asChild>
+              <strong>Platform Mode:</strong> You're in the super admin console.
+              Organization-specific features are available through the{" "}
+              <Button
+                variant="link"
+                className="p-0 h-auto text-blue-600 underline"
+                asChild
+              >
                 <Link to="/org-flows">Organization Health Monitor</Link>
               </Button>{" "}
-              where you can access individual organization dashboards when needed.
+              where you can access individual organization dashboards when
+              needed.
             </>
           )}
         </AlertDescription>

@@ -321,15 +321,33 @@ export default function SuperAdmin() {
           >
             Admin Team
           </TabsTrigger>
-          <TabsTrigger value="users" className="tab-team">Users</TabsTrigger>
-          <TabsTrigger value="integrations" className="tab-team">Integrations</TabsTrigger>
-          <TabsTrigger value="compliance" className="tab-team">Compliance</TabsTrigger>
-          <TabsTrigger value="rbac" className="tab-team">RBAC</TabsTrigger>
-          <TabsTrigger value="invites" className="tab-team">Invites/GDPR</TabsTrigger>
-          <TabsTrigger value="billing-ops" className="tab-team">Billing Ops</TabsTrigger>
-          <TabsTrigger value="audit" className="tab-errors">Audit</TabsTrigger>
-          <TabsTrigger value="errors" className="tab-errors">Errors</TabsTrigger>
-          <TabsTrigger value="ops" className="tab-performance">Ops</TabsTrigger>
+          <TabsTrigger value="users" className="tab-team">
+            Users
+          </TabsTrigger>
+          <TabsTrigger value="integrations" className="tab-team">
+            Integrations
+          </TabsTrigger>
+          <TabsTrigger value="compliance" className="tab-team">
+            Compliance
+          </TabsTrigger>
+          <TabsTrigger value="rbac" className="tab-team">
+            RBAC
+          </TabsTrigger>
+          <TabsTrigger value="invites" className="tab-team">
+            Invites/GDPR
+          </TabsTrigger>
+          <TabsTrigger value="billing-ops" className="tab-team">
+            Billing Ops
+          </TabsTrigger>
+          <TabsTrigger value="audit" className="tab-errors">
+            Audit
+          </TabsTrigger>
+          <TabsTrigger value="errors" className="tab-errors">
+            Errors
+          </TabsTrigger>
+          <TabsTrigger value="ops" className="tab-performance">
+            Ops
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent
@@ -621,15 +639,33 @@ export default function SuperAdmin() {
           </div>
         </TabsContent>
 
-        <TabsContent value="users" className="space-y-6"><AdminUsers/></TabsContent>
-        <TabsContent value="integrations" className="space-y-6"><TenantIntegrations/></TabsContent>
-        <TabsContent value="compliance" className="space-y-6"><IntegrationsCompliance/></TabsContent>
-        <TabsContent value="rbac" className="space-y-6"><RBACEditor/></TabsContent>
-        <TabsContent value="invites" className="space-y-6"><InvitesGDPR/></TabsContent>
-        <TabsContent value="billing-ops" className="space-y-6"><StripeOps/></TabsContent>
-        <TabsContent value="audit" className="space-y-6"><AuditCenter/></TabsContent>
-        <TabsContent value="errors" className="space-y-6"><ErrorCenter/></TabsContent>
-        <TabsContent value="ops" className="space-y-6"><OpsCenter/></TabsContent>
+        <TabsContent value="users" className="space-y-6">
+          <AdminUsers />
+        </TabsContent>
+        <TabsContent value="integrations" className="space-y-6">
+          <TenantIntegrations />
+        </TabsContent>
+        <TabsContent value="compliance" className="space-y-6">
+          <IntegrationsCompliance />
+        </TabsContent>
+        <TabsContent value="rbac" className="space-y-6">
+          <RBACEditor />
+        </TabsContent>
+        <TabsContent value="invites" className="space-y-6">
+          <InvitesGDPR />
+        </TabsContent>
+        <TabsContent value="billing-ops" className="space-y-6">
+          <StripeOps />
+        </TabsContent>
+        <TabsContent value="audit" className="space-y-6">
+          <AuditCenter />
+        </TabsContent>
+        <TabsContent value="errors" className="space-y-6">
+          <ErrorCenter />
+        </TabsContent>
+        <TabsContent value="ops" className="space-y-6">
+          <OpsCenter />
+        </TabsContent>
 
         <TabsContent
           value="api-keys"

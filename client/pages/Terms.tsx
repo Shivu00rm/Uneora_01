@@ -10,7 +10,9 @@ export default function Terms() {
           <CardTitle>Acceptance of Terms</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground">
-          By accessing or using Uneora, you agree to these Terms. If you use the service on behalf of an organization, you represent that you have authority to bind that organization.
+          By accessing or using Uneora, you agree to these Terms. If you use the
+          service on behalf of an organization, you represent that you have
+          authority to bind that organization.
         </CardContent>
       </Card>
 
@@ -20,8 +22,14 @@ export default function Terms() {
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
           <ul className="list-disc pl-6 space-y-1">
-            <li>You are responsible for safeguarding credentials and activity under your account.</li>
-            <li>We may suspend or terminate accounts for policy violations, security concerns, or non-payment.</li>
+            <li>
+              You are responsible for safeguarding credentials and activity
+              under your account.
+            </li>
+            <li>
+              We may suspend or terminate accounts for policy violations,
+              security concerns, or non-payment.
+            </li>
           </ul>
         </CardContent>
       </Card>
@@ -33,7 +41,10 @@ export default function Terms() {
         <CardContent className="text-sm text-muted-foreground space-y-2">
           <ul className="list-disc pl-6 space-y-1">
             <li>No illegal, harmful, or infringing content or activities.</li>
-            <li>No attempts to disrupt, reverse-engineer, or bypass security controls.</li>
+            <li>
+              No attempts to disrupt, reverse-engineer, or bypass security
+              controls.
+            </li>
           </ul>
         </CardContent>
       </Card>
@@ -44,8 +55,13 @@ export default function Terms() {
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
           <ul className="list-disc pl-6 space-y-1">
-            <li>Paid plans renew automatically unless canceled as per plan terms.</li>
-            <li>Fees are non-refundable except where required by law or explicitly stated.</li>
+            <li>
+              Paid plans renew automatically unless canceled as per plan terms.
+            </li>
+            <li>
+              Fees are non-refundable except where required by law or explicitly
+              stated.
+            </li>
           </ul>
         </CardContent>
       </Card>
@@ -55,7 +71,9 @@ export default function Terms() {
           <CardTitle>Intellectual Property</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground">
-          The service, including software and content, is owned by Uneora or its licensors. You retain ownership of your data. You grant us a limited license to process your data to provide the service.
+          The service, including software and content, is owned by Uneora or its
+          licensors. You retain ownership of your data. You grant us a limited
+          license to process your data to provide the service.
         </CardContent>
       </Card>
 
@@ -64,7 +82,9 @@ export default function Terms() {
           <CardTitle>Disclaimers and Liability</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground">
-          The service is provided "as is" without warranties. To the maximum extent permitted by law, Uneora is not liable for indirect, incidental, or consequential damages.
+          The service is provided "as is" without warranties. To the maximum
+          extent permitted by law, Uneora is not liable for indirect,
+          incidental, or consequential damages.
         </CardContent>
       </Card>
 

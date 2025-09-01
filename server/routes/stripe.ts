@@ -4,7 +4,8 @@ import { emitEvent } from "../lib/eventBus";
 
 export const createCheckoutSession: RequestHandler = async (req, res) => {
   const plan = req.body?.plan;
-  if (!plan) return error(req, res, "INVALID_REQUEST", "Missing plan", undefined, 400);
+  if (!plan)
+    return error(req, res, "INVALID_REQUEST", "Missing plan", undefined, 400);
 
   // Stub until Stripe is configured
   return error(
@@ -33,6 +34,8 @@ export const createBillingPortal: RequestHandler = async (req, res) => {
 
 export const stripeWebhook: RequestHandler = async (req, res) => {
   // Accept webhook and enqueue event without verification until configured
-  await emitEvent("billing.webhook_received_unverified", { receivedAt: new Date().toISOString() });
+  await emitEvent("billing.webhook_received_unverified", {
+    receivedAt: new Date().toISOString(),
+  });
   return success(req, res, { received: true });
 };

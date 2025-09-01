@@ -19,15 +19,10 @@ export const ALL_FEATURES = [
   "sla_guarantee",
 ] as const;
 
-export type Feature = typeof ALL_FEATURES[number];
+export type Feature = (typeof ALL_FEATURES)[number];
 
 export const PLAN_FEATURES: Record<Plan, Feature[]> = {
-  starter: [
-    "basic_inventory",
-    "pos",
-    "analytics_basic",
-    "files",
-  ],
+  starter: ["basic_inventory", "pos", "analytics_basic", "files"],
   growth: [
     "basic_inventory",
     "pos",

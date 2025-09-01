@@ -11,7 +11,9 @@ export default function Privacy() {
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
           <p>
-            We respect your privacy and are committed to protecting your personal information. This policy explains what data we collect, how we use it, and your rights.
+            We respect your privacy and are committed to protecting your
+            personal information. This policy explains what data we collect, how
+            we use it, and your rights.
           </p>
         </CardContent>
       </Card>
@@ -51,7 +53,10 @@ export default function Privacy() {
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
           <p>
-            We do not sell personal data. We share information with trusted processors only to deliver our service (e.g., hosting, analytics, payments). Each processor is bound by confidentiality and security obligations.
+            We do not sell personal data. We share information with trusted
+            processors only to deliver our service (e.g., hosting, analytics,
+            payments). Each processor is bound by confidentiality and security
+            obligations.
           </p>
         </CardContent>
       </Card>
@@ -62,7 +67,9 @@ export default function Privacy() {
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-muted-foreground">
           <p>
-            We retain data for as long as your account is active and as required by law. You may request deletion of your account data; some records may be retained for compliance, auditing, and fraud prevention.
+            We retain data for as long as your account is active and as required
+            by law. You may request deletion of your account data; some records
+            may be retained for compliance, auditing, and fraud prevention.
           </p>
         </CardContent>
       </Card>
