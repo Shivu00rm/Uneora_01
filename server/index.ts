@@ -40,6 +40,11 @@ export function createServer() {
   app.post("/api/billing/checkout-session", createCheckoutSession);
   app.get("/api/billing/portal", createBillingPortal);
 
+  // Super Admin routes (secured via Supabase RLS in real setup)
+  app.get("/api/admin/audit/export", exportAuditCSV);
+  app.post("/api/admin/impersonate", impersonate);
+  app.post("/api/admin/errors/replay", replayError);
+
   // Error handler last
   app.use(errorHandler);
 
