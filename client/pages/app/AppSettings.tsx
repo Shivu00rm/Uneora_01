@@ -512,6 +512,123 @@ export default function AppSettings() {
               </div>
             </CardContent>
           </Card>
+
+          {/* WhatsApp Business API */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Phone className="h-5 w-5" />
+                WhatsApp Business API
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Enable WhatsApp Alerts</div>
+                  <div className="text-sm text-muted-foreground">Send real-time alerts to selected team members via WhatsApp</div>
+                </div>
+                <Switch
+                  checked={whatsapp.enabled}
+                  onCheckedChange={(checked) => setWhatsapp((prev) => ({ ...prev, enabled: checked }))}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="wa-phone-id">Business Phone Number ID</Label>
+                  <Input
+                    id="wa-phone-id"
+                    placeholder="Enter Business Phone Number ID"
+                    value={whatsapp.businessPhoneId}
+                    onChange={(e) => setWhatsapp((prev) => ({ ...prev, businessPhoneId: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="wa-access-token">Access Token</Label>
+                  <Input
+                    id="wa-access-token"
+                    type="password"
+                    placeholder="Enter Access Token"
+                    value={whatsapp.accessToken}
+                    onChange={(e) => setWhatsapp((prev) => ({ ...prev, accessToken: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="wa-template">Default Template</Label>
+                  <Input
+                    id="wa-template"
+                    placeholder="e.g. business_alert"
+                    value={whatsapp.defaultTemplate}
+                    onChange={(e) => setWhatsapp((prev) => ({ ...prev, defaultTemplate: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="font-medium">Recipients (Team Members)</div>
+                  <Button variant="outline" size="sm" onClick={addRecipient}>
+                    <Plus className="h-4 w-4 mr-2" /> Add Recipient
+                  </Button>
+                </div>
+
+                <div className="space-y-2">
+                  {whatsapp.recipients.map((r) => (
+                    <div key={r.id} className="grid grid-cols-12 gap-2 items-center p-2 border rounded">
+                      <Input
+                        className="col-span-4"
+                        placeholder="Name"
+                        value={r.name}
+                        onChange={(e) => updateRecipient(r.id, { name: e.target.value })}
+                      />
+                      <Select
+                        value={r.role}
+                        onValueChange={(v) => updateRecipient(r.id, { role: v })}
+                      >
+                        <SelectTrigger className="col-span-2">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="ORG_ADMIN">Org Admin</SelectItem>
+                          <SelectItem value="ORG_USER">Org User</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        className="col-span-4"
+                        placeholder="WhatsApp (digits only)"
+                        value={r.phone}
+                        onChange={(e) => updateRecipient(r.id, { phone: e.target.value.replace(/\D+/g, "") })}
+                      />
+                      <div className="col-span-1 flex justify-center">
+                        <Switch checked={r.enabled} onCheckedChange={(c) => updateRecipient(r.id, { enabled: c })} />
+                      </div>
+                      <div className="col-span-1 flex justify-end">
+                        <Button variant="ghost" size="sm" onClick={() => removeRecipient(r.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-2 border-t">
+                <Button onClick={() => handleSaveSettings("whatsapp")} disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save WhatsApp Settings
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Security */}
