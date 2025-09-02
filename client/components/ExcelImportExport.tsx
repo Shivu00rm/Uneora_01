@@ -137,7 +137,11 @@ const exportTemplates = [
 ];
 
 function downloadCSV(filename: string, rows: string[][]) {
-  const csv = rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const csv = rows
+    .map((r) =>
+      r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","),
+    )
+    .join("\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -162,10 +166,19 @@ type InventoryItem = {
   location: string;
   lastUpdated?: string;
   status: string;
-  movements?: Array<{ type: "in" | "out" | "adjustment"; quantity: number; date: string; reason: string }>;
+  movements?: Array<{
+    type: "in" | "out" | "adjustment";
+    quantity: number;
+    date: string;
+    reason: string;
+  }>;
 };
 
-export function ExcelImportExport({ inventory = [] as InventoryItem[] }: { inventory?: InventoryItem[] }) {
+export function ExcelImportExport({
+  inventory = [] as InventoryItem[],
+}: {
+  inventory?: InventoryItem[];
+}) {
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [importStep, setImportStep] = useState(1);
@@ -563,7 +576,9 @@ export function ExcelImportExport({ inventory = [] as InventoryItem[] }: { inven
                 className="flex-1"
                 disabled={!selectedExportTemplate}
                 onClick={() => {
-                  const template = exportTemplates.find((t) => t.id === selectedExportTemplate);
+                  const template = exportTemplates.find(
+                    (t) => t.id === selectedExportTemplate,
+                  );
                   if (template) {
                     const headers = template.fields;
                     let rows: string[][] = [];
@@ -588,7 +603,12 @@ export function ExcelImportExport({ inventory = [] as InventoryItem[] }: { inven
                       ]);
                     } else if (template.id === "low_stock") {
                       const lastIn = (it: InventoryItem) =>
-                        it.movements?.filter((m) => m.type === "in").sort((a, b) => a.date.localeCompare(b.date)).slice(-1)[0]?.date || it.lastUpdated || "";
+                        it.movements
+                          ?.filter((m) => m.type === "in")
+                          .sort((a, b) => a.date.localeCompare(b.date))
+                          .slice(-1)[0]?.date ||
+                        it.lastUpdated ||
+                        "";
                       rows = inventory
                         .filter((it) => it.currentStock <= it.reorderLevel)
                         .map((it) => [
@@ -612,7 +632,10 @@ export function ExcelImportExport({ inventory = [] as InventoryItem[] }: { inven
                         ]),
                       );
                     }
-                    downloadCSV(`${template.name.replace(/\s+/g, '_').toLowerCase()}.csv`, [headers, ...rows]);
+                    downloadCSV(
+                      `${template.name.replace(/\s+/g, "_").toLowerCase()}.csv`,
+                      [headers, ...rows],
+                    );
                   }
                   setIsExportOpen(false);
                   setSelectedExportTemplate("");
