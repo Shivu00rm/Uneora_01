@@ -355,7 +355,7 @@ export default function Inventory() {
 
         <div className="flex flex-wrap gap-2">
           <POGenerator inventory={inventory} />
-          <ExcelImportExport />
+          <ExcelImportExport inventory={inventory} />
           <Dialog
             open={isStockMovementOpen}
             onOpenChange={setIsStockMovementOpen}
