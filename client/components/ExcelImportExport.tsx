@@ -136,6 +136,19 @@ const exportTemplates = [
   },
 ];
 
+function downloadCSV(filename: string, rows: string[][]) {
+  const csv = rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export function ExcelImportExport() {
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -292,7 +305,21 @@ export function ExcelImportExport() {
                     <li>• Column F: Reorder Level</li>
                   </ul>
                 </div>
-                <Button variant="outline" className="w-full">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    const headers = [
+                      "SKU",
+                      "Product Name",
+                      "Category",
+                      "Unit Price",
+                      "Current Stock",
+                      "Reorder Level",
+                    ];
+                    downloadCSV("inventory_template.csv", [headers]);
+                  }}
+                >
                   <Download className="mr-2 h-4 w-4" />
                   Download Template
                 </Button>
@@ -520,7 +547,11 @@ export function ExcelImportExport() {
                 className="flex-1"
                 disabled={!selectedExportTemplate}
                 onClick={() => {
-                  // Simulate download
+                  const template = exportTemplates.find((t) => t.id === selectedExportTemplate);
+                  if (template) {
+                    const headers = template.fields;
+                    downloadCSV(`${template.name.replace(/\s+/g, '_').toLowerCase()}.csv`, [headers]);
+                  }
                   setIsExportOpen(false);
                   setSelectedExportTemplate("");
                 }}
