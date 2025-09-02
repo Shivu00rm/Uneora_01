@@ -74,6 +74,34 @@ export default function AppSettings() {
     pushNotifications: true,
   });
 
+  // WhatsApp Business API settings
+  const [whatsapp, setWhatsapp] = useState({
+    enabled: true,
+    businessPhoneId: "",
+    accessToken: "",
+    defaultTemplate: "business_alert",
+    recipients: [
+      { id: "r1", name: user?.name || "Org Admin", role: user?.role || "ORG_ADMIN", phone: "919876543210", enabled: true },
+    ] as Array<{ id: string; name: string; role: string; phone: string; enabled: boolean }>,
+  });
+
+  const addRecipient = () => {
+    const id = `r-${Date.now()}`;
+    setWhatsapp((prev) => ({
+      ...prev,
+      recipients: [...prev.recipients, { id, name: "", role: "ORG_USER", phone: "", enabled: true }],
+    }));
+  };
+  const updateRecipient = (id: string, patch: Partial<{ name: string; role: string; phone: string; enabled: boolean }>) => {
+    setWhatsapp((prev) => ({
+      ...prev,
+      recipients: prev.recipients.map((r) => (r.id === id ? { ...r, ...patch } : r)),
+    }));
+  };
+  const removeRecipient = (id: string) => {
+    setWhatsapp((prev) => ({ ...prev, recipients: prev.recipients.filter((r) => r.id !== id) }));
+  };
+
   // Security settings
   const [security, setSecurity] = useState({
     twoFactorAuth: false,
