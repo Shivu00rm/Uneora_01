@@ -149,7 +149,23 @@ function downloadCSV(filename: string, rows: string[][]) {
   URL.revokeObjectURL(url);
 }
 
-export function ExcelImportExport() {
+type InventoryItem = {
+  id: number;
+  sku: string;
+  name: string;
+  category: string;
+  currentStock: number;
+  reorderLevel: number;
+  maxStock: number;
+  unitPrice: number;
+  supplier: string;
+  location: string;
+  lastUpdated?: string;
+  status: string;
+  movements?: Array<{ type: "in" | "out" | "adjustment"; quantity: number; date: string; reason: string }>;
+};
+
+export function ExcelImportExport({ inventory = [] as InventoryItem[] }: { inventory?: InventoryItem[] }) {
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [importStep, setImportStep] = useState(1);
@@ -550,7 +566,53 @@ export function ExcelImportExport() {
                   const template = exportTemplates.find((t) => t.id === selectedExportTemplate);
                   if (template) {
                     const headers = template.fields;
-                    downloadCSV(`${template.name.replace(/\s+/g, '_').toLowerCase()}.csv`, [headers]);
+                    let rows: string[][] = [];
+                    if (template.id === "inventory") {
+                      rows = inventory.map((it) => [
+                        it.sku,
+                        it.name,
+                        it.category,
+                        String(it.currentStock),
+                        String(it.reorderLevel),
+                        String(it.unitPrice),
+                        it.supplier,
+                        it.location,
+                      ]);
+                    } else if (template.id === "stock_levels") {
+                      rows = inventory.map((it) => [
+                        it.sku,
+                        it.name,
+                        String(it.currentStock),
+                        String(it.reorderLevel),
+                        it.status,
+                      ]);
+                    } else if (template.id === "low_stock") {
+                      const lastIn = (it: InventoryItem) =>
+                        it.movements?.filter((m) => m.type === "in").sort((a, b) => a.date.localeCompare(b.date)).slice(-1)[0]?.date || it.lastUpdated || "";
+                      rows = inventory
+                        .filter((it) => it.currentStock <= it.reorderLevel)
+                        .map((it) => [
+                          it.sku,
+                          it.name,
+                          String(it.currentStock),
+                          String(it.reorderLevel),
+                          it.supplier,
+                          lastIn(it),
+                        ]);
+                    } else if (template.id === "movements") {
+                      rows = inventory.flatMap((it) =>
+                        (it.movements || []).map((m) => [
+                          m.date,
+                          it.sku,
+                          it.name,
+                          m.type,
+                          String(m.quantity),
+                          m.reason || "",
+                          "",
+                        ]),
+                      );
+                    }
+                    downloadCSV(`${template.name.replace(/\s+/g, '_').toLowerCase()}.csv`, [headers, ...rows]);
                   }
                   setIsExportOpen(false);
                   setSelectedExportTemplate("");
