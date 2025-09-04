@@ -82,7 +82,7 @@ export function SuperAdminSetup() {
                 organization_id: null,
                 email: "superadmin@uneora.com",
                 name: "Uneora Super Admin",
-                role: "super_admin",
+                role: "SUPER_ADMIN",
               });
 
               // Sign out after profile update
@@ -110,7 +110,7 @@ export function SuperAdminSetup() {
           organization_id: null,
           email: "superadmin@uneora.com",
           name: "Uneora Super Admin",
-          role: "super_admin",
+          role: "SUPER_ADMIN",
         });
 
         console.log("Super admin created successfully");
