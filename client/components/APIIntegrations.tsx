@@ -120,6 +120,7 @@ export function APIIntegrations() {
         dataVolume: { orders: 0, products: 0, customers: 0 },
         syncInterval: "daily",
         errorMessage: "Authentication failed - API key expired",
+        permissions: [],
       },
       {
         id: "stripe-1",
