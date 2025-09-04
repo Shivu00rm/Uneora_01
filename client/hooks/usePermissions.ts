@@ -22,16 +22,19 @@ export const usePermissions = () => {
     // Basic permission checks
     can: (permission: Permission) => {
       if (!userRole) return false;
+      if (userRole === "SUPER_ADMIN") return true;
       return hasPermission(userRole, permission);
     },
 
     canAny: (permissions: Permission[]) => {
       if (!userRole) return false;
+      if (userRole === "SUPER_ADMIN") return true;
       return hasAnyPermission(userRole, permissions);
     },
 
     canAll: (permissions: Permission[]) => {
       if (!userRole) return false;
+      if (userRole === "SUPER_ADMIN") return true;
       return hasAllPermissions(userRole, permissions);
     },
 
@@ -44,6 +47,7 @@ export const usePermissions = () => {
     // UI visibility
     shouldShow: (requiredPermissions: Permission[], targetOrgId?: string) => {
       if (!userRole) return false;
+      if (userRole === "SUPER_ADMIN") return true;
       return shouldShowComponent(
         userRole,
         requiredPermissions,
