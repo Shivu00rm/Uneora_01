@@ -49,7 +49,7 @@ interface Product {
   location: string;
   status: "in_stock" | "low_stock" | "out_of_stock";
   movements?: Array<{
-    type: "in" | "out";
+    type: "in" | "out" | "adjustment";
     quantity: number;
     date: string;
     reason: string;
