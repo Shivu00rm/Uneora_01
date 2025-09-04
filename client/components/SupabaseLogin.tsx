@@ -13,6 +13,7 @@ import {
 import { Loader2, AlertCircle, Shield } from "lucide-react";
 import { Alert, AlertDescription } from "./ui/alert";
 import { SuperAdminSetup } from "./SuperAdminSetup";
+import type { UserRole } from "@/contexts/SupabaseAuthContext";
 
 export function SupabaseLogin() {
   const { login, signUp, loading, user, getDefaultRoute } = useAuth();
@@ -24,7 +25,7 @@ export function SupabaseLogin() {
     email: "",
     password: "",
     name: "",
-    role: "ORG_USER" as const,
+    role: "ORG_USER" as UserRole,
     companyName: "",
   });
   const [error, setError] = useState<string | null>(null);
@@ -84,24 +85,15 @@ export function SupabaseLogin() {
 
     try {
       if (isSignUp) {
-        // For org admins, create company first if provided
-        if (formData.role === "ORG_ADMIN" && formData.companyName) {
-          // Company creation will be handled in the signup process
-          await signUp(
-            formData.email,
-            formData.password,
-            formData.name,
-            formData.role,
-            formData.companyName,
-          );
-        } else {
-          await signUp(
-            formData.email,
-            formData.password,
-            formData.name,
-            formData.role,
-          );
-        }
+        const userData = {
+          name: formData.name,
+          email: formData.email,
+          role: formData.role,
+          organizationId: null,
+          permissions: {},
+          companyName: formData.companyName || undefined,
+        };
+        await signUp(formData.email, formData.password, userData);
       } else {
         await login(formData.email, formData.password);
         // After successful login, redirect to appropriate dashboard
@@ -302,8 +294,7 @@ export function SupabaseLogin() {
                     </select>
                   </div>
 
-                  {(formData.role === "ORG_ADMIN" ||
-                    formData.role === "SUPER_ADMIN") && (
+                  {(formData.role === "ORG_ADMIN" || formData.role === "SUPER_ADMIN") && (
                     <div className="space-y-2">
                       <label
                         htmlFor="companyName"
