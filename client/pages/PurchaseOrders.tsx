@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -39,15 +39,17 @@ import {
   IndianRupee,
   Clock,
   CheckCircle,
-  AlertTriangle,
   XCircle,
   Truck,
   FileText,
   Edit,
   Send,
 } from "lucide-react";
+import { usePermissions } from "@/contexts/AuthContext";
+import { getVendorContact, upsertVendorContact } from "@/lib/vendorContacts";
+import { toast } from "@/hooks/use-toast";
 
-const mockPurchaseOrders = [
+const initialPurchaseOrders = [
   {
     id: "PO-2024-001",
     vendor: "TechSupply India Pvt Ltd",
@@ -103,18 +105,96 @@ const statusConfig = {
   cancelled: { color: "destructive", icon: XCircle, label: "Cancelled" },
 } as const;
 
+type Order = (typeof initialPurchaseOrders)[number];
+
+type SendMethod = "email" | "whatsapp";
+
 export default function PurchaseOrders() {
+  const { hasPermission } = usePermissions();
+  const canSend =
+    hasPermission("purchase_orders", "create") ||
+    hasPermission("purchase_orders", "approve");
+
+  const [orders, setOrders] = useState<Order[]>(initialPurchaseOrders);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
+
+  // Create PO form state
+  const [poVendor, setPoVendor] = useState("");
+  const [poExpected, setPoExpected] = useState("");
+  const [poReference, setPoReference] = useState("");
+  const [poPriority, setPoPriority] = useState("");
+  const [poNotes, setPoNotes] = useState("");
+  const [poItems, setPoItems] = useState<
+    { product: string; qty: number; price: number }[]
+  >([{ product: "", qty: 0, price: 0 }]);
   const [isCreatePOOpen, setIsCreatePOOpen] = useState(false);
 
-  const filteredOrders = mockPurchaseOrders.filter((order) => {
+  // Send flow state
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  const [sendDialogOpen, setSendDialogOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactWhatsApp, setContactWhatsApp] = useState("");
+
+  const addItemRow = () =>
+    setPoItems((prev) => [...prev, { product: "", qty: 0, price: 0 }]);
+  const updateItem = (
+    idx: number,
+    patch: Partial<{ product: string; qty: number; price: number }>,
+  ) => {
+    setPoItems((prev) =>
+      prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
+    );
+  };
+  const removeItem = (idx: number) =>
+    setPoItems((prev) => prev.filter((_, i) => i !== idx));
+
+  const lineTotal = (it: { qty: number; price: number }) =>
+    (Number(it.qty) || 0) * (Number(it.price) || 0);
+  const grandTotal = poItems.reduce((sum, it) => sum + lineTotal(it), 0);
+  const totalQty = poItems.reduce((sum, it) => sum + (Number(it.qty) || 0), 0);
+
+  const canCreate = poVendor && poExpected && totalQty > 0 && grandTotal > 0;
+
+  const resetForm = () => {
+    setPoVendor("");
+    setPoExpected("");
+    setPoReference("");
+    setPoPriority("");
+    setPoNotes("");
+    setPoItems([{ product: "", qty: 0, price: 0 }]);
+  };
+
+  const handleCreatePO = () => {
+    if (!canCreate) return;
+    const nextId = `PO-${new Date().getFullYear()}-${String(orders.length + 1).padStart(3, "0")}`;
+    const newOrder: Order = {
+      id: nextId,
+      vendor: poVendor,
+      date: new Date().toISOString().slice(0, 10),
+      expectedDelivery: poExpected,
+      status: "pending",
+      items: totalQty,
+      totalAmount: grandTotal,
+      approvedBy: "",
+      progress: 0,
+    };
+    setOrders((prev) => [newOrder, ...prev]);
+    resetForm();
+    setIsCreatePOOpen(false);
+    toast({
+      title: "PO created",
+      description: `${nextId} created for ${poVendor}`,
+    });
+  };
+
+  const filteredOrders = orders.filter((order) => {
     const matchesSearch =
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.vendor.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus =
       selectedStatus === "all" || order.status === selectedStatus;
-
     return matchesSearch && matchesStatus;
   });
 
@@ -135,11 +215,97 @@ export default function PurchaseOrders() {
     const diffDays = Math.ceil(
       (deliveryDate.getTime() - today.getTime()) / (1000 * 3600 * 24),
     );
-
     if (diffDays < 0) return "text-destructive";
     if (diffDays <= 3) return "text-yellow-600";
     return "text-muted-foreground";
   };
+
+  const vendorOptions = useMemo(() => {
+    const set = new Set<string>();
+    orders.forEach((o) => set.add(o.vendor));
+    return Array.from(set);
+  }, [orders]);
+
+  // Document helpers
+  function buildPOHtml(order: Order) {
+    return `<!doctype html><html><head><meta charset=\"utf-8\"/><title>${order.id}</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:24px}h1{margin:0 0 8px}table{border-collapse:collapse;width:100%;margin-top:16px}td,th{border:1px solid #ddd;padding:8px;text-align:left}small{color:#555}</style></head><body><h1>Purchase Order ${order.id}</h1><small>Date: ${new Date(order.date).toLocaleDateString()}</small><div style=\"margin-top:12px\"><strong>Vendor:</strong> ${order.vendor}</div><div style=\"margin-top:4px\"><strong>Expected Delivery:</strong> ${new Date(order.expectedDelivery).toLocaleDateString()}</div><table><thead><tr><th>Summary</th><th>Value</th></tr></thead><tbody><tr><td>Total Items</td><td>${order.items}</td></tr><tr><td>Total Amount</td><td>₹${order.totalAmount.toLocaleString()}</td></tr></tbody></table><p style=\"margin-top:16px\">This is a system-generated PO summary.</p></body></html>`;
+  }
+
+  function downloadPO(order: Order) {
+    const html = buildPOHtml(order);
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${order.id}.html`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function openGmail(to: string, subject: string, body: string) {
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  function openWhatsApp(numberDigits: string, text: string) {
+    const url = `https://wa.me/${numberDigits}?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  function startSendFlow(order: Order) {
+    if (!canSend) {
+      toast({
+        title: "Not allowed",
+        description: "You don't have permission to send POs",
+      });
+      return;
+    }
+    setSelectedOrder(order);
+    const contact = getVendorContact(order.vendor);
+    if (!contact?.email && !contact?.whatsapp) {
+      setContactEmail("");
+      setContactWhatsApp("");
+      setContactDialogOpen(true);
+    } else {
+      setContactEmail(contact?.email || "");
+      setContactWhatsApp(contact?.whatsapp || "");
+      setSendDialogOpen(true);
+    }
+  }
+
+  function saveContactAndContinue() {
+    if (!selectedOrder) return;
+    upsertVendorContact(selectedOrder.vendor, {
+      email: contactEmail,
+      whatsapp: contactWhatsApp,
+    });
+    setContactDialogOpen(false);
+    setSendDialogOpen(true);
+  }
+
+  function handleSend(method: SendMethod) {
+    if (!selectedOrder) return;
+    // Prepare document for user to attach
+    downloadPO(selectedOrder);
+    const subject = `Purchase Order ${selectedOrder.id}`;
+    const body = `Hello,\n\nPlease find the attached Purchase Order ${selectedOrder.id} for ${selectedOrder.vendor}.\nTotal: ₹${selectedOrder.totalAmount.toLocaleString()} | Items: ${selectedOrder.items}.\nExpected Delivery: ${new Date(selectedOrder.expectedDelivery).toLocaleDateString()}.\n\nThank you.`;
+    if (method === "email" && contactEmail) {
+      openGmail(contactEmail, subject, body);
+      toast({
+        title: "Compose opened",
+        description: "Gmail compose opened. Attach the downloaded PO.",
+      });
+    } else if (method === "whatsapp" && contactWhatsApp) {
+      openWhatsApp(contactWhatsApp, `${subject}\n\n${body}`);
+      toast({
+        title: "WhatsApp opened",
+        description: "Please send the message with the PO details.",
+      });
+    }
+    setSendDialogOpen(false);
+  }
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -168,37 +334,43 @@ export default function PurchaseOrders() {
                 Generate a new purchase order with vendor and product details.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto">
               <div className="space-y-2">
                 <Label htmlFor="po-vendor">Vendor</Label>
-                <Select>
+                <Select value={poVendor} onValueChange={setPoVendor}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select vendor" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="techsupply">
-                      TechSupply India Pvt Ltd
-                    </SelectItem>
-                    <SelectItem value="fashionhub">
-                      Fashion Hub Distributors
-                    </SelectItem>
-                    <SelectItem value="globalelec">
-                      Global Electronics Corp
-                    </SelectItem>
+                    {vendorOptions.map((v) => (
+                      <SelectItem key={v} value={v}>
+                        {v}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="po-delivery">Expected Delivery</Label>
-                <Input id="po-delivery" type="date" />
+                <Input
+                  id="po-delivery"
+                  type="date"
+                  value={poExpected}
+                  onChange={(e) => setPoExpected(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="po-reference">Reference Number</Label>
-                <Input id="po-reference" placeholder="Internal reference" />
+                <Input
+                  id="po-reference"
+                  placeholder="Internal reference"
+                  value={poReference}
+                  onChange={(e) => setPoReference(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="po-priority">Priority</Label>
-                <Select>
+                <Select value={poPriority} onValueChange={setPoPriority}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select priority" />
                   </SelectTrigger>
@@ -215,42 +387,91 @@ export default function PurchaseOrders() {
                 <Textarea
                   id="po-notes"
                   placeholder="Additional instructions or notes"
+                  value={poNotes}
+                  onChange={(e) => setPoNotes(e.target.value)}
                 />
               </div>
               <div className="md:col-span-2 space-y-4 border-t pt-4">
-                <h4 className="font-medium">Order Items</h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Order Items</h4>
+                  <Button variant="outline" size="sm" onClick={addItemRow}>
+                    <Plus className="h-4 w-4 mr-2" /> Add Item
+                  </Button>
+                </div>
                 <div className="space-y-2">
-                  <div className="grid grid-cols-4 gap-2 text-sm font-medium">
-                    <span>Product</span>
-                    <span>Quantity</span>
-                    <span>Unit Price</span>
-                    <span>Total</span>
+                  <div className="grid grid-cols-12 gap-2 text-sm font-medium">
+                    <span className="col-span-6">Product</span>
+                    <span className="col-span-2">Qty</span>
+                    <span className="col-span-2">Unit Price</span>
+                    <span className="col-span-2">Total</span>
                   </div>
-                  <div className="grid grid-cols-4 gap-2">
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select product" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="laptop">Dell Laptop</SelectItem>
-                        <SelectItem value="mouse">Wireless Mouse</SelectItem>
-                        <SelectItem value="keyboard">
-                          Mechanical Keyboard
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Input type="number" placeholder="Qty" />
-                    <Input type="number" placeholder="Price" />
-                    <Input placeholder="₹0.00" disabled />
+                  {poItems.map((it, idx) => (
+                    <div
+                      key={idx}
+                      className="grid grid-cols-12 gap-2 items-center"
+                    >
+                      <Input
+                        className="col-span-6"
+                        placeholder="Product name"
+                        value={it.product}
+                        onChange={(e) =>
+                          updateItem(idx, { product: e.target.value })
+                        }
+                      />
+                      <Input
+                        className="col-span-2"
+                        type="number"
+                        min={0}
+                        value={it.qty}
+                        onChange={(e) =>
+                          updateItem(idx, { qty: Number(e.target.value) })
+                        }
+                      />
+                      <Input
+                        className="col-span-2"
+                        type="number"
+                        min={0}
+                        value={it.price}
+                        onChange={(e) =>
+                          updateItem(idx, { price: Number(e.target.value) })
+                        }
+                      />
+                      <div className="col-span-2 text-sm text-right">
+                        ₹{lineTotal(it).toLocaleString()}
+                      </div>
+                      {poItems.length > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeItem(idx)}
+                        >
+                          <XCircle className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end gap-6 text-sm border-t pt-3">
+                  <div>
+                    <div className="text-muted-foreground">Total Qty</div>
+                    <div className="font-medium">{totalQty}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Grand Total</div>
+                    <div className="font-medium">
+                      ₹{grandTotal.toLocaleString()}
+                    </div>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Item
-                </Button>
               </div>
-              <div className="md:col-span-2 flex gap-2 pt-4">
-                <Button className="flex-1">Create Purchase Order</Button>
+              <div className="md:col-span-2 flex gap-2 pt-2">
+                <Button
+                  className="flex-1"
+                  onClick={handleCreatePO}
+                  disabled={!canCreate}
+                >
+                  Create Purchase Order
+                </Button>
                 <Button
                   variant="outline"
                   onClick={() => setIsCreatePOOpen(false)}
@@ -271,9 +492,7 @@ export default function PurchaseOrders() {
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {mockPurchaseOrders.length}
-            </div>
+            <div className="text-2xl font-bold">{orders.length}</div>
             <p className="text-xs text-muted-foreground">This month</p>
           </CardContent>
         </Card>
@@ -287,10 +506,7 @@ export default function PurchaseOrders() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {
-                mockPurchaseOrders.filter((po) => po.status === "pending")
-                  .length
-              }
+              {orders.filter((po) => po.status === "pending").length}
             </div>
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
@@ -304,7 +520,7 @@ export default function PurchaseOrders() {
           <CardContent>
             <div className="text-2xl font-bold">
               {
-                mockPurchaseOrders.filter(
+                orders.filter(
                   (po) => po.status === "approved" || po.status === "shipped",
                 ).length
               }
@@ -322,10 +538,7 @@ export default function PurchaseOrders() {
             <div className="text-2xl font-bold">
               ₹
               {(
-                mockPurchaseOrders.reduce(
-                  (sum, po) => sum + po.totalAmount,
-                  0,
-                ) / 100000
+                orders.reduce((sum, po) => sum + po.totalAmount, 0) / 100000
               ).toFixed(1)}
               L
             </div>
@@ -461,12 +674,38 @@ export default function PurchaseOrders() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="sm">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              window.open(
+                                URL.createObjectURL(
+                                  new Blob([buildPOHtml(order)], {
+                                    type: "text/html",
+                                  }),
+                                ),
+                                "_blank",
+                              )
+                            }
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => downloadPO(order)}
+                          >
                             <Download className="h-4 w-4" />
                           </Button>
+                          {canSend && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => startSendFlow(order)}
+                            >
+                              <Send className="h-4 w-4" />
+                            </Button>
+                          )}
                           {order.status === "pending" && (
                             <Button
                               variant="ghost"
@@ -499,7 +738,7 @@ export default function PurchaseOrders() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockPurchaseOrders
+                {orders
                   .filter((order) => order.status === "pending")
                   .map((order) => (
                     <div
@@ -517,20 +756,30 @@ export default function PurchaseOrders() {
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4 mr-2" />
-                          Review
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            window.open(
+                              URL.createObjectURL(
+                                new Blob([buildPOHtml(order)], {
+                                  type: "text/html",
+                                }),
+                              ),
+                              "_blank",
+                            )
+                          }
+                        >
+                          <Eye className="h-4 w-4 mr-2" /> Review
                         </Button>
                         <Button
                           size="sm"
                           className="bg-emerald-600 hover:bg-emerald-700"
                         >
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Approve
+                          <CheckCircle className="h-4 w-4 mr-2" /> Approve
                         </Button>
                         <Button variant="destructive" size="sm">
-                          <XCircle className="h-4 w-4 mr-2" />
-                          Reject
+                          <XCircle className="h-4 w-4 mr-2" /> Reject
                         </Button>
                       </div>
                     </div>
@@ -553,7 +802,7 @@ export default function PurchaseOrders() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockPurchaseOrders
+                {orders
                   .filter(
                     (order) =>
                       order.status === "approved" ||
@@ -595,6 +844,83 @@ export default function PurchaseOrders() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Contact capture dialog */}
+      <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Vendor contact details</DialogTitle>
+            <DialogDescription>
+              Add email and/or WhatsApp number for {selectedOrder?.vendor}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="vendor-email">Email</Label>
+              <Input
+                id="vendor-email"
+                type="email"
+                placeholder="orders@vendor.com"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="vendor-wa">WhatsApp (digits only)</Label>
+              <Input
+                id="vendor-wa"
+                placeholder="919876543210"
+                value={contactWhatsApp}
+                onChange={(e) =>
+                  setContactWhatsApp(e.target.value.replace(/\D+/g, ""))
+                }
+              />
+            </div>
+            <div className="flex gap-2 pt-2">
+              <Button className="flex-1" onClick={saveContactAndContinue}>
+                Continue
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setContactDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Send chooser dialog */}
+      <Dialog open={sendDialogOpen} onOpenChange={setSendDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Send Purchase Order</DialogTitle>
+            <DialogDescription>
+              Choose how you want to send PO {selectedOrder?.id} to{" "}
+              {selectedOrder?.vendor}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <Button
+              disabled={!contactEmail}
+              onClick={() => handleSend("email")}
+            >
+              <Send className="h-4 w-4 mr-2" /> Email via Gmail
+            </Button>
+            <Button
+              variant="outline"
+              disabled={!contactWhatsApp}
+              onClick={() => handleSend("whatsapp")}
+            >
+              <Send className="h-4 w-4 mr-2" /> WhatsApp
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            A PO file will be downloaded for you to attach when sending.
+          </p>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

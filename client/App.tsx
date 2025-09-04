@@ -3,13 +3,19 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import {
   SupabaseAuthProvider,
   useSupabaseAuth,
-} from "./contexts/SupabaseAuthContext";
-import { AuthProvider } from "./contexts/AuthContext";
-import { SuperAdminProvider } from "./contexts/SuperAdminContext";
+} from "@/contexts/SupabaseAuthContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { SuperAdminProvider } from "@/contexts/SuperAdminContext";
 import { ProtectedRoute } from "./components/SupabaseProtectedRoute";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -33,6 +39,7 @@ import OrganizationMonitor from "./pages/OrganizationMonitor";
 import AppDashboard from "./pages/app/AppDashboard";
 import TeamManagement from "./pages/app/TeamManagement";
 import AppSettings from "./pages/app/AppSettings";
+import Billing from "./pages/app/Billing";
 import Manufacturing from "./pages/solutions/Manufacturing";
 import Retail from "./pages/solutions/Retail";
 import Wholesale from "./pages/solutions/Wholesale";
@@ -41,6 +48,9 @@ import { SuperAdminLayout } from "./components/SuperAdminLayout";
 import { RoleRoute } from "./components/SupabaseProtectedRoute";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Security from "./pages/Security";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,7 +83,12 @@ function ConditionalHeader() {
   const location = useLocation();
 
   // Don't render header on tenant routes since TenantLayout provides its own header
-  if (location.pathname.startsWith("/app/") || location.pathname === "/login") {
+  if (
+    location.pathname.startsWith("/app/") ||
+    location.pathname === "/login" ||
+    location.pathname.startsWith("/super-admin") ||
+    location.pathname.startsWith("/org-flows")
+  ) {
     return null;
   }
 
@@ -93,10 +108,13 @@ function AuthenticatedApp() {
       <ConditionalHeader />
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<SupabaseLogin />} />
           <Route path="/signup" element={<SupabaseLogin />} />
           <Route path="/email-auth" element={<EmailAuth />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/security" element={<Security />} />
 
           {/* Solution Pages */}
           <Route path="/solutions/manufacturing" element={<Manufacturing />} />
@@ -380,6 +398,14 @@ function AuthenticatedApp() {
                           requiredAction="view"
                         >
                           <AppSettings />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="billing"
+                      element={
+                        <ProtectedRoute allowedRoles={["ORG_ADMIN"]}>
+                          <Billing />
                         </ProtectedRoute>
                       }
                     />

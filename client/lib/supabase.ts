@@ -3,17 +3,23 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Optional flag to force mock client (useful when bad keys are present)
+const forceMock =
+  typeof window !== "undefined" &&
+  (localStorage.getItem("USE_MOCK_SUPABASE") === "1" ||
+    import.meta.env.VITE_USE_MOCK_SUPABASE === "1");
+
 // Check if we have real Supabase credentials
 const hasValidSupabaseConfig =
-  supabaseUrl &&
-  supabaseKey &&
+  !!supabaseUrl &&
+  !!supabaseKey &&
   supabaseUrl !== "https://your-project-id.supabase.co" &&
   supabaseKey !== "your-anon-key-here" &&
   supabaseUrl.includes(".supabase.co");
 
 let supabase: any = null;
 
-if (hasValidSupabaseConfig) {
+if (hasValidSupabaseConfig && !forceMock) {
   // Use real Supabase client
   supabase = createClient(supabaseUrl, supabaseKey, {
     auth: {
@@ -25,7 +31,9 @@ if (hasValidSupabaseConfig) {
 } else {
   // Create mock Supabase client for development
   console.warn(
-    "🔄 Using mock Supabase client - set real VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY for production",
+    forceMock
+      ? "🔄 Using mock Supabase client (forced by flag)"
+      : "🔄 Using mock Supabase client - set real VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY for production",
   );
 
   // Mock user data for development
