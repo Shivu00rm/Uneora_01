@@ -13,6 +13,7 @@ import {
 import { Loader2, AlertCircle, Shield } from "lucide-react";
 import { Alert, AlertDescription } from "./ui/alert";
 import { SuperAdminSetup } from "./SuperAdminSetup";
+import type { UserRole } from "@/contexts/SupabaseAuthContext";
 
 export function SupabaseLogin() {
   const { login, signUp, loading, user, getDefaultRoute } = useAuth();
@@ -107,6 +108,7 @@ export function SupabaseLogin() {
             },
           );
         }
+
       } else {
         await login(formData.email, formData.password);
         // After successful login, redirect to appropriate dashboard

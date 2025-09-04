@@ -1,19 +1,55 @@
 import { supabase } from "./supabase";
-
-// Lightweight types for compile-time compatibility; refine as schema evolves
-export type Organization = {
+// Local type definitions matching usage in this file
+export interface Organization {
   id: string;
   name: string;
   slug?: string;
-  industry?: string;
-  subscription_plan?: string;
+  industry?: string | null;
+  subscription_plan?: "starter" | "growth" | "pro" | "enterprise";
+  domain?: string | null;
+  status?: "active" | "suspended" | "trial" | "overdue";
+  billing_email?: string | null;
+  custom_domain?: string | null;
+  features?: string[] | null;
+  settings?: Record<string, any>;
   created_at?: string;
   updated_at?: string;
-};
-export type Profile = any;
-export type Product = any;
-export type SalesOrder = any;
-export type Integration = any;
+}
+
+export interface Profile {
+  id: string;
+  organization_id: string | null;
+  role: "SUPER_ADMIN" | "ORG_ADMIN" | "ORG_USER";
+  name: string;
+  email: string;
+  avatar_url?: string | null;
+  status?: string;
+  permissions?: Record<string, any>;
+  last_login?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SalesOrder {
+  id: string;
+  organization_id: string;
+  status: string;
+  total_amount: number | string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface Integration {
+  id: string;
+  organization_id: string;
+  service_name?: string;
+  service_type?: string;
+  config?: Record<string, any>;
+  credentials?: Record<string, any>;
+  status?: string;
+  created_at?: string;
+  updated_at?: string;
+}
 
 // Database service layer for Uneora
 export class DatabaseService {
@@ -25,7 +61,7 @@ export class DatabaseService {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data || [];
+    return (data as Organization[]) || [];
   }
 
   static async getOrganization(id: string): Promise<Organization | null> {
@@ -36,7 +72,7 @@ export class DatabaseService {
       .single();
 
     if (error) return null;
-    return data;
+    return data as Organization;
   }
 
   static async createOrganization(
@@ -61,10 +97,10 @@ export class DatabaseService {
     if (error) {
       console.error("Organization creation error:", error);
       let errorMessage = "Failed to create organization";
-      if (error.message) {
-        errorMessage = `Failed to create organization: ${error.message}`;
-      } else if (error.details) {
-        errorMessage = `Failed to create organization: ${error.details}`;
+      if ((error as any).message) {
+        errorMessage = `Failed to create organization: ${(error as any).message}`;
+      } else if ((error as any).details) {
+        errorMessage = `Failed to create organization: ${(error as any).details}`;
       } else if (typeof error === "string") {
         errorMessage = `Failed to create organization: ${error}`;
       }
@@ -72,7 +108,7 @@ export class DatabaseService {
     }
 
     console.log("Organization created successfully:", data);
-    return data;
+    return data as Organization;
   }
 
   // Legacy method alias for backward compatibility
@@ -95,22 +131,22 @@ export class DatabaseService {
     });
   }
 
-  // Profile operations
+  // Profile operations (table: user_profiles)
   static async getProfile(userId: string): Promise<Profile | null> {
     const { data, error } = await supabase
-      .from("profiles")
+      .from("user_profiles")
       .select("*")
       .eq("id", userId)
       .single();
 
     if (error) return null;
-    return data;
+    return data as Profile;
   }
 
   static async createProfile(profile: Profile): Promise<Profile> {
     console.log("Creating profile:", profile);
     const { data, error } = await supabase
-      .from("profiles")
+      .from("user_profiles")
       .insert(profile)
       .select()
       .single();
@@ -118,10 +154,10 @@ export class DatabaseService {
     if (error) {
       console.error("Profile creation error:", error);
       let errorMessage = "Failed to create profile";
-      if (error.message) {
-        errorMessage = `Failed to create profile: ${error.message}`;
-      } else if (error.details) {
-        errorMessage = `Failed to create profile: ${error.details}`;
+      if ((error as any).message) {
+        errorMessage = `Failed to create profile: ${(error as any).message}`;
+      } else if ((error as any).details) {
+        errorMessage = `Failed to create profile: ${(error as any).details}`;
       } else if (typeof error === "string") {
         errorMessage = `Failed to create profile: ${error}`;
       }
@@ -129,7 +165,7 @@ export class DatabaseService {
     }
 
     console.log("Profile created successfully:", data);
-    return data;
+    return data as Profile;
   }
 
   static async updateProfile(
@@ -137,20 +173,20 @@ export class DatabaseService {
     updates: Partial<Profile>,
   ): Promise<Profile> {
     const { data, error } = await supabase
-      .from("profiles")
+      .from("user_profiles")
       .update(updates)
       .eq("id", userId)
       .select()
       .single();
 
     if (error) throw error;
-    return data;
+    return data as Profile;
   }
 
   static async upsertProfile(profile: Profile): Promise<Profile> {
     console.log("Upserting profile:", profile);
     const { data, error } = await supabase
-      .from("profiles")
+      .from("user_profiles")
       .upsert(profile)
       .select()
       .single();
@@ -158,10 +194,10 @@ export class DatabaseService {
     if (error) {
       console.error("Profile upsert error:", error);
       let errorMessage = "Failed to upsert profile";
-      if (error.message) {
-        errorMessage = `Failed to upsert profile: ${error.message}`;
-      } else if (error.details) {
-        errorMessage = `Failed to upsert profile: ${error.details}`;
+      if ((error as any).message) {
+        errorMessage = `Failed to upsert profile: ${(error as any).message}`;
+      } else if ((error as any).details) {
+        errorMessage = `Failed to upsert profile: ${(error as any).details}`;
       } else if (typeof error === "string") {
         errorMessage = `Failed to upsert profile: ${error}`;
       }
@@ -169,20 +205,20 @@ export class DatabaseService {
     }
 
     console.log("Profile upserted successfully:", data);
-    return data;
+    return data as Profile;
   }
 
   static async getOrganizationProfiles(
     organizationId: string,
   ): Promise<Profile[]> {
     const { data, error } = await supabase
-      .from("profiles")
+      .from("user_profiles")
       .select("*")
       .eq("organization_id", organizationId)
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data || [];
+    return (data as Profile[]) || [];
   }
 
   // Legacy method alias
@@ -199,7 +235,7 @@ export class DatabaseService {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data || [];
+    return (data as SalesOrder[]) || [];
   }
 
   static async createSalesOrder(
@@ -212,7 +248,7 @@ export class DatabaseService {
       .single();
 
     if (error) throw error;
-    return data;
+    return data as SalesOrder;
   }
 
   static async updateSalesOrder(
@@ -227,7 +263,7 @@ export class DatabaseService {
       .single();
 
     if (error) throw error;
-    return data;
+    return data as SalesOrder;
   }
 
   // Integration operations
@@ -239,7 +275,7 @@ export class DatabaseService {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data || [];
+    return (data as Integration[]) || [];
   }
 
   static async createIntegration(
@@ -252,7 +288,7 @@ export class DatabaseService {
       .single();
 
     if (error) throw error;
-    return data;
+    return data as Integration;
   }
 
   static async deleteIntegration(id: string): Promise<void> {

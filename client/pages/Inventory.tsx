@@ -61,9 +61,9 @@ type InventoryItem = {
   supplier: string;
   location: string;
   lastUpdated: string;
-  status: StockStatus;
+  status: "in_stock" | "low_stock" | "out_of_stock";
   movements: Array<{
-    type: MovementType;
+    type: "in" | "out";
     quantity: number;
     date: string;
     reason: string;
@@ -179,7 +179,7 @@ const initialInventory: InventoryItem[] = [
   },
 ];
 
-const getStatusColor = (status: StockStatus) => {
+const getStatusColor = (status: "in_stock" | "low_stock" | "out_of_stock") => {
   switch (status) {
     case "in_stock":
       return "default";
@@ -296,14 +296,14 @@ export default function Inventory() {
         maxStock: Number(newProduct.maxStock),
         unitPrice: Number(newProduct.unitPrice),
         supplier: newProduct.supplier,
-        location: "Warehouse A", // Default location
+        location: "Warehouse A",
         lastUpdated: new Date().toISOString().split("T")[0],
         status:
           Number(newProduct.initialStock) === 0
-            ? "out_of_stock"
+            ? ("out_of_stock" as const)
             : Number(newProduct.initialStock) <= Number(newProduct.reorderLevel)
-              ? "low_stock"
-              : "in_stock",
+              ? ("low_stock" as const)
+              : ("in_stock" as const),
         movements:
           Number(newProduct.initialStock) > 0
             ? [
