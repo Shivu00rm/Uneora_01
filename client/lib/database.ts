@@ -1,12 +1,19 @@
 import { supabase } from "./supabase";
-import type { Tables } from "./supabase";
 
-type Organization = Tables<"organizations">;
-// Using broad types for compile-time compatibility; refine as schema evolves
-type Profile = any;
-type Product = any;
-type SalesOrder = any;
-type Integration = any;
+// Lightweight types for compile-time compatibility; refine as schema evolves
+export type Organization = {
+  id: string;
+  name: string;
+  slug?: string;
+  industry?: string;
+  subscription_plan?: string;
+  created_at?: string;
+  updated_at?: string;
+};
+export type Profile = any;
+export type Product = any;
+export type SalesOrder = any;
+export type Integration = any;
 
 // Database service layer for Uneora
 export class DatabaseService {
