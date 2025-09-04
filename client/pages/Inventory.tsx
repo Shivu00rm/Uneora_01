@@ -46,7 +46,31 @@ import {
 import { ExcelImportExport } from "@/components/ExcelImportExport";
 import { POGenerator } from "@/components/POGenerator";
 
-const mockInventory = [
+type MovementType = "in" | "out" | "adjustment";
+type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
+
+type InventoryItem = {
+  id: number;
+  sku: string;
+  name: string;
+  category: string;
+  currentStock: number;
+  reorderLevel: number;
+  maxStock: number;
+  unitPrice: number;
+  supplier: string;
+  location: string;
+  lastUpdated: string;
+  status: StockStatus;
+  movements: Array<{
+    type: MovementType;
+    quantity: number;
+    date: string;
+    reason: string;
+  }>;
+};
+
+const initialInventory: InventoryItem[] = [
   {
     id: 1,
     sku: "APL-IP14-128",
@@ -155,7 +179,7 @@ const mockInventory = [
   },
 ];
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: StockStatus) => {
   switch (status) {
     case "in_stock":
       return "default";
@@ -168,13 +192,17 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const getStockStatus = (currentStock: number, reorderLevel: number) => {
+const getStockStatus = (
+  currentStock: number,
+  reorderLevel: number,
+): StockStatus => {
   if (currentStock === 0) return "out_of_stock";
   if (currentStock <= reorderLevel) return "low_stock";
   return "in_stock";
 };
 
 export default function Inventory() {
+  const [inventory, setInventory] = useState<InventoryItem[]>(initialInventory);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
@@ -195,7 +223,7 @@ export default function Inventory() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const filteredInventory = mockInventory.filter((item) => {
+  const filteredInventory = inventory.filter((item) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.sku.toLowerCase().includes(searchQuery.toLowerCase());
@@ -207,13 +235,11 @@ export default function Inventory() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const lowStockItems = mockInventory.filter(
+  const lowStockItems = inventory.filter(
     (item) => item.currentStock <= item.reorderLevel,
   );
-  const outOfStockItems = mockInventory.filter(
-    (item) => item.currentStock === 0,
-  );
-  const totalValue = mockInventory.reduce(
+  const outOfStockItems = inventory.filter((item) => item.currentStock === 0);
+  const totalValue = inventory.reduce(
     (sum, item) => sum + item.currentStock * item.unitPrice,
     0,
   );
@@ -247,7 +273,7 @@ export default function Inventory() {
     }
 
     // Check if SKU already exists
-    const existingSKU = mockInventory.find(
+    const existingSKU = inventory.find(
       (item) => item.sku.toLowerCase() === newProduct.sku.toLowerCase(),
     );
 
@@ -260,8 +286,8 @@ export default function Inventory() {
 
     try {
       // Create new product object
-      const productToAdd = {
-        id: mockInventory.length + 1,
+      const productToAdd: InventoryItem = {
+        id: inventory.length + 1,
         sku: newProduct.sku.toUpperCase(),
         name: newProduct.name.trim(),
         category: newProduct.category,
@@ -282,7 +308,7 @@ export default function Inventory() {
           Number(newProduct.initialStock) > 0
             ? [
                 {
-                  type: "in" as const,
+                  type: "in",
                   quantity: Number(newProduct.initialStock),
                   date: new Date().toISOString().split("T")[0],
                   reason: "Initial Stock - Product Creation",
@@ -295,7 +321,7 @@ export default function Inventory() {
       // await addProductAPI(productToAdd);
 
       // For demo purposes, we'll add to the mock array
-      mockInventory.push(productToAdd);
+      setInventory((prev) => [...prev, productToAdd]);
 
       // Reset form
       setNewProduct({
@@ -355,8 +381,8 @@ export default function Inventory() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <POGenerator inventory={mockInventory} />
-          <ExcelImportExport />
+          <POGenerator inventory={inventory} />
+          <ExcelImportExport inventory={inventory} />
           <Dialog
             open={isStockMovementOpen}
             onOpenChange={setIsStockMovementOpen}
@@ -382,7 +408,7 @@ export default function Inventory() {
                       <SelectValue placeholder="Select product" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockInventory.map((item) => (
+                      {inventory.map((item) => (
                         <SelectItem key={item.id} value={item.sku}>
                           {item.name} - {item.sku}
                         </SelectItem>
@@ -644,7 +670,7 @@ export default function Inventory() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockInventory.length}</div>
+            <div className="text-2xl font-bold">{inventory.length}</div>
             <p className="text-xs text-muted-foreground">Active SKUs</p>
           </CardContent>
         </Card>
@@ -939,7 +965,7 @@ export default function Inventory() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockInventory.flatMap((item) =>
+                {inventory.flatMap((item) =>
                   item.movements.map((movement, index) => (
                     <div
                       key={`${item.id}-${index}`}

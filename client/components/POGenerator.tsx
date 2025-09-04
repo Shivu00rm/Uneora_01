@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -20,7 +20,9 @@ import {
 } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
 import { Badge } from "./ui/badge";
+import { getVendorContact, upsertVendorContact } from "@/lib/vendorContacts";
 import { Separator } from "./ui/separator";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   FileText,
   Calculator,
@@ -47,7 +49,7 @@ interface Product {
   location: string;
   status: "in_stock" | "low_stock" | "out_of_stock";
   movements?: Array<{
-    type: "in" | "out";
+    type: "in" | "out" | "adjustment";
     quantity: number;
     date: string;
     reason: string;
@@ -66,12 +68,17 @@ interface POGeneratorProps {
 }
 
 export function POGenerator({ inventory }: POGeneratorProps) {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [generationType, setGenerationType] = useState<"single" | "all">("all");
   const [selectedVendor, setSelectedVendor] = useState("");
   const [orderFrequency, setOrderFrequency] = useState("weekly");
   const [includeAlmostLow, setIncludeAlmostLow] = useState(true);
   const [customCompany, setCustomCompany] = useState("");
+  const orgName = user?.organizationName || "";
+  useEffect(() => {
+    if (!customCompany && orgName) setCustomCompany(orgName);
+  }, [orgName]);
   const [gstRate, setGstRate] = useState(18);
   const [sgstRate, setSgstRate] = useState(9);
   const [cgstRate, setCgstRate] = useState(9);
@@ -80,6 +87,10 @@ export function POGenerator({ inventory }: POGeneratorProps) {
   );
   const [poItems, setPOItems] = useState<POItem[]>([]);
   const [showPOPreview, setShowPOPreview] = useState(false);
+  const [sendDialogOpen, setSendDialogOpen] = useState(false);
+  const [sendVendor, setSendVendor] = useState<string>("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactWhatsApp, setContactWhatsApp] = useState("");
 
   // Mock sales data for calculation (in real app, this would come from API)
   const mockSalesData = {
@@ -290,6 +301,92 @@ export function POGenerator({ inventory }: POGeneratorProps) {
     });
     return groups;
   }, [poItems]);
+
+  // Build minimal PO HTML for a vendor
+  const buildVendorPOHtml = (vendor: string, items: POItem[]) => {
+    const vendorSubtotal = items.reduce((sum, it) => sum + it.totalAmount, 0);
+    const vendorGST = vendorSubtotal * (gstRate / 100);
+    const vendorSGST = vendorSubtotal * (sgstRate / 100);
+    const vendorCGST = vendorSubtotal * (cgstRate / 100);
+    const vendorTotal = vendorSubtotal + vendorGST + vendorSGST + vendorCGST;
+    return `<!doctype html><html><head><meta charset=\"utf-8\"/><title>PO-${new Date().getFullYear()}-${vendor.replace(/\s+/g, "").substring(0, 3).toUpperCase()}</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:24px}h1{margin:0 0 8px}table{border-collapse:collapse;width:100%;margin-top:16px}td,th{border:1px solid #ddd;padding:8px;text-align:left}small{color:#555}</style></head><body><h1>Purchase Order</h1><small>Date: ${new Date().toLocaleDateString()}</small><div style=\"margin-top:12px\"><strong>Vendor:</strong> ${vendor}</div><div style=\"margin-top:4px\"><strong>Company:</strong> ${customCompany || orgName || ""}</div><table><thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead><tbody>${items
+      .map(
+        (it) =>
+          `<tr><td>${it.product.name}</td><td>${it.customQty}</td><td>₹${it.product.unitPrice.toLocaleString()}</td><td>₹${(it.customQty * it.product.unitPrice).toLocaleString()}</td></tr>`,
+      )
+      .join(
+        "",
+      )}</tbody></table><div style=\"margin-top:12px\"><div>Subtotal: ₹${vendorSubtotal.toLocaleString()}</div><div>GST (${gstRate}%): ₹${vendorGST.toLocaleString()}</div><div>SGST (${sgstRate}%): ₹${vendorSGST.toLocaleString()}</div><div>CGST (${cgstRate}%): ₹${vendorCGST.toLocaleString()}</div><div><strong>Total: ₹${vendorTotal.toLocaleString()}</strong></div></div></body></html>`;
+  };
+  const downloadVendorPO = (vendor: string, items: POItem[]) => {
+    const html = buildVendorPOHtml(vendor, items);
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `PO-${new Date().getFullYear()}-${vendor.replace(/\s+/g, "").substring(0, 3).toUpperCase()}.html`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+  const openGmail = (to: string, subject: string, body: string) => {
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+  const openWhatsApp = (numberDigits: string, text: string) => {
+    const url = `https://wa.me/${numberDigits}?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const openSendDialog = () => {
+    const firstVendor = Array.from(groupedByVendor.keys())[0] || "";
+    setSendVendor(firstVendor);
+    if (firstVendor) {
+      const contact = getVendorContact(firstVendor);
+      setContactEmail(contact?.email || "");
+      setContactWhatsApp(contact?.whatsapp || "");
+    } else {
+      setContactEmail("");
+      setContactWhatsApp("");
+    }
+    setSendDialogOpen(true);
+  };
+
+  const onVendorChange = (v: string) => {
+    setSendVendor(v);
+    const contact = getVendorContact(v);
+    setContactEmail(contact?.email || "");
+    setContactWhatsApp(contact?.whatsapp || "");
+  };
+
+  const saveContact = () => {
+    if (!sendVendor) return;
+    upsertVendorContact(sendVendor, {
+      email: contactEmail,
+      whatsapp: contactWhatsApp,
+    });
+  };
+
+  const handleSend = (method: "email" | "whatsapp") => {
+    if (!sendVendor) return;
+    const items = groupedByVendor.get(sendVendor) || [];
+    downloadVendorPO(sendVendor, items);
+    const subject = `Purchase Order for ${sendVendor}`;
+    const body = `Hello,\n\nPlease find the attached Purchase Order for ${sendVendor}.\nItems: ${items.length}.\n\nThank you.`;
+    if (method === "email" && contactEmail) {
+      openGmail(contactEmail, subject, body);
+    } else if (method === "whatsapp" && contactWhatsApp) {
+      openWhatsApp(contactWhatsApp, `${subject}\n\n${body}`);
+    }
+    setSendDialogOpen(false);
+  };
+
+  const downloadAllPOs = () => {
+    groupedByVendor.forEach((items, vendor) => {
+      setTimeout(() => downloadVendorPO(vendor, items), 0);
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -516,11 +613,11 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                   <Package className="mr-2 h-4 w-4" />
                   Back to Config
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" onClick={downloadAllPOs}>
                   <Download className="mr-2 h-4 w-4" />
-                  Download PDF
+                  Download PO
                 </Button>
-                <Button>
+                <Button onClick={openSendDialog}>
                   <Mail className="mr-2 h-4 w-4" />
                   Send to Vendors
                 </Button>
@@ -552,7 +649,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                           <div className="flex items-center gap-2">
                             <Building2 className="h-4 w-4" />
                             <span className="font-medium">
-                              {customCompany || "Uneora Company"}
+                              {customCompany || orgName}
                             </span>
                           </div>
                           <div className="text-sm text-muted-foreground">
@@ -731,7 +828,7 @@ export function POGenerator({ inventory }: POGeneratorProps) {
                             Authorized Signature
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {customCompany || "Uneora Company"}
+                            {customCompany || orgName}
                           </div>
                         </div>
                       </div>
@@ -752,6 +849,74 @@ export function POGenerator({ inventory }: POGeneratorProps) {
             })}
           </div>
         )}
+        {/* Send to Vendors Dialog */}
+        <Dialog open={sendDialogOpen} onOpenChange={setSendDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Send Purchase Order</DialogTitle>
+              <DialogDescription>
+                Select vendor and sending method
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label>Vendor</Label>
+                <Select value={sendVendor} onValueChange={onVendorChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose vendor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from(groupedByVendor.keys()).map((v) => (
+                      <SelectItem key={v} value={v}>
+                        {v}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label>Email</Label>
+                  <Input
+                    type="email"
+                    placeholder="orders@vendor.com"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>WhatsApp (digits only)</Label>
+                  <Input
+                    placeholder="919876543210"
+                    value={contactWhatsApp}
+                    onChange={(e) =>
+                      setContactWhatsApp(e.target.value.replace(/\D+/g, ""))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={saveContact}>
+                  Save Contact
+                </Button>
+                <div className="flex-1" />
+                <Button
+                  disabled={!contactEmail}
+                  onClick={() => handleSend("email")}
+                >
+                  Email via Gmail
+                </Button>
+                <Button
+                  variant="outline"
+                  disabled={!contactWhatsApp}
+                  onClick={() => handleSend("whatsapp")}
+                >
+                  WhatsApp
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </DialogContent>
     </Dialog>
   );

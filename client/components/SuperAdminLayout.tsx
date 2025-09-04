@@ -5,6 +5,7 @@ import { Alert, AlertDescription } from "./ui/alert";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+
 import {
   Crown,
   Shield,
@@ -17,6 +18,7 @@ import {
   Settings
 } from "lucide-react";
 
+
 interface SuperAdminLayoutProps {
   children: React.ReactNode;
 }
@@ -24,6 +26,7 @@ interface SuperAdminLayoutProps {
 export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
   const { user } = useAuth();
   const location = useLocation();
+
 
   const isActiveRoute = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + "/");
@@ -36,6 +39,7 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
         : "text-muted-foreground hover:text-foreground hover:bg-muted"
     }`;
   };
+
 
   if (!user || user.role !== "SUPER_ADMIN") {
     return (
@@ -123,7 +127,35 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
       <Alert className="mx-4 sm:mx-6 lg:mx-8 mt-6 mb-6 border-blue-200 bg-blue-50">
         <Shield className="h-4 w-4 text-blue-600" />
         <AlertDescription className="text-blue-800">
-          <strong>Platform Mode:</strong> You have complete visibility and control across all organizations, stores, and integrations in the Uneora platform.
+
+          {location.pathname.startsWith("/org-flows") ? (
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <strong>Organization Health Monitor:</strong> View fleet-wide
+                status and incidents.
+              </div>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/super-admin">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back to Super Admin
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <>
+              <strong>Platform Mode:</strong> You're in the super admin console.
+              Organization-specific features are available through the{" "}
+              <Button
+                variant="link"
+                className="p-0 h-auto text-blue-600 underline"
+                asChild
+              >
+                <Link to="/org-flows">Organization Health Monitor</Link>
+              </Button>{" "}
+              where you can access individual organization dashboards when
+              needed.
+            </>
+          )}
+
         </AlertDescription>
       </Alert>
 

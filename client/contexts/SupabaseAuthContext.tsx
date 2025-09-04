@@ -244,6 +244,15 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
         if (sessionError) {
           console.error("Session error:", sessionError);
+          const msg = sessionError.message || "";
+          if (msg.includes("Invalid API key")) {
+            // Force mock mode and reload to recover seamlessly in dev
+            try {
+              localStorage.setItem("USE_MOCK_SUPABASE", "1");
+            } catch {}
+            window.location.reload();
+            return;
+          }
           setError(sessionError.message);
           return;
         }
@@ -328,6 +337,20 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         error?.error_description ||
         error?.error ||
         "Login failed";
+
+      // If Supabase API key is invalid, switch to mock mode automatically
+      if (
+        typeof errorMessage === "string" &&
+        errorMessage.includes("Invalid API key")
+      ) {
+        try {
+          localStorage.setItem("USE_MOCK_SUPABASE", "1");
+        } catch {}
+        // Reload to reinitialize the Supabase client in mock mode
+        window.location.reload();
+        return;
+      }
+
       setError(errorMessage);
       throw error;
     } finally {

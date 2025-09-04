@@ -32,6 +32,15 @@ import { Separator } from "@/components/ui/separator";
 import { useSuperAdmin } from "@/contexts/SuperAdminContext";
 import { InvoiceTemplate } from "@/components/InvoiceTemplate";
 import { PlatformAlerts } from "@/components/PlatformAlerts";
+import AdminUsers from "@/components/super-admin/AdminUsers";
+import TenantIntegrations from "@/components/super-admin/TenantIntegrations";
+import AuditCenter from "@/components/super-admin/AuditCenter";
+import ErrorCenter from "@/components/super-admin/ErrorCenter";
+import RBACEditor from "@/components/super-admin/RBACEditor";
+import InvitesGDPR from "@/components/super-admin/InvitesGDPR";
+import StripeOps from "@/components/super-admin/StripeOps";
+import IntegrationsCompliance from "@/components/super-admin/IntegrationsCompliance";
+import OpsCenter from "@/components/super-admin/OpsCenter";
 import {
   Shield,
   Users,
@@ -282,7 +291,7 @@ export default function SuperAdmin() {
 
       {/* Main Content */}
       <Tabs defaultValue="organizations" className="space-y-6 enhanced-tabs">
-        <TabsList className="grid w-full grid-cols-4 bg-slate-100">
+        <TabsList className="grid w-full grid-cols-12 bg-slate-100">
           <TabsTrigger
             value="organizations"
             className="tab-organizations text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
@@ -311,6 +320,33 @@ export default function SuperAdmin() {
             className="tab-team text-slate-700 font-medium data-[state=active]:text-slate-900 data-[state=active]:font-semibold"
           >
             Admin Team
+          </TabsTrigger>
+          <TabsTrigger value="users" className="tab-team">
+            Users
+          </TabsTrigger>
+          <TabsTrigger value="integrations" className="tab-team">
+            Integrations
+          </TabsTrigger>
+          <TabsTrigger value="compliance" className="tab-team">
+            Compliance
+          </TabsTrigger>
+          <TabsTrigger value="rbac" className="tab-team">
+            RBAC
+          </TabsTrigger>
+          <TabsTrigger value="invites" className="tab-team">
+            Invites/GDPR
+          </TabsTrigger>
+          <TabsTrigger value="billing-ops" className="tab-team">
+            Billing Ops
+          </TabsTrigger>
+          <TabsTrigger value="audit" className="tab-errors">
+            Audit
+          </TabsTrigger>
+          <TabsTrigger value="errors" className="tab-errors">
+            Errors
+          </TabsTrigger>
+          <TabsTrigger value="ops" className="tab-performance">
+            Ops
           </TabsTrigger>
         </TabsList>
 
@@ -603,6 +639,34 @@ export default function SuperAdmin() {
           </div>
         </TabsContent>
 
+        <TabsContent value="users" className="space-y-6">
+          <AdminUsers />
+        </TabsContent>
+        <TabsContent value="integrations" className="space-y-6">
+          <TenantIntegrations />
+        </TabsContent>
+        <TabsContent value="compliance" className="space-y-6">
+          <IntegrationsCompliance />
+        </TabsContent>
+        <TabsContent value="rbac" className="space-y-6">
+          <RBACEditor />
+        </TabsContent>
+        <TabsContent value="invites" className="space-y-6">
+          <InvitesGDPR />
+        </TabsContent>
+        <TabsContent value="billing-ops" className="space-y-6">
+          <StripeOps />
+        </TabsContent>
+        <TabsContent value="audit" className="space-y-6">
+          <AuditCenter />
+        </TabsContent>
+        <TabsContent value="errors" className="space-y-6">
+          <ErrorCenter />
+        </TabsContent>
+        <TabsContent value="ops" className="space-y-6">
+          <OpsCenter />
+        </TabsContent>
+
         <TabsContent
           value="api-keys"
           className="space-y-6 tab-content-watermark flowstock-watermark"
@@ -630,7 +694,7 @@ export default function SuperAdmin() {
                   <Input
                     id="openai-key"
                     type="password"
-                    placeholder="••••••••••••••••"
+                    placeholder="•••••••••••��••••"
                     defaultValue="sk-abc123"
                   />
                 </div>

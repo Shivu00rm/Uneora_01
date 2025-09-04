@@ -5,6 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import { PLAN_FEATURES, type Feature, type Plan } from "@/lib/planFeatures";
 
 interface Organization {
   id: string;
@@ -67,6 +68,9 @@ interface SuperAdminContextType {
   reactivateOrganization: (orgId: string) => void;
   getOrganizationMetrics: (orgId: string) => any;
   hasSystemPermission: (permission: string) => boolean;
+  getPlanFeatures: (plan: Plan) => Feature[];
+  applyPlanDefaults: (orgId: string) => void;
+  setOrgFeature: (orgId: string, feature: Feature, enabled: boolean) => void;
 }
 
 const SuperAdminContext = createContext<SuperAdminContextType | undefined>(
@@ -208,12 +212,16 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
         adminName: superAdminUser?.name || "System Admin",
       };
 
-      setRecentPlanChanges((prev) => [planChange, ...prev.slice(0, 9)]); // Keep last 10 changes
+      setRecentPlanChanges((prev) => [planChange, ...prev.slice(0, 9)]);
 
       setOrganizations((prev) =>
-        prev.map((o) =>
-          o.id === orgId ? { ...o, plan: plan as Organization["plan"] } : o,
-        ),
+        prev.map((o) => {
+          if (o.id !== orgId) return o;
+          const defaults = PLAN_FEATURES[plan as Plan];
+          const current = new Set(o.features || []);
+          const merged = Array.from(new Set([...defaults, ...current]));
+          return { ...o, plan: plan as Organization["plan"], features: merged };
+        }),
       );
     }
   };
@@ -233,6 +241,30 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
       ),
     );
   };
+
+  const setOrgFeature = (orgId: string, feature: Feature, enabled: boolean) => {
+    setOrganizations((prev) =>
+      prev.map((o) => {
+        if (o.id !== orgId) return o;
+        const set = new Set(o.features || []);
+        if (enabled) set.add(feature);
+        else set.delete(feature);
+        return { ...o, features: Array.from(set) };
+      }),
+    );
+  };
+
+  const applyPlanDefaults = (orgId: string) => {
+    setOrganizations((prev) =>
+      prev.map((o) => {
+        if (o.id !== orgId) return o;
+        const defaults = PLAN_FEATURES[o.plan as Plan];
+        return { ...o, features: [...defaults] };
+      }),
+    );
+  };
+
+  const getPlanFeatures = (plan: Plan) => PLAN_FEATURES[plan];
 
   const getOrganizationMetrics = (orgId: string) => {
     const org = organizations.find((o) => o.id === orgId);
@@ -262,6 +294,9 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     reactivateOrganization,
     getOrganizationMetrics,
     hasSystemPermission,
+    getPlanFeatures,
+    applyPlanDefaults,
+    setOrgFeature,
   };
 
   return (
