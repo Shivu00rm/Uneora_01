@@ -282,7 +282,7 @@ export default function Inventory() {
 
     try {
       // Create new product object
-      const productToAdd = {
+      const productToAdd: InventoryProduct = {
         id: inventory.length + 1,
         sku: newProduct.sku.toUpperCase(),
         name: newProduct.name.trim(),
@@ -292,19 +292,19 @@ export default function Inventory() {
         maxStock: Number(newProduct.maxStock),
         unitPrice: Number(newProduct.unitPrice),
         supplier: newProduct.supplier,
-        location: "Warehouse A", // Default location
+        location: "Warehouse A",
         lastUpdated: new Date().toISOString().split("T")[0],
         status:
           Number(newProduct.initialStock) === 0
-            ? "out_of_stock"
+            ? ("out_of_stock" as const)
             : Number(newProduct.initialStock) <= Number(newProduct.reorderLevel)
-              ? "low_stock"
-              : "in_stock",
+              ? ("low_stock" as const)
+              : ("in_stock" as const),
         movements:
           Number(newProduct.initialStock) > 0
             ? [
                 {
-                  type: "in" as const,
+                  type: "in",
                   quantity: Number(newProduct.initialStock),
                   date: new Date().toISOString().split("T")[0],
                   reason: "Initial Stock - Product Creation",
