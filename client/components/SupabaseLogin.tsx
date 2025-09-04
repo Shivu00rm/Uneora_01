@@ -20,11 +20,12 @@ export function SupabaseLogin() {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(location.pathname === "/signup");
   const [showSuperAdminSetup, setShowSuperAdminSetup] = useState(false);
+  type Role = "ORG_USER" | "ORG_ADMIN" | "SUPER_ADMIN";
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     name: "",
-    role: "ORG_USER" as const,
+    role: "ORG_USER" as Role,
     companyName: "",
   });
   const [error, setError] = useState<string | null>(null);
@@ -90,16 +91,20 @@ export function SupabaseLogin() {
           await signUp(
             formData.email,
             formData.password,
-            formData.name,
-            formData.role,
-            formData.companyName,
+            {
+              name: formData.name,
+              role: formData.role,
+              companyName: formData.companyName,
+            },
           );
         } else {
           await signUp(
             formData.email,
             formData.password,
-            formData.name,
-            formData.role,
+            {
+              name: formData.name,
+              role: formData.role,
+            },
           );
         }
       } else {
