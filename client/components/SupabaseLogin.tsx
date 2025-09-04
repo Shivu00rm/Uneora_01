@@ -21,11 +21,12 @@ export function SupabaseLogin() {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(location.pathname === "/signup");
   const [showSuperAdminSetup, setShowSuperAdminSetup] = useState(false);
+  type Role = "ORG_USER" | "ORG_ADMIN" | "SUPER_ADMIN";
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     name: "",
-    role: "ORG_USER" as UserRole,
+    role: "ORG_USER" as Role,
     companyName: "",
   });
   const [error, setError] = useState<string | null>(null);
@@ -85,15 +86,29 @@ export function SupabaseLogin() {
 
     try {
       if (isSignUp) {
-        const userData = {
-          name: formData.name,
-          email: formData.email,
-          role: formData.role,
-          organizationId: null,
-          permissions: {},
-          companyName: formData.companyName || undefined,
-        };
-        await signUp(formData.email, formData.password, userData);
+        // For org admins, create company first if provided
+        if (formData.role === "ORG_ADMIN" && formData.companyName) {
+          // Company creation will be handled in the signup process
+          await signUp(
+            formData.email,
+            formData.password,
+            {
+              name: formData.name,
+              role: formData.role,
+              companyName: formData.companyName,
+            },
+          );
+        } else {
+          await signUp(
+            formData.email,
+            formData.password,
+            {
+              name: formData.name,
+              role: formData.role,
+            },
+          );
+        }
+
       } else {
         await login(formData.email, formData.password);
         // After successful login, redirect to appropriate dashboard
@@ -203,10 +218,18 @@ export function SupabaseLogin() {
 
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>
-              {isSignUp ? "Create Account" : "Sign In"} - Uneora
+            <div className="flex flex-col items-center space-y-2 mb-2">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fb7155483f4aa4218b0fd455934ead78a%2F70167a20be274a39b7819818c11d0910?format=webp&width=800"
+                alt="Uneora Logo"
+                className="h-10 w-10 object-contain"
+              />
+              <span className="text-lg font-semibold text-foreground">Uneora</span>
+            </div>
+            <CardTitle className="text-center">
+              {isSignUp ? "Create Account" : "Sign In"}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-center">
               {isSignUp
                 ? "Create your Uneora account to get started"
                 : "Sign in to your Uneora account"}

@@ -27,6 +27,8 @@ interface AuthContextType {
   isOrgUser: () => boolean;
   canManageUsers: () => boolean;
   canAccessOrganizationData: (orgId: string) => boolean;
+  canManageStore: (storeId: string) => boolean;
+  canManageEcommerce: () => boolean;
   getDefaultRoute: () => string;
 }
 
@@ -151,6 +153,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return supabaseAuth.canAccessOrganizationData(orgId);
   };
 
+  const canManageStore = (storeId: string): boolean => {
+    return supabaseAuth.canManageStore(storeId);
+  };
+
+  const canManageEcommerce = (): boolean => {
+    return supabaseAuth.canManageEcommerce();
+  };
+
   const getDefaultRoute = (): string => {
     return supabaseAuth.getDefaultRoute();
   };
@@ -167,6 +177,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isOrgUser,
     canManageUsers,
     canAccessOrganizationData,
+    canManageStore,
+    canManageEcommerce,
     getDefaultRoute,
   };
 

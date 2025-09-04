@@ -1,5 +1,4 @@
 import { supabase } from "./supabase";
-
 // Local type definitions matching usage in this file
 export interface Organization {
   id: string;
