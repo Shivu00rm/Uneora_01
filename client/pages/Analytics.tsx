@@ -252,7 +252,23 @@ export default function Analytics() {
           </Button>
 
           {/* Export Reports */}
-          <ReportExporter />
+          <ReportExporter
+            title="Analytics Data"
+            description="Export analytics and sales data"
+            availableFields={[
+              { id: "month", label: "Month", enabled: true, required: true },
+              { id: "sales", label: "Sales Revenue", enabled: true },
+              { id: "orders", label: "Number of Orders", enabled: true },
+              { id: "customers", label: "Customers", enabled: false },
+              { id: "avg_order_value", label: "Average Order Value", enabled: false },
+            ]}
+            onExport={async (options) => {
+              // Handle export logic here
+              console.log("Exporting with options:", options);
+              // Simulate export processing
+              await new Promise(resolve => setTimeout(resolve, 2000));
+            }}
+          />
         </div>
       </div>
 

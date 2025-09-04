@@ -46,7 +46,10 @@ import {
 import { ExcelImportExport } from "@/components/ExcelImportExport";
 import { POGenerator } from "@/components/POGenerator";
 
-type InventoryProduct = {
+type MovementType = "in" | "out" | "adjustment";
+type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
+
+type InventoryItem = {
   id: number;
   sku: string;
   name: string;
@@ -67,7 +70,7 @@ type InventoryProduct = {
   }>;
 };
 
-const initialInventory: InventoryProduct[] = [
+const initialInventory: InventoryItem[] = [
   {
     id: 1,
     sku: "APL-IP14-128",
@@ -189,14 +192,17 @@ const getStatusColor = (status: "in_stock" | "low_stock" | "out_of_stock") => {
   }
 };
 
-const getStockStatus = (currentStock: number, reorderLevel: number) => {
+const getStockStatus = (
+  currentStock: number,
+  reorderLevel: number,
+): StockStatus => {
   if (currentStock === 0) return "out_of_stock";
   if (currentStock <= reorderLevel) return "low_stock";
   return "in_stock";
 };
 
 export default function Inventory() {
-  const [inventory, setInventory] = useState(initialInventory);
+  const [inventory, setInventory] = useState<InventoryItem[]>(initialInventory);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
@@ -280,7 +286,7 @@ export default function Inventory() {
 
     try {
       // Create new product object
-      const productToAdd: InventoryProduct = {
+      const productToAdd: InventoryItem = {
         id: inventory.length + 1,
         sku: newProduct.sku.toUpperCase(),
         name: newProduct.name.trim(),

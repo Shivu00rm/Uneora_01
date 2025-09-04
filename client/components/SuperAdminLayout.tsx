@@ -1,11 +1,23 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Card, CardContent } from "./ui/card";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { Crown, Shield, Building2, ArrowLeft } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+
+import {
+  Crown,
+  Shield,
+  ExternalLink,
+  Building2,
+  BarChart3,
+  Monitor,
+  Activity,
+  Users,
+  Settings
+} from "lucide-react";
+
 
 interface SuperAdminLayoutProps {
   children: React.ReactNode;
@@ -14,6 +26,20 @@ interface SuperAdminLayoutProps {
 export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
   const { user } = useAuth();
   const location = useLocation();
+
+
+  const isActiveRoute = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(path + "/");
+  };
+
+  const navLinkClass = (path: string) => {
+    return `flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+      isActiveRoute(path)
+        ? "bg-primary text-primary-foreground"
+        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+    }`;
+  };
+
 
   if (!user || user.role !== "SUPER_ADMIN") {
     return (
@@ -77,10 +103,31 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
         </div>
       </div>
 
-      {/* Navigation Notice */}
+      {/* Navigation */}
+      <div className="border-b">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center space-x-6 py-4">
+            <Link to="/super-admin" className={navLinkClass("/super-admin")}>
+              <BarChart3 className="h-4 w-4" />
+              Admin Console
+            </Link>
+            <Link to="/org-flows" className={navLinkClass("/org-flows")}>
+              <Activity className="h-4 w-4" />
+              Health Monitor
+            </Link>
+            <Link to="/super-admin/analytics" className={navLinkClass("/super-admin/analytics")}>
+              <Monitor className="h-4 w-4" />
+              Analytics & Insights
+            </Link>
+          </nav>
+        </div>
+      </div>
+
+      {/* Status Notice */}
       <Alert className="mx-4 sm:mx-6 lg:mx-8 mt-6 mb-6 border-blue-200 bg-blue-50">
         <Shield className="h-4 w-4 text-blue-600" />
         <AlertDescription className="text-blue-800">
+
           {location.pathname.startsWith("/org-flows") ? (
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -108,6 +155,7 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
               needed.
             </>
           )}
+
         </AlertDescription>
       </Alert>
 

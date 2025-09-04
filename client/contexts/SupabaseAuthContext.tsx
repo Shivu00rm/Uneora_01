@@ -8,7 +8,7 @@ import React, {
 import { User as SupabaseUser, Session } from "@supabase/supabase-js";
 import { supabase, Tables } from "@/lib/supabase";
 
-export type UserRole = "SUPER_ADMIN" | "ORG_ADMIN" | "ORG_USER";
+export type UserRole = "SUPER_ADMIN" | "ORG_ADMIN" | "STORE_MANAGER" | "CASHIER" | "ONLINE_OPS_MANAGER" | "ORG_USER";
 
 interface User {
   id: string;
@@ -21,6 +21,19 @@ interface User {
   permissions: Record<string, any>;
   lastLogin?: string;
   avatarUrl?: string;
+  // Multi-store support
+  storeAccess?: Array<{
+    storeId: string;
+    storeName: string;
+    role: UserRole;
+    permissions: string[];
+    isActive: boolean;
+  }>;
+  defaultStoreId?: string;
+  ecommerceAccess?: {
+    platforms: string[];
+    permissions: string[];
+  };
 }
 
 interface AuthContextType {
@@ -31,12 +44,19 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signUp: (email: string, password: string, userData: any) => Promise<void>;
-  hasPermission: (module: string, action?: string) => boolean;
+  hasPermission: (module: string, action?: string, storeId?: string) => boolean;
   isSuperAdmin: () => boolean;
   isOrgAdmin: () => boolean;
   isOrgUser: () => boolean;
+  isStoreManager: () => boolean;
+  isCashier: () => boolean;
+  isOnlineOpsManager: () => boolean;
   canManageUsers: () => boolean;
   canAccessOrganizationData: (orgId: string) => boolean;
+  canAccessStore: (storeId: string) => boolean;
+  canManageStore: (storeId: string) => boolean;
+  canManageEcommerce: () => boolean;
+  getUserStores: () => Array<{storeId: string; storeName: string; role: UserRole}>;
   getDefaultRoute: () => string;
   refreshUser: () => Promise<void>;
 }
@@ -158,6 +178,40 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
           users: ["view", "create", "edit", "delete"],
           files: ["view", "upload", "delete"],
           settings: ["view", "edit"],
+          stores: ["view", "create", "edit", "delete", "manage"],
+          ecommerce: ["view", "create", "edit", "delete", "sync", "manage"],
+          multi_store_analytics: ["view", "export"],
+        };
+      case "STORE_MANAGER":
+        return {
+          dashboard: ["view"],
+          inventory: ["view", "create", "edit", "delete", "export"],
+          stock_movements: ["view", "create", "edit"],
+          pos: ["view", "create", "refund"],
+          vendors: ["view", "create", "edit"],
+          purchase_orders: ["view", "create", "edit", "approve"],
+          analytics: ["view", "export"],
+          users: ["view", "create", "edit"], // Store-level only
+          files: ["view", "upload", "delete"],
+          settings: ["view", "edit"], // Store-level only
+          ecommerce: ["view", "sync"], // Limited e-commerce access
+        };
+      case "CASHIER":
+        return {
+          dashboard: ["view"],
+          inventory: ["view"],
+          pos: ["view", "create"],
+          stock_movements: ["view"],
+          files: ["view"],
+        };
+      case "ONLINE_OPS_MANAGER":
+        return {
+          dashboard: ["view"],
+          inventory: ["view", "edit"],
+          stock_movements: ["view", "create"],
+          analytics: ["view"],
+          ecommerce: ["view", "create", "edit", "sync", "manage"],
+          files: ["view", "upload"],
         };
       case "ORG_USER":
         return {
@@ -388,12 +442,28 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const hasPermission = (module: string, action?: string): boolean => {
+  const hasPermission = (module: string, action?: string, storeId?: string): boolean => {
     if (!user) return false;
 
     // Super admin has all permissions
     if (user.role === "SUPER_ADMIN") return true;
 
+    // If storeId is provided, check store-specific permissions
+    if (storeId && user.storeAccess) {
+      const storeAccess = user.storeAccess.find(access =>
+        access.storeId === storeId && access.isActive
+      );
+
+      if (storeAccess) {
+        // Check store-specific permissions
+        if (!action) {
+          return storeAccess.permissions.some(permission => permission.startsWith(module));
+        }
+        return storeAccess.permissions.includes(`${module}.${action}`);
+      }
+    }
+
+    // Fall back to global permissions
     const permissions = user.permissions || {};
     const modulePermissions = permissions[module] || [];
 
@@ -419,8 +489,69 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     return user?.role === "ORG_USER" || false;
   };
 
+  const isStoreManager = (): boolean => {
+    return user?.role === "STORE_MANAGER" || false;
+  };
+
+  const isCashier = (): boolean => {
+    return user?.role === "CASHIER" || false;
+  };
+
+  const isOnlineOpsManager = (): boolean => {
+    return user?.role === "ONLINE_OPS_MANAGER" || false;
+  };
+
   const canManageUsers = (): boolean => {
     return isSuperAdmin() || (isOrgAdmin() && hasPermission("users", "create"));
+  };
+
+  const canAccessStore = (storeId: string): boolean => {
+    if (!user) return false;
+
+    // Super admin and Org admin can access all stores
+    if (user.role === "SUPER_ADMIN" || user.role === "ORG_ADMIN") return true;
+
+    // Check if user has access to this specific store
+    return user.storeAccess?.some(access => access.storeId === storeId && access.isActive) || false;
+  };
+
+  const canManageStore = (storeId: string): boolean => {
+    if (!user) return false;
+
+    // Super admin and Org admin can manage all stores
+    if (user.role === "SUPER_ADMIN" || user.role === "ORG_ADMIN") return true;
+
+    // Store managers can manage their assigned stores
+    if (user.role === "STORE_MANAGER") {
+      return user.storeAccess?.some(access =>
+        access.storeId === storeId && access.role === "STORE_MANAGER" && access.isActive
+      ) || false;
+    }
+
+    return false;
+  };
+
+  const canManageEcommerce = (): boolean => {
+    if (!user) return false;
+
+    return (
+      user.role === "SUPER_ADMIN" ||
+      user.role === "ORG_ADMIN" ||
+      user.role === "ONLINE_OPS_MANAGER" ||
+      hasPermission("ecommerce", "manage")
+    );
+  };
+
+  const getUserStores = (): Array<{storeId: string; storeName: string; role: UserRole}> => {
+    if (!user?.storeAccess) return [];
+
+    return user.storeAccess
+      .filter(access => access.isActive)
+      .map(access => ({
+        storeId: access.storeId,
+        storeName: access.storeName,
+        role: access.role
+      }));
   };
 
   const canAccessOrganizationData = (orgId: string): boolean => {
@@ -440,6 +571,17 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       case "SUPER_ADMIN":
         return "/super-admin";
       case "ORG_ADMIN":
+        return "/app/org-dashboard";
+      case "STORE_MANAGER":
+        // Redirect to their default store or first accessible store
+        const defaultStore = user.defaultStoreId || user.storeAccess?.[0]?.storeId;
+        return defaultStore ? `/app/store/${defaultStore}/dashboard` : "/app/dashboard";
+      case "CASHIER":
+        // Cashiers go directly to POS
+        const cashierStore = user.defaultStoreId || user.storeAccess?.[0]?.storeId;
+        return cashierStore ? `/app/store/${cashierStore}/pos` : "/app/pos";
+      case "ONLINE_OPS_MANAGER":
+        return "/app/ecommerce/dashboard";
       case "ORG_USER":
         return "/app/dashboard";
       default:
@@ -459,8 +601,15 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     isSuperAdmin,
     isOrgAdmin,
     isOrgUser,
+    isStoreManager,
+    isCashier,
+    isOnlineOpsManager,
     canManageUsers,
     canAccessOrganizationData,
+    canAccessStore,
+    canManageStore,
+    canManageEcommerce,
+    getUserStores,
     getDefaultRoute,
     refreshUser,
   };

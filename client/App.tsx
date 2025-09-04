@@ -35,14 +35,27 @@ import Analytics from "./pages/Analytics";
 import Files from "./pages/Files";
 import Settings from "./pages/Settings";
 import SuperAdmin from "./pages/SuperAdmin";
+import SuperAdminConsole from "./pages/SuperAdminConsole";
 import OrganizationMonitor from "./pages/OrganizationMonitor";
+import SuperAdminAnalytics from "./pages/SuperAdminAnalytics";
 import AppDashboard from "./pages/app/AppDashboard";
 import TeamManagement from "./pages/app/TeamManagement";
 import AppSettings from "./pages/app/AppSettings";
+
+import OrgAdminDashboard from "./pages/app/OrgAdminDashboard";
+import StoreManagement from "./pages/app/StoreManagement";
+import EcommerceIntegration from "./pages/app/EcommerceIntegration";
+import MultiStoreAnalytics from "./pages/app/MultiStoreAnalytics";
+
 import Billing from "./pages/app/Billing";
+
 import Manufacturing from "./pages/solutions/Manufacturing";
 import Retail from "./pages/solutions/Retail";
 import Wholesale from "./pages/solutions/Wholesale";
+import About from "./pages/About";
+import Pricing from "./pages/Pricing";
+import Contact from "./pages/Contact";
+import Support from "./pages/Support";
 import { TenantLayout } from "./components/TenantLayout";
 import { SuperAdminLayout } from "./components/SuperAdminLayout";
 import { RoleRoute } from "./components/SupabaseProtectedRoute";
@@ -120,6 +133,12 @@ function AuthenticatedApp() {
           <Route path="/solutions/manufacturing" element={<Manufacturing />} />
           <Route path="/solutions/retail" element={<Retail />} />
           <Route path="/solutions/wholesale" element={<Wholesale />} />
+
+          {/* Public Pages */}
+          <Route path="/about" element={<About />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/support" element={<Support />} />
 
           {/* Legacy Protected Routes - Redirect to role-appropriate routes */}
           <Route
@@ -277,7 +296,17 @@ function AuthenticatedApp() {
             element={
               <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
                 <SuperAdminLayout>
-                  <SuperAdmin />
+                  <SuperAdminConsole />
+                </SuperAdminLayout>
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/super-admin/console"
+            element={
+              <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
+                <SuperAdminLayout>
+                  <SuperAdminConsole />
                 </SuperAdminLayout>
               </RoleRoute>
             }
@@ -292,15 +321,126 @@ function AuthenticatedApp() {
               </RoleRoute>
             }
           />
+          <Route
+            path="/super-admin/analytics"
+            element={
+              <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
+                <SuperAdminLayout>
+                  <SuperAdminAnalytics />
+                </SuperAdminLayout>
+              </RoleRoute>
+            }
+          />
 
           {/* Tenant App Routes */}
           <Route
             path="/app/*"
             element={
-              <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER"]}>
+              <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER", "STORE_MANAGER", "CASHIER", "ONLINE_OPS_MANAGER"]}>
                 <TenantLayout>
                   <Routes>
                     <Route path="dashboard" element={<AppDashboard />} />
+
+                    {/* Multi-Store Routes */}
+                    <Route
+                      path="org-dashboard"
+                      element={
+                        <ProtectedRoute allowedRoles={["ORG_ADMIN"]}>
+                          <OrgAdminDashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="stores"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="stores"
+                          requiredAction="view"
+                        >
+                          <StoreManagement />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="ecommerce"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="ecommerce"
+                          requiredAction="view"
+                        >
+                          <EcommerceIntegration />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="multi-store-analytics"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="multi_store_analytics"
+                          requiredAction="view"
+                        >
+                          <MultiStoreAnalytics />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* Store-specific routes */}
+                    <Route
+                      path="store/:storeId/dashboard"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="dashboard"
+                          requiredAction="view"
+                        >
+                          <AppDashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="store/:storeId/inventory"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="inventory"
+                          requiredAction="view"
+                        >
+                          <Inventory />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="store/:storeId/pos"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="pos"
+                          requiredAction="view"
+                        >
+                          <POS />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="store/:storeId/analytics"
+                      element={
+                        <ProtectedRoute
+                          requiredModule="analytics"
+                          requiredAction="view"
+                        >
+                          <Analytics />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* E-commerce specific routes */}
+                    <Route
+                      path="ecommerce/dashboard"
+                      element={
+                        <ProtectedRoute
+                          allowedRoles={["ONLINE_OPS_MANAGER", "ORG_ADMIN"]}
+                        >
+                          <EcommerceIntegration />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route
                       path="inventory"
                       element={
