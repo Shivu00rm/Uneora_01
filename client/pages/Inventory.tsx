@@ -176,9 +176,7 @@ const initialInventory: InventoryProduct[] = [
   },
 ];
 
-const getStatusColor = (
-  status: "in_stock" | "low_stock" | "out_of_stock",
-) => {
+const getStatusColor = (status: "in_stock" | "low_stock" | "out_of_stock") => {
   switch (status) {
     case "in_stock":
       return "default";

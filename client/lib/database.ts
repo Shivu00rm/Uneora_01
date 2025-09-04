@@ -309,8 +309,12 @@ export class DatabaseService {
       (sum, order) => sum + (Number(order.total_amount) || 0),
       0,
     );
-    const pendingOrders = orders.filter((order) => order.status === "pending").length;
-    const deliveredOrders = orders.filter((order) => order.status === "delivered").length;
+    const pendingOrders = orders.filter(
+      (order) => order.status === "pending",
+    ).length;
+    const deliveredOrders = orders.filter(
+      (order) => order.status === "delivered",
+    ).length;
 
     return {
       totalRevenue,

@@ -294,7 +294,8 @@ export function SupabaseLogin() {
                     </select>
                   </div>
 
-                  {(formData.role === "ORG_ADMIN" || formData.role === "SUPER_ADMIN") && (
+                  {(formData.role === "ORG_ADMIN" ||
+                    formData.role === "SUPER_ADMIN") && (
                     <div className="space-y-2">
                       <label
                         htmlFor="companyName"
