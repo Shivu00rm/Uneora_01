@@ -46,7 +46,28 @@ import {
 import { ExcelImportExport } from "@/components/ExcelImportExport";
 import { POGenerator } from "@/components/POGenerator";
 
-const initialInventory = [
+type InventoryProduct = {
+  id: number;
+  sku: string;
+  name: string;
+  category: string;
+  currentStock: number;
+  reorderLevel: number;
+  maxStock: number;
+  unitPrice: number;
+  supplier: string;
+  location: string;
+  lastUpdated: string;
+  status: "in_stock" | "low_stock" | "out_of_stock";
+  movements: Array<{
+    type: "in" | "out";
+    quantity: number;
+    date: string;
+    reason: string;
+  }>;
+};
+
+const initialInventory: InventoryProduct[] = [
   {
     id: 1,
     sku: "APL-IP14-128",
@@ -155,7 +176,9 @@ const initialInventory = [
   },
 ];
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (
+  status: "in_stock" | "low_stock" | "out_of_stock",
+) => {
   switch (status) {
     case "in_stock":
       return "default";
