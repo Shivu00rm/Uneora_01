@@ -151,14 +151,14 @@ const flowTypeColors = {
   api_call: "secondary",
   ecommerce_sync: "default",
   whatsapp_alert: "outline",
-};
+} as const;
 
 const flowStatusColors = {
   success: "default",
   pending_approval: "secondary",
   failed: "destructive",
   warning: "secondary",
-};
+} as const;
 
 export default function OrgFlows() {
   const [selectedOrg, setSelectedOrg] = useState("all");
