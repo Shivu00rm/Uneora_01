@@ -46,7 +46,31 @@ import {
 import { ExcelImportExport } from "@/components/ExcelImportExport";
 import { POGenerator } from "@/components/POGenerator";
 
-const initialInventory = [
+type MovementType = "in" | "out" | "adjustment";
+type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
+
+type InventoryItem = {
+  id: number;
+  sku: string;
+  name: string;
+  category: string;
+  currentStock: number;
+  reorderLevel: number;
+  maxStock: number;
+  unitPrice: number;
+  supplier: string;
+  location: string;
+  lastUpdated: string;
+  status: StockStatus;
+  movements: Array<{
+    type: MovementType;
+    quantity: number;
+    date: string;
+    reason: string;
+  }>;
+};
+
+const initialInventory: InventoryItem[] = [
   {
     id: 1,
     sku: "APL-IP14-128",
@@ -155,7 +179,7 @@ const initialInventory = [
   },
 ];
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: StockStatus) => {
   switch (status) {
     case "in_stock":
       return "default";
@@ -168,14 +192,17 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const getStockStatus = (currentStock: number, reorderLevel: number) => {
+const getStockStatus = (
+  currentStock: number,
+  reorderLevel: number,
+): StockStatus => {
   if (currentStock === 0) return "out_of_stock";
   if (currentStock <= reorderLevel) return "low_stock";
   return "in_stock";
 };
 
 export default function Inventory() {
-  const [inventory, setInventory] = useState(initialInventory);
+  const [inventory, setInventory] = useState<InventoryItem[]>(initialInventory);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
@@ -259,7 +286,7 @@ export default function Inventory() {
 
     try {
       // Create new product object
-      const productToAdd = {
+      const productToAdd: InventoryItem = {
         id: inventory.length + 1,
         sku: newProduct.sku.toUpperCase(),
         name: newProduct.name.trim(),
@@ -281,7 +308,7 @@ export default function Inventory() {
           Number(newProduct.initialStock) > 0
             ? [
                 {
-                  type: "in" as const,
+                  type: "in",
                   quantity: Number(newProduct.initialStock),
                   date: new Date().toISOString().split("T")[0],
                   reason: "Initial Stock - Product Creation",
