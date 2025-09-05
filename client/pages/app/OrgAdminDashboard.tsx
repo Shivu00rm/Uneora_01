@@ -599,6 +599,49 @@ export default function OrgAdminDashboard() {
             ))}
           </div>
 
+          {channelsView === "bar" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Channel Revenue and Orders</CardTitle>
+                <CardDescription>Comparison across channels</CardDescription>
+              </CardHeader>
+              <CardContent style={{ height: 320 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data.ecommercePlatforms}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="revenue" name="Revenue" fill="#818cf8" />
+                    <Bar dataKey="orders" name="Orders" fill="#f59e0b" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          )}
+
+          {channelsView === "pie" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Channel Revenue Share</CardTitle>
+                <CardDescription>Share of total revenue per channel</CardDescription>
+              </CardHeader>
+              <CardContent style={{ height: 320 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={data.ecommercePlatforms} dataKey="revenue" nameKey="name" outerRadius={110} label>
+                      {data.ecommercePlatforms.map((_, idx) => (
+                        <Cell key={idx} fill={["#818cf8", "#f59e0b", "#10b981", "#f472b6"][idx % 4]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Add New Platform */}
           <Card className="border-dashed border-2 hover:border-gray-400 transition-colors">
             <CardContent className="flex flex-col items-center justify-center py-12">
