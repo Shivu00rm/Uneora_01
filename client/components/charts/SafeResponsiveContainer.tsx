@@ -6,7 +6,11 @@ interface SafeResponsiveContainerProps extends PropsWithChildren {
   width?: number | string;
 }
 
-export function SafeResponsiveContainer({ height = "100%", width = "100%", children }: SafeResponsiveContainerProps) {
+export function SafeResponsiveContainer({
+  height = "100%",
+  width = "100%",
+  children,
+}: SafeResponsiveContainerProps) {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {

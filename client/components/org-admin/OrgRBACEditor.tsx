@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
 
@@ -34,14 +41,16 @@ const ACTIONS = [
 
 export default function OrgRBACEditor() {
   const { user } = useSupabaseAuth();
-  const [matrix, setMatrix] = useState<Record<string, Record<string, boolean>>>(() => {
-    const m: Record<string, Record<string, boolean>> = {};
-    for (const mod of MODULES) {
-      m[mod] = {} as Record<string, boolean>;
-      for (const act of ACTIONS) m[mod][act] = act === "view"; // sensible defaults
-    }
-    return m;
-  });
+  const [matrix, setMatrix] = useState<Record<string, Record<string, boolean>>>(
+    () => {
+      const m: Record<string, Record<string, boolean>> = {};
+      for (const mod of MODULES) {
+        m[mod] = {} as Record<string, boolean>;
+        for (const act of ACTIONS) m[mod][act] = act === "view"; // sensible defaults
+      }
+      return m;
+    },
+  );
 
   const toggle = (mod: string, act: string) =>
     setMatrix((prev) => ({
@@ -64,7 +73,8 @@ export default function OrgRBACEditor() {
         <CardTitle>
           Organization Permissions
           <span className="block mt-1 text-sm font-normal text-muted-foreground">
-            Applies only to {user?.organizationName} users. Other organizations are not affected.
+            Applies only to {user?.organizationName} users. Other organizations
+            are not affected.
           </span>
         </CardTitle>
       </CardHeader>
@@ -84,7 +94,9 @@ export default function OrgRBACEditor() {
             <TableBody>
               {MODULES.map((mod) => (
                 <TableRow key={mod}>
-                  <TableCell className="font-medium capitalize">{mod.replace(/_/g, " ")}</TableCell>
+                  <TableCell className="font-medium capitalize">
+                    {mod.replace(/_/g, " ")}
+                  </TableCell>
                   {ACTIONS.map((a) => (
                     <TableCell key={a} className="text-center">
                       <input

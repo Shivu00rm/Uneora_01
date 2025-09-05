@@ -64,17 +64,32 @@ import {
 // Define org-level permissions matrix
 const ALL_PERMISSIONS = {
   dashboard: { label: "Dashboard", actions: ["view"] },
-  inventory: { label: "Inventory", actions: ["view", "create", "edit", "delete", "export"] },
-  stock_movements: { label: "Stock Movements", actions: ["view", "create", "edit"] },
+  inventory: {
+    label: "Inventory",
+    actions: ["view", "create", "edit", "delete", "export"],
+  },
+  stock_movements: {
+    label: "Stock Movements",
+    actions: ["view", "create", "edit"],
+  },
   pos: { label: "POS", actions: ["view", "create", "refund"] },
   vendors: { label: "Vendors", actions: ["view", "create", "edit", "delete"] },
-  purchase_orders: { label: "Purchase Orders", actions: ["view", "create", "edit", "approve", "delete"] },
+  purchase_orders: {
+    label: "Purchase Orders",
+    actions: ["view", "create", "edit", "approve", "delete"],
+  },
   analytics: { label: "Analytics", actions: ["view", "export"] },
   files: { label: "Files", actions: ["view", "upload", "delete"] },
   users: { label: "Users", actions: ["view", "create", "edit", "delete"] },
   settings: { label: "Settings", actions: ["view", "edit"] },
-  stores: { label: "Stores", actions: ["view", "create", "edit", "delete", "manage"] },
-  ecommerce: { label: "E-commerce", actions: ["view", "create", "edit", "delete", "sync", "manage"] },
+  stores: {
+    label: "Stores",
+    actions: ["view", "create", "edit", "delete", "manage"],
+  },
+  ecommerce: {
+    label: "E-commerce",
+    actions: ["view", "create", "edit", "delete", "sync", "manage"],
+  },
   billing: { label: "Billing", actions: ["view"] },
 } as const;
 
@@ -125,7 +140,7 @@ const mockTeamMembers = [
     joinedDate: "2023-06-10",
     permissions: {
       inventory: ["view"],
-      pos: ["view"]
+      pos: ["view"],
     } as PermissionMap,
   },
   {
@@ -137,7 +152,7 @@ const mockTeamMembers = [
     lastLogin: "3 days ago",
     joinedDate: "2023-09-05",
     permissions: {
-      inventory: ["view"]
+      inventory: ["view"],
     } as PermissionMap,
   },
 ];
@@ -165,7 +180,9 @@ export default function TeamManagement() {
   const [teamMembers, setTeamMembers] = useState(mockTeamMembers);
   const [isEditPermissionsOpen, setIsEditPermissionsOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [pendingPermissions, setPendingPermissions] = useState<PermissionMap>({});
+  const [pendingPermissions, setPendingPermissions] = useState<PermissionMap>(
+    {},
+  );
 
   const filteredAndSortedMembers = teamMembers
     .filter((member) => {
@@ -190,9 +207,7 @@ export default function TeamManagement() {
       return 0;
     });
 
-  const activeMembers = teamMembers.filter(
-    (m) => m.status === "active",
-  ).length;
+  const activeMembers = teamMembers.filter((m) => m.status === "active").length;
   const totalMembers = teamMembers.length;
 
   const handleSelectAll = () => {
@@ -657,11 +672,17 @@ export default function TeamManagement() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        {Object.keys(member.permissions).slice(0, 2).map((module) => (
-                          <Badge key={module} variant="outline" className="text-xs">
-                            {module.replace(/_/g, " ")}
-                          </Badge>
-                        ))}
+                        {Object.keys(member.permissions)
+                          .slice(0, 2)
+                          .map((module) => (
+                            <Badge
+                              key={module}
+                              variant="outline"
+                              className="text-xs"
+                            >
+                              {module.replace(/_/g, " ")}
+                            </Badge>
+                          ))}
                         {Object.keys(member.permissions).length > 2 && (
                           <Badge variant="outline" className="text-xs">
                             +{Object.keys(member.permissions).length - 2} more
@@ -677,7 +698,13 @@ export default function TeamManagement() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => { setSelectedUser(member); setPendingPermissions(member.permissions); setIsEditPermissionsOpen(true); }}>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setSelectedUser(member);
+                              setPendingPermissions(member.permissions);
+                              setIsEditPermissionsOpen(true);
+                            }}
+                          >
                             <Edit className="h-4 w-4 mr-2" />
                             Edit Permissions
                           </DropdownMenuItem>
@@ -711,12 +738,16 @@ export default function TeamManagement() {
       </Card>
 
       {/* Edit Permissions Dialog */}
-      <Dialog open={isEditPermissionsOpen} onOpenChange={setIsEditPermissionsOpen}>
+      <Dialog
+        open={isEditPermissionsOpen}
+        onOpenChange={setIsEditPermissionsOpen}
+      >
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Edit Permissions</DialogTitle>
             <DialogDescription>
-              Update permissions for {selectedUser?.name}. Changes apply only to {user?.organizationName}.
+              Update permissions for {selectedUser?.name}. Changes apply only to{" "}
+              {user?.organizationName}.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 max-h-[60vh] overflow-auto">
@@ -752,7 +783,10 @@ export default function TeamManagement() {
                   <CardContent className="pt-0 pb-4">
                     <div className="flex flex-wrap gap-3">
                       {allActions.map((action) => (
-                        <label key={action} className="flex items-center gap-2 border rounded px-2 py-1 text-sm">
+                        <label
+                          key={action}
+                          className="flex items-center gap-2 border rounded px-2 py-1 text-sm"
+                        >
                           <input
                             type="checkbox"
                             checked={moduleActions.includes(action)}
@@ -767,7 +801,9 @@ export default function TeamManagement() {
                               });
                             }}
                           />
-                          <span className="capitalize">{action.replace(/_/g, " ")}</span>
+                          <span className="capitalize">
+                            {action.replace(/_/g, " ")}
+                          </span>
                         </label>
                       ))}
                     </div>
@@ -777,15 +813,30 @@ export default function TeamManagement() {
             })}
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="outline" onClick={() => setIsEditPermissionsOpen(false)}>Cancel</Button>
+            <Button
+              variant="outline"
+              onClick={() => setIsEditPermissionsOpen(false)}
+            >
+              Cancel
+            </Button>
             <Button
               onClick={async () => {
                 if (!selectedUser) return;
-                setTeamMembers((prev) => prev.map((m) => (m.id === selectedUser.id ? { ...m, permissions: pendingPermissions } : m)));
+                setTeamMembers((prev) =>
+                  prev.map((m) =>
+                    m.id === selectedUser.id
+                      ? { ...m, permissions: pendingPermissions }
+                      : m,
+                  ),
+                );
                 await fetch("/api/org/users/permissions", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ orgId: user?.organizationId, userId: selectedUser.id, permissions: pendingPermissions }),
+                  body: JSON.stringify({
+                    orgId: user?.organizationId,
+                    userId: selectedUser.id,
+                    permissions: pendingPermissions,
+                  }),
                 });
                 setIsEditPermissionsOpen(false);
               }}

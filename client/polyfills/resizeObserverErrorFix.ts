@@ -4,7 +4,9 @@ if (typeof window !== "undefined") {
     const msg = e?.message || "";
     if (
       msg.includes("ResizeObserver loop limit exceeded") ||
-      msg.includes("ResizeObserver loop completed with undelivered notifications")
+      msg.includes(
+        "ResizeObserver loop completed with undelivered notifications",
+      )
     ) {
       e.stopImmediatePropagation();
     }
@@ -15,7 +17,9 @@ if (typeof window !== "undefined") {
     const msg = reason?.message || "";
     if (
       msg.includes("ResizeObserver loop limit exceeded") ||
-      msg.includes("ResizeObserver loop completed with undelivered notifications")
+      msg.includes(
+        "ResizeObserver loop completed with undelivered notifications",
+      )
     ) {
       e.preventDefault();
     }
