@@ -710,6 +710,92 @@ export default function TeamManagement() {
         </CardContent>
       </Card>
 
+      {/* Edit Permissions Dialog */}
+      <Dialog open={isEditPermissionsOpen} onOpenChange={setIsEditPermissionsOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Edit Permissions</DialogTitle>
+            <DialogDescription>
+              Update permissions for {selectedUser?.name}. Changes apply only to {user?.organizationName}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 max-h-[60vh] overflow-auto">
+            {Object.entries(ALL_PERMISSIONS).map(([module, config]) => {
+              const moduleActions = pendingPermissions[module] || [];
+              const allActions = (config as any).actions as string[];
+              const moduleChecked = moduleActions.length > 0;
+              return (
+                <Card key={module}>
+                  <CardHeader className="py-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-sm font-medium">
+                        {(config as any).label}
+                      </CardTitle>
+                      <div className="flex items-center gap-2 text-sm">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={moduleChecked}
+                            onChange={(e) => {
+                              const checked = e.currentTarget.checked;
+                              setPendingPermissions((prev) => ({
+                                ...prev,
+                                [module]: checked ? [...allActions] : [],
+                              }));
+                            }}
+                          />
+                          <span>Enable</span>
+                        </label>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0 pb-4">
+                    <div className="flex flex-wrap gap-3">
+                      {allActions.map((action) => (
+                        <label key={action} className="flex items-center gap-2 border rounded px-2 py-1 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={moduleActions.includes(action)}
+                            onChange={(e) => {
+                              const checked = e.currentTarget.checked;
+                              setPendingPermissions((prev) => {
+                                const current = prev[module] || [];
+                                const next = checked
+                                  ? Array.from(new Set([...current, action]))
+                                  : current.filter((a) => a !== action);
+                                return { ...prev, [module]: next };
+                              });
+                            }}
+                          />
+                          <span className="capitalize">{action.replace(/_/g, " ")}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="outline" onClick={() => setIsEditPermissionsOpen(false)}>Cancel</Button>
+            <Button
+              onClick={async () => {
+                if (!selectedUser) return;
+                setTeamMembers((prev) => prev.map((m) => (m.id === selectedUser.id ? { ...m, permissions: pendingPermissions } : m)));
+                await fetch("/api/org/users/permissions", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ orgId: user?.organizationId, userId: selectedUser.id, permissions: pendingPermissions }),
+                });
+                setIsEditPermissionsOpen(false);
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Organization-level Permissions (RBAC) */}
       <div className="mt-8">
         <OrgRBACEditor />
