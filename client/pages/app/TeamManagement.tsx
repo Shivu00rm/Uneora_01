@@ -190,10 +190,10 @@ export default function TeamManagement() {
       return 0;
     });
 
-  const activeMembers = mockTeamMembers.filter(
+  const activeMembers = teamMembers.filter(
     (m) => m.status === "active",
   ).length;
-  const totalMembers = mockTeamMembers.length;
+  const totalMembers = teamMembers.length;
 
   const handleSelectAll = () => {
     if (selectedMembers.length === filteredAndSortedMembers.length) {
