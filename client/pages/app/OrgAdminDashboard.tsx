@@ -165,6 +165,8 @@ export default function OrgAdminDashboard() {
   const { isOrgAdmin, hasPermission } = useAuth();
   const [data] = useState(mockDashboardData);
   const [selectedPeriod, setSelectedPeriod] = useState("month");
+  const [storesView, setStoresView] = useState<ViewMode>("cards");
+  const [channelsView, setChannelsView] = useState<ViewMode>("cards");
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
