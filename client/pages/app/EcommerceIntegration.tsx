@@ -25,7 +25,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import type { EcommercePlatform, SyncStatusResponse } from "@shared/api";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
+import SafeResponsiveContainer from "@/components/charts/SafeResponsiveContainer";
 
 // Mock data for demonstration
 const mockPlatforms: EcommercePlatform[] = [
@@ -635,7 +636,7 @@ export default function EcommerceIntegration() {
                 <CardTitle>Orders and Products by Channel</CardTitle>
               </CardHeader>
               <CardContent style={{ height: 320 }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer width="100%" height="100%">
                   <BarChart data={platforms}>
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -644,7 +645,7 @@ export default function EcommerceIntegration() {
                     <Bar dataKey={(d: any) => d.syncStats?.ordersSync || 0} name="Orders" fill="#60a5fa" />
                     <Bar dataKey={(d: any) => d.syncStats?.productsSync || 0} name="Products" fill="#34d399" />
                   </BarChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
               </CardContent>
             </Card>
           )}
@@ -655,7 +656,7 @@ export default function EcommerceIntegration() {
                 <CardTitle>Orders Share by Channel</CardTitle>
               </CardHeader>
               <CardContent style={{ height: 320 }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie data={platforms.map(p => ({ name: p.name, value: p.syncStats?.ordersSync || 0 }))} dataKey="value" nameKey="name" outerRadius={110} label>
                       {platforms.map((_, idx) => (
@@ -665,7 +666,7 @@ export default function EcommerceIntegration() {
                     <Tooltip />
                     <Legend />
                   </PieChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
               </CardContent>
             </Card>
           )}
