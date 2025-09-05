@@ -32,7 +32,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
+import SafeResponsiveContainer from "@/components/charts/SafeResponsiveContainer";
 
 // Mock data for demonstration
 const mockDashboardData = {
@@ -464,7 +465,7 @@ export default function OrgAdminDashboard() {
                 <CardDescription>Comparison across stores</CardDescription>
               </CardHeader>
               <CardContent style={{ height: 320 }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer width="100%" height="100%">
                   <BarChart data={data.stores}>
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -473,7 +474,7 @@ export default function OrgAdminDashboard() {
                     <Bar dataKey="revenue" name="Revenue" fill="#60a5fa" />
                     <Bar dataKey="orders" name="Orders" fill="#34d399" />
                   </BarChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
               </CardContent>
             </Card>
           )}
@@ -485,7 +486,7 @@ export default function OrgAdminDashboard() {
                 <CardDescription>Share of total revenue per store</CardDescription>
               </CardHeader>
               <CardContent style={{ height: 320 }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie data={data.stores} dataKey="revenue" nameKey="name" outerRadius={110} label>
                       {data.stores.map((_, idx) => (
@@ -495,7 +496,7 @@ export default function OrgAdminDashboard() {
                     <Tooltip />
                     <Legend />
                   </PieChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
               </CardContent>
             </Card>
           )}
@@ -606,7 +607,7 @@ export default function OrgAdminDashboard() {
                 <CardDescription>Comparison across channels</CardDescription>
               </CardHeader>
               <CardContent style={{ height: 320 }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer width="100%" height="100%">
                   <BarChart data={data.ecommercePlatforms}>
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -615,7 +616,7 @@ export default function OrgAdminDashboard() {
                     <Bar dataKey="revenue" name="Revenue" fill="#818cf8" />
                     <Bar dataKey="orders" name="Orders" fill="#f59e0b" />
                   </BarChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
               </CardContent>
             </Card>
           )}
@@ -627,7 +628,7 @@ export default function OrgAdminDashboard() {
                 <CardDescription>Share of total revenue per channel</CardDescription>
               </CardHeader>
               <CardContent style={{ height: 320 }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie data={data.ecommercePlatforms} dataKey="revenue" nameKey="name" outerRadius={110} label>
                       {data.ecommercePlatforms.map((_, idx) => (
@@ -637,7 +638,7 @@ export default function OrgAdminDashboard() {
                     <Tooltip />
                     <Legend />
                   </PieChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
               </CardContent>
             </Card>
           )}
