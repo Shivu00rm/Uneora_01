@@ -573,6 +573,16 @@ export default function EcommerceIntegration() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
+          <div className="flex items-center justify-end">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">View:</span>
+              <select className="border rounded px-2 py-1 text-sm" value={analyticsView} onChange={(e) => setAnalyticsView(e.target.value as any)}>
+                <option value="list">List</option>
+                <option value="bar">Bar</option>
+                <option value="pie">Pie</option>
+              </select>
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
