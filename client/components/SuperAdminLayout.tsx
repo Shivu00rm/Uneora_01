@@ -7,15 +7,17 @@ import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
 import {
-  Crown,
-  Shield,
-  ExternalLink,
-  Building2,
-  BarChart3,
-  Monitor,
-  Activity,
-  Users,
-  Settings
+    Crown,
+    Shield,
+    ExternalLink,
+    Building2,
+    BarChart3,
+    Monitor,
+    Activity,
+    Users,
+    Settings,
+    ArrowLeft,
+    LogOut
 } from "lucide-react";
 
 
@@ -24,7 +26,7 @@ interface SuperAdminLayoutProps {
 }
 
 export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
 
@@ -96,9 +98,15 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
                 </p>
               </div>
             </div>
-            <Badge variant="outline" className="border-primary/30 text-primary">
-              Super Admin Access
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="border-primary/30 text-primary">
+                Super Admin Access
+              </Badge>
+              <Button variant="outline" size="sm" onClick={logout} className="text-red-600 border-red-200 hover:bg-red-50">
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign Out
+              </Button>
+            </div>
           </div>
         </div>
       </div>
