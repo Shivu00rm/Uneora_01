@@ -167,7 +167,7 @@ export default function TeamManagement() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [pendingPermissions, setPendingPermissions] = useState<PermissionMap>({});
 
-  const filteredAndSortedMembers = mockTeamMembers
+  const filteredAndSortedMembers = teamMembers
     .filter((member) => {
       const matchesSearch =
         member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
