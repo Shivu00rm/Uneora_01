@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import RBACEditor from "@/components/super-admin/RBACEditor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -472,13 +473,14 @@ export default function SuperAdminConsole() {
       </div>
 
       <Tabs value={selectedView} onValueChange={setSelectedView}>
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="organizations">Organizations</TabsTrigger>
           <TabsTrigger value="analytics">Global Analytics</TabsTrigger>
           <TabsTrigger value="monitoring">System Health</TabsTrigger>
           <TabsTrigger value="billing">Billing & Usage</TabsTrigger>
           <TabsTrigger value="alerts">Alerts</TabsTrigger>
           <TabsTrigger value="compliance">Compliance</TabsTrigger>
+          <TabsTrigger value="rbac">RBAC</TabsTrigger>
         </TabsList>
 
         <TabsContent value="organizations" className="space-y-6">
@@ -1184,6 +1186,10 @@ export default function SuperAdminConsole() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="rbac" className="space-y-6">
+          <RBACEditor />
         </TabsContent>
       </Tabs>
     </div>
