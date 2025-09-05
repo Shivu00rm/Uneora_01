@@ -369,6 +369,7 @@ export default function OrgAdminDashboard() {
             </div>
           </div>
           {/* Store Performance Cards */}
+          {storesView === "cards" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {data.stores.map((store) => (
               <Card key={store.id} className="hover:shadow-lg transition-shadow">
@@ -454,6 +455,50 @@ export default function OrgAdminDashboard() {
               </Card>
             ))}
           </div>
+          )}
+
+          {storesView === "bar" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Store Revenue and Orders</CardTitle>
+                <CardDescription>Comparison across stores</CardDescription>
+              </CardHeader>
+              <CardContent style={{ height: 320 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data.stores}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="revenue" name="Revenue" fill="#60a5fa" />
+                    <Bar dataKey="orders" name="Orders" fill="#34d399" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          )}
+
+          {storesView === "pie" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Revenue Distribution</CardTitle>
+                <CardDescription>Share of total revenue per store</CardDescription>
+              </CardHeader>
+              <CardContent style={{ height: 320 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={data.stores} dataKey="revenue" nameKey="name" outerRadius={110} label>
+                      {data.stores.map((_, idx) => (
+                        <Cell key={idx} fill={["#60a5fa", "#34d399", "#fbbf24", "#f472b6"][idx % 4]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Add New Store */}
           <Card className="border-dashed border-2 hover:border-gray-400 transition-colors">
