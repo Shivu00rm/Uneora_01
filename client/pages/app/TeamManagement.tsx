@@ -385,7 +385,7 @@ export default function TeamManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockTeamMembers.filter((m) => m.role === "ORG_ADMIN").length}
+              {teamMembers.filter((m) => m.role === "ORG_ADMIN").length}
             </div>
             <p className="text-xs text-muted-foreground">Full permissions</p>
           </CardContent>
@@ -398,7 +398,7 @@ export default function TeamManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockTeamMembers.filter((m) => m.role === "ORG_USER").length}
+              {teamMembers.filter((m) => m.role === "ORG_USER").length}
             </div>
             <p className="text-xs text-muted-foreground">Limited access</p>
           </CardContent>
