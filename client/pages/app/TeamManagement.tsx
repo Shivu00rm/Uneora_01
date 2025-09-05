@@ -162,6 +162,10 @@ export default function TeamManagement() {
   const [filterRole, setFilterRole] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [teamMembers, setTeamMembers] = useState(mockTeamMembers);
+  const [isEditPermissionsOpen, setIsEditPermissionsOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [pendingPermissions, setPendingPermissions] = useState<PermissionMap>({});
 
   const filteredAndSortedMembers = mockTeamMembers
     .filter((member) => {
