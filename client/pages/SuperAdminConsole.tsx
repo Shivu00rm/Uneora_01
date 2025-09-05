@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import RBACEditor from "@/components/super-admin/RBACEditor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -78,7 +85,7 @@ import {
   Bell,
   Smartphone,
   Monitor,
-  PlusCircle
+  PlusCircle,
 } from "lucide-react";
 
 // Types for Super Admin data structures
@@ -169,17 +176,17 @@ export default function SuperAdminConsole() {
         transactions: 125000,
         transactionLimit: 250000,
         apiCalls: 450000,
-        apiCallLimit: 1000000
+        apiCallLimit: 1000000,
       },
       billing: {
         mrr: 2500,
         lastPayment: "2024-01-15",
         nextBilling: "2024-02-15",
-        status: "paid"
+        status: "paid",
       },
       createdAt: "2023-06-15",
       lastActivity: "2024-01-18T10:30:00Z",
-      health: "healthy"
+      health: "healthy",
     },
     {
       id: "fashion-boutique-002",
@@ -197,17 +204,17 @@ export default function SuperAdminConsole() {
         transactions: 45000,
         transactionLimit: 100000,
         apiCalls: 180000,
-        apiCallLimit: 500000
+        apiCallLimit: 500000,
       },
       billing: {
         mrr: 1200,
         lastPayment: "2024-01-12",
         nextBilling: "2024-02-12",
-        status: "paid"
+        status: "paid",
       },
       createdAt: "2023-09-22",
       lastActivity: "2024-01-18T14:20:00Z",
-      health: "warning"
+      health: "warning",
     },
     {
       id: "foodie-chain-003",
@@ -225,17 +232,17 @@ export default function SuperAdminConsole() {
         transactions: 2400,
         transactionLimit: 5000,
         apiCalls: 12000,
-        apiCallLimit: 25000
+        apiCallLimit: 25000,
       },
       billing: {
         mrr: 0,
         lastPayment: "",
         nextBilling: "2024-01-25",
-        status: "paid"
+        status: "paid",
       },
       createdAt: "2024-01-10",
       lastActivity: "2024-01-18T16:45:00Z",
-      health: "healthy"
+      health: "healthy",
     },
     {
       id: "pharma-plus-004",
@@ -253,17 +260,17 @@ export default function SuperAdminConsole() {
         transactions: 68000,
         transactionLimit: 100000,
         apiCalls: 285000,
-        apiCallLimit: 500000
+        apiCallLimit: 500000,
       },
       billing: {
         mrr: 1200,
         lastPayment: "2023-12-12",
         nextBilling: "2024-01-12",
-        status: "overdue"
+        status: "overdue",
       },
       createdAt: "2023-04-08",
       lastActivity: "2024-01-17T09:15:00Z",
-      health: "critical"
+      health: "critical",
     },
     {
       id: "startup-xyz-005",
@@ -281,18 +288,18 @@ export default function SuperAdminConsole() {
         transactions: 8500,
         transactionLimit: 5000,
         apiCalls: 35000,
-        apiCallLimit: 25000
+        apiCallLimit: 25000,
       },
       billing: {
         mrr: 0,
         lastPayment: "",
         nextBilling: "",
-        status: "failed"
+        status: "failed",
       },
       createdAt: "2023-11-20",
       lastActivity: "2024-01-10T12:00:00Z",
-      health: "offline"
-    }
+      health: "offline",
+    },
   ];
 
   const mockGlobalKPIs: GlobalKPIs = {
@@ -305,14 +312,14 @@ export default function SuperAdminConsole() {
       shopify: 45.2,
       woocommerce: 28.7,
       amazon: 15.8,
-      flipkart: 10.3
+      flipkart: 10.3,
     },
     systemHealth: {
       uptime: 99.97,
       avgResponseTime: 245,
       errorRate: 0.02,
-      activeIncidents: 2
-    }
+      activeIncidents: 2,
+    },
   };
 
   const mockSystemAlerts: SystemAlert[] = [
@@ -324,17 +331,18 @@ export default function SuperAdminConsole() {
       description: "Global API rate limit at 85% capacity",
       affectedOrgs: ["All"],
       timestamp: "2024-01-18T15:30:00Z",
-      resolved: false
+      resolved: false,
     },
     {
       id: "alert-002",
       type: "integration",
       severity: "medium",
       title: "Shopify Sync Delays",
-      description: "Shopify integration experiencing 15% higher than normal sync times",
+      description:
+        "Shopify integration experiencing 15% higher than normal sync times",
       affectedOrgs: ["tech-corp-001", "fashion-boutique-002"],
       timestamp: "2024-01-18T14:45:00Z",
-      resolved: false
+      resolved: false,
     },
     {
       id: "alert-003",
@@ -344,56 +352,78 @@ export default function SuperAdminConsole() {
       description: "45% increase in payment failures in last 24 hours",
       affectedOrgs: ["pharma-plus-004", "startup-xyz-005"],
       timestamp: "2024-01-18T12:20:00Z",
-      resolved: true
-    }
+      resolved: true,
+    },
   ];
 
   const getSubscriptionTierColor = (tier: string) => {
     switch (tier) {
-      case "free": return "bg-gray-500";
-      case "pro": return "bg-blue-500";
-      case "enterprise": return "bg-purple-500";
-      default: return "bg-gray-500";
+      case "free":
+        return "bg-gray-500";
+      case "pro":
+        return "bg-blue-500";
+      case "enterprise":
+        return "bg-purple-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-500";
-      case "trial": return "bg-blue-500";
-      case "suspended": return "bg-red-500";
-      case "overdue": return "bg-yellow-500";
-      default: return "bg-gray-500";
+      case "active":
+        return "bg-green-500";
+      case "trial":
+        return "bg-blue-500";
+      case "suspended":
+        return "bg-red-500";
+      case "overdue":
+        return "bg-yellow-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getHealthIcon = (health: string) => {
     switch (health) {
-      case "healthy": return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "warning": return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case "critical": return <XCircle className="h-4 w-4 text-red-500" />;
-      case "offline": return <WifiOff className="h-4 w-4 text-gray-500" />;
-      default: return <Wifi className="h-4 w-4 text-gray-500" />;
+      case "healthy":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "warning":
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+      case "critical":
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      case "offline":
+        return <WifiOff className="h-4 w-4 text-gray-500" />;
+      default:
+        return <Wifi className="h-4 w-4 text-gray-500" />;
     }
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "low": return "bg-blue-500";
-      case "medium": return "bg-yellow-500";
-      case "high": return "bg-orange-500";
-      case "critical": return "bg-red-500";
-      default: return "bg-gray-500";
+      case "low":
+        return "bg-blue-500";
+      case "medium":
+        return "bg-yellow-500";
+      case "high":
+        return "bg-orange-500";
+      case "critical":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
-  const filteredOrganizations = mockOrganizations.filter(org => {
-    const matchesSearch = org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         org.domain?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTier = filterTier === "all" || org.subscriptionTier === filterTier;
-    const matchesIndustry = filterIndustry === "all" || org.industry === filterIndustry;
+  const filteredOrganizations = mockOrganizations.filter((org) => {
+    const matchesSearch =
+      org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      org.domain?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTier =
+      filterTier === "all" || org.subscriptionTier === filterTier;
+    const matchesIndustry =
+      filterIndustry === "all" || org.industry === filterIndustry;
     const matchesStatus = filterStatus === "all" || org.status === filterStatus;
-    
+
     return matchesSearch && matchesTier && matchesIndustry && matchesStatus;
   });
 
@@ -403,15 +433,15 @@ export default function SuperAdminConsole() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-US').format(num);
+    return new Intl.NumberFormat("en-US").format(num);
   };
 
   return (
@@ -419,8 +449,12 @@ export default function SuperAdminConsole() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Super Admin Console</h1>
-          <p className="text-gray-600">Complete visibility and control across all organizations</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Super Admin Console
+          </h1>
+          <p className="text-gray-600">
+            Complete visibility and control across all organizations
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -472,13 +506,14 @@ export default function SuperAdminConsole() {
       </div>
 
       <Tabs value={selectedView} onValueChange={setSelectedView}>
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="organizations">Organizations</TabsTrigger>
           <TabsTrigger value="analytics">Global Analytics</TabsTrigger>
           <TabsTrigger value="monitoring">System Health</TabsTrigger>
           <TabsTrigger value="billing">Billing & Usage</TabsTrigger>
           <TabsTrigger value="alerts">Alerts</TabsTrigger>
           <TabsTrigger value="compliance">Compliance</TabsTrigger>
+          <TabsTrigger value="rbac">RBAC</TabsTrigger>
         </TabsList>
 
         <TabsContent value="organizations" className="space-y-6">
@@ -486,11 +521,15 @@ export default function SuperAdminConsole() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Organizations</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total Organizations
+                </CardTitle>
                 <Building2 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatNumber(mockGlobalKPIs.totalOrgs)}</div>
+                <div className="text-2xl font-bold">
+                  {formatNumber(mockGlobalKPIs.totalOrgs)}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   {mockGlobalKPIs.activeOrgs} active
                 </p>
@@ -499,24 +538,30 @@ export default function SuperAdminConsole() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Stores</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total Stores
+                </CardTitle>
                 <Store className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatNumber(mockGlobalKPIs.totalStores)}</div>
-                <p className="text-xs text-muted-foreground">
-                  Across all orgs
-                </p>
+                <div className="text-2xl font-bold">
+                  {formatNumber(mockGlobalKPIs.totalStores)}
+                </div>
+                <p className="text-xs text-muted-foreground">Across all orgs</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Monthly Revenue</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Monthly Revenue
+                </CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(mockGlobalKPIs.totalRevenue)}</div>
+                <div className="text-2xl font-bold">
+                  {formatCurrency(mockGlobalKPIs.totalRevenue)}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   +{mockGlobalKPIs.monthlyGrowth}% from last month
                 </p>
@@ -525,11 +570,15 @@ export default function SuperAdminConsole() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">System Uptime</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  System Uptime
+                </CardTitle>
                 <Server className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{mockGlobalKPIs.systemHealth.uptime}%</div>
+                <div className="text-2xl font-bold">
+                  {mockGlobalKPIs.systemHealth.uptime}%
+                </div>
                 <p className="text-xs text-muted-foreground">
                   {mockGlobalKPIs.systemHealth.activeIncidents} incidents
                 </p>
@@ -538,7 +587,9 @@ export default function SuperAdminConsole() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Top Integration</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Top Integration
+                </CardTitle>
                 <ShoppingCart className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -551,14 +602,16 @@ export default function SuperAdminConsole() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Response Time</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Response Time
+                </CardTitle>
                 <Zap className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{mockGlobalKPIs.systemHealth.avgResponseTime}ms</div>
-                <p className="text-xs text-muted-foreground">
-                  Average global
-                </p>
+                <div className="text-2xl font-bold">
+                  {mockGlobalKPIs.systemHealth.avgResponseTime}ms
+                </div>
+                <p className="text-xs text-muted-foreground">Average global</p>
               </CardContent>
             </Card>
           </div>
@@ -568,7 +621,8 @@ export default function SuperAdminConsole() {
             <CardHeader>
               <CardTitle>Organization Management</CardTitle>
               <CardDescription>
-                Complete overview of all organizations with subscription details and health status
+                Complete overview of all organizations with subscription details
+                and health status
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -593,22 +647,27 @@ export default function SuperAdminConsole() {
                         <TableCell>
                           <div>
                             <div className="font-medium">{org.name}</div>
-                            <div className="text-sm text-gray-500">{org.domain}</div>
+                            <div className="text-sm text-gray-500">
+                              {org.domain}
+                            </div>
                             <div className="flex items-center gap-2 mt-1">
-                              <Badge 
-                                variant="outline" 
+                              <Badge
+                                variant="outline"
                                 className={`${getStatusColor(org.status)} text-white border-none text-xs`}
                               >
                                 {org.status}
                               </Badge>
-                              <Badge variant="outline" className="text-xs capitalize">
+                              <Badge
+                                variant="outline"
+                                className="text-xs capitalize"
+                              >
                                 {org.industry}
                               </Badge>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge 
+                          <Badge
                             className={`${getSubscriptionTierColor(org.subscriptionTier)} text-white`}
                           >
                             {org.subscriptionTier.toUpperCase()}
@@ -629,7 +688,11 @@ export default function SuperAdminConsole() {
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
                             {org.activeIntegrations.map((integration) => (
-                              <Badge key={integration} variant="secondary" className="text-xs">
+                              <Badge
+                                key={integration}
+                                variant="secondary"
+                                className="text-xs"
+                              >
                                 {integration}
                               </Badge>
                             ))}
@@ -638,28 +701,38 @@ export default function SuperAdminConsole() {
                         <TableCell>
                           <div className="space-y-1">
                             <div className="text-sm">
-                              SKUs: {formatNumber(org.usage.skus)}/{formatNumber(org.usage.skuLimit)}
+                              SKUs: {formatNumber(org.usage.skus)}/
+                              {formatNumber(org.usage.skuLimit)}
                             </div>
-                            <Progress 
-                              value={(org.usage.skus / org.usage.skuLimit) * 100} 
+                            <Progress
+                              value={
+                                (org.usage.skus / org.usage.skuLimit) * 100
+                              }
                               className="h-1"
                             />
                             <div className="text-xs text-gray-500">
-                              API: {Math.round((org.usage.apiCalls / org.usage.apiCallLimit) * 100)}%
+                              API:{" "}
+                              {Math.round(
+                                (org.usage.apiCalls / org.usage.apiCallLimit) *
+                                  100,
+                              )}
+                              %
                             </div>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="font-medium">
-                            {org.billing.mrr > 0 ? formatCurrency(org.billing.mrr) : "Free"}
+                            {org.billing.mrr > 0
+                              ? formatCurrency(org.billing.mrr)
+                              : "Free"}
                           </div>
-                          <div className={`text-xs ${org.billing.status === 'paid' ? 'text-green-600' : 'text-red-600'}`}>
+                          <div
+                            className={`text-xs ${org.billing.status === "paid" ? "text-green-600" : "text-red-600"}`}
+                          >
                             {org.billing.status}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          {getHealthIcon(org.health)}
-                        </TableCell>
+                        <TableCell>{getHealthIcon(org.health)}</TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -670,34 +743,52 @@ export default function SuperAdminConsole() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => handleOrgAction('view', org.id)}>
+                              <DropdownMenuItem
+                                onClick={() => handleOrgAction("view", org.id)}
+                              >
                                 <Eye className="h-4 w-4 mr-2" />
                                 View Details
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleOrgAction('impersonate', org.id)}>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleOrgAction("impersonate", org.id)
+                                }
+                              >
                                 <UserCheck className="h-4 w-4 mr-2" />
                                 Impersonate Admin
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleOrgAction('edit-subscription', org.id)}>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleOrgAction("edit-subscription", org.id)
+                                }
+                              >
                                 <Edit className="h-4 w-4 mr-2" />
                                 Edit Subscription
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleOrgAction('reset-api-keys', org.id)}>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleOrgAction("reset-api-keys", org.id)
+                                }
+                              >
                                 <Key className="h-4 w-4 mr-2" />
                                 Reset API Keys
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              {org.status === 'active' ? (
-                                <DropdownMenuItem 
-                                  onClick={() => handleOrgAction('suspend', org.id)}
+                              {org.status === "active" ? (
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleOrgAction("suspend", org.id)
+                                  }
                                   className="text-red-600"
                                 >
                                   <Ban className="h-4 w-4 mr-2" />
                                   Suspend Org
                                 </DropdownMenuItem>
                               ) : (
-                                <DropdownMenuItem 
-                                  onClick={() => handleOrgAction('activate', org.id)}
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleOrgAction("activate", org.id)
+                                  }
                                   className="text-green-600"
                                 >
                                   <Play className="h-4 w-4 mr-2" />
@@ -722,7 +813,9 @@ export default function SuperAdminConsole() {
             <Card>
               <CardHeader>
                 <CardTitle>Integration Usage Distribution</CardTitle>
-                <CardDescription>Platform adoption across organizations</CardDescription>
+                <CardDescription>
+                  Platform adoption across organizations
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -731,34 +824,44 @@ export default function SuperAdminConsole() {
                       <ShoppingCart className="h-4 w-4" />
                       Shopify
                     </span>
-                    <span className="font-medium">{mockGlobalKPIs.integrationUsage.shopify}%</span>
+                    <span className="font-medium">
+                      {mockGlobalKPIs.integrationUsage.shopify}%
+                    </span>
                   </div>
                   <Progress value={mockGlobalKPIs.integrationUsage.shopify} />
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="flex items-center gap-2">
                       <Globe className="h-4 w-4" />
                       WooCommerce
                     </span>
-                    <span className="font-medium">{mockGlobalKPIs.integrationUsage.woocommerce}%</span>
+                    <span className="font-medium">
+                      {mockGlobalKPIs.integrationUsage.woocommerce}%
+                    </span>
                   </div>
-                  <Progress value={mockGlobalKPIs.integrationUsage.woocommerce} />
-                  
+                  <Progress
+                    value={mockGlobalKPIs.integrationUsage.woocommerce}
+                  />
+
                   <div className="flex justify-between items-center">
                     <span className="flex items-center gap-2">
                       <Package className="h-4 w-4" />
                       Amazon
                     </span>
-                    <span className="font-medium">{mockGlobalKPIs.integrationUsage.amazon}%</span>
+                    <span className="font-medium">
+                      {mockGlobalKPIs.integrationUsage.amazon}%
+                    </span>
                   </div>
                   <Progress value={mockGlobalKPIs.integrationUsage.amazon} />
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="flex items-center gap-2">
                       <Smartphone className="h-4 w-4" />
                       Flipkart
                     </span>
-                    <span className="font-medium">{mockGlobalKPIs.integrationUsage.flipkart}%</span>
+                    <span className="font-medium">
+                      {mockGlobalKPIs.integrationUsage.flipkart}%
+                    </span>
                   </div>
                   <Progress value={mockGlobalKPIs.integrationUsage.flipkart} />
                 </div>
@@ -778,25 +881,25 @@ export default function SuperAdminConsole() {
                     <span className="font-medium">35%</span>
                   </div>
                   <Progress value={35} />
-                  
+
                   <div className="flex justify-between items-center">
                     <span>Manufacturing</span>
                     <span className="font-medium">28%</span>
                   </div>
                   <Progress value={28} />
-                  
+
                   <div className="flex justify-between items-center">
                     <span>F&B</span>
                     <span className="font-medium">20%</span>
                   </div>
                   <Progress value={20} />
-                  
+
                   <div className="flex justify-between items-center">
                     <span>Pharma</span>
                     <span className="font-medium">12%</span>
                   </div>
                   <Progress value={12} />
-                  
+
                   <div className="flex justify-between items-center">
                     <span>Services</span>
                     <span className="font-medium">5%</span>
@@ -811,24 +914,34 @@ export default function SuperAdminConsole() {
           <Card>
             <CardHeader>
               <CardTitle>Revenue Analytics</CardTitle>
-              <CardDescription>Monthly recurring revenue and growth trends</CardDescription>
+              <CardDescription>
+                Monthly recurring revenue and growth trends
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">{formatCurrency(mockGlobalKPIs.totalRevenue)}</div>
+                  <div className="text-2xl font-bold text-green-600">
+                    {formatCurrency(mockGlobalKPIs.totalRevenue)}
+                  </div>
                   <div className="text-sm text-gray-600">Total MRR</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">+{mockGlobalKPIs.monthlyGrowth}%</div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    +{mockGlobalKPIs.monthlyGrowth}%
+                  </div>
                   <div className="text-sm text-gray-600">Monthly Growth</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{formatCurrency(116)}</div>
+                  <div className="text-2xl font-bold text-purple-600">
+                    {formatCurrency(116)}
+                  </div>
                   <div className="text-sm text-gray-600">ARPU</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">92.5%</div>
+                  <div className="text-2xl font-bold text-orange-600">
+                    92.5%
+                  </div>
                   <div className="text-sm text-gray-600">Retention Rate</div>
                 </div>
               </div>
@@ -841,44 +954,60 @@ export default function SuperAdminConsole() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">System Uptime</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  System Uptime
+                </CardTitle>
                 <Server className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">{mockGlobalKPIs.systemHealth.uptime}%</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {mockGlobalKPIs.systemHealth.uptime}%
+                </div>
                 <p className="text-xs text-muted-foreground">Last 30 days</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Response Time</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Response Time
+                </CardTitle>
                 <Zap className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{mockGlobalKPIs.systemHealth.avgResponseTime}ms</div>
+                <div className="text-2xl font-bold">
+                  {mockGlobalKPIs.systemHealth.avgResponseTime}ms
+                </div>
                 <p className="text-xs text-muted-foreground">Average</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Error Rate
+                </CardTitle>
                 <AlertTriangle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">{mockGlobalKPIs.systemHealth.errorRate}%</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {mockGlobalKPIs.systemHealth.errorRate}%
+                </div>
                 <p className="text-xs text-muted-foreground">Last 24 hours</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Incidents</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Active Incidents
+                </CardTitle>
                 <AlertCircle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-yellow-600">{mockGlobalKPIs.systemHealth.activeIncidents}</div>
+                <div className="text-2xl font-bold text-yellow-600">
+                  {mockGlobalKPIs.systemHealth.activeIncidents}
+                </div>
                 <p className="text-xs text-muted-foreground">Ongoing</p>
               </CardContent>
             </Card>
@@ -888,7 +1017,9 @@ export default function SuperAdminConsole() {
           <Card>
             <CardHeader>
               <CardTitle>Service Status</CardTitle>
-              <CardDescription>Real-time status of all system components</CardDescription>
+              <CardDescription>
+                Real-time status of all system components
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -897,7 +1028,9 @@ export default function SuperAdminConsole() {
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
                       <div className="font-medium">API Gateway</div>
-                      <div className="text-sm text-gray-600">All regions operational</div>
+                      <div className="text-sm text-gray-600">
+                        All regions operational
+                      </div>
                     </div>
                   </div>
                   <Badge className="bg-green-500 text-white">Operational</Badge>
@@ -908,7 +1041,9 @@ export default function SuperAdminConsole() {
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
                       <div className="font-medium">Database Cluster</div>
-                      <div className="text-sm text-gray-600">Primary and replica healthy</div>
+                      <div className="text-sm text-gray-600">
+                        Primary and replica healthy
+                      </div>
                     </div>
                   </div>
                   <Badge className="bg-green-500 text-white">Operational</Badge>
@@ -919,7 +1054,9 @@ export default function SuperAdminConsole() {
                     <AlertTriangle className="h-5 w-5 text-yellow-500" />
                     <div>
                       <div className="font-medium">Integration Services</div>
-                      <div className="text-sm text-gray-600">Shopify sync experiencing delays</div>
+                      <div className="text-sm text-gray-600">
+                        Shopify sync experiencing delays
+                      </div>
                     </div>
                   </div>
                   <Badge className="bg-yellow-500 text-white">Degraded</Badge>
@@ -930,7 +1067,9 @@ export default function SuperAdminConsole() {
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
                       <div className="font-medium">File Storage</div>
-                      <div className="text-sm text-gray-600">CDN performing normally</div>
+                      <div className="text-sm text-gray-600">
+                        CDN performing normally
+                      </div>
                     </div>
                   </div>
                   <Badge className="bg-green-500 text-white">Operational</Badge>
@@ -949,25 +1088,35 @@ export default function SuperAdminConsole() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(mockGlobalKPIs.totalRevenue)}</div>
-                <p className="text-xs text-muted-foreground">+{mockGlobalKPIs.monthlyGrowth}% from last month</p>
+                <div className="text-2xl font-bold">
+                  {formatCurrency(mockGlobalKPIs.totalRevenue)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  +{mockGlobalKPIs.monthlyGrowth}% from last month
+                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Overdue Accounts</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Overdue Accounts
+                </CardTitle>
                 <CreditCard className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">23</div>
-                <p className="text-xs text-muted-foreground">{formatCurrency(12400)} at risk</p>
+                <p className="text-xs text-muted-foreground">
+                  {formatCurrency(12400)} at risk
+                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Trial Conversions</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Trial Conversions
+                </CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -978,7 +1127,9 @@ export default function SuperAdminConsole() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Churn Rate</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Churn Rate
+                </CardTitle>
                 <TrendingDown className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -992,18 +1143,26 @@ export default function SuperAdminConsole() {
           <Card>
             <CardHeader>
               <CardTitle>Usage Limit Alerts</CardTitle>
-              <CardDescription>Organizations approaching or exceeding their plan limits</CardDescription>
+              <CardDescription>
+                Organizations approaching or exceeding their plan limits
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {mockOrganizations
-                  .filter(org => (org.usage.skus / org.usage.skuLimit) > 0.8)
-                  .map(org => (
-                    <div key={org.id} className="flex justify-between items-center p-3 border rounded-lg">
+                  .filter((org) => org.usage.skus / org.usage.skuLimit > 0.8)
+                  .map((org) => (
+                    <div
+                      key={org.id}
+                      className="flex justify-between items-center p-3 border rounded-lg"
+                    >
                       <div>
                         <div className="font-medium">{org.name}</div>
                         <div className="text-sm text-gray-600">
-                          {Math.round((org.usage.skus / org.usage.skuLimit) * 100)}% of SKU limit used
+                          {Math.round(
+                            (org.usage.skus / org.usage.skuLimit) * 100,
+                          )}
+                          % of SKU limit used
                         </div>
                       </div>
                       <div className="flex gap-2">
@@ -1024,12 +1183,14 @@ export default function SuperAdminConsole() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Alerts</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Active Alerts
+                </CardTitle>
                 <Bell className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
-                  {mockSystemAlerts.filter(alert => !alert.resolved).length}
+                  {mockSystemAlerts.filter((alert) => !alert.resolved).length}
                 </div>
                 <p className="text-xs text-muted-foreground">Unresolved</p>
               </CardContent>
@@ -1042,7 +1203,12 @@ export default function SuperAdminConsole() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
-                  {mockSystemAlerts.filter(alert => alert.severity === "critical" && !alert.resolved).length}
+                  {
+                    mockSystemAlerts.filter(
+                      (alert) =>
+                        alert.severity === "critical" && !alert.resolved,
+                    ).length
+                  }
                 </div>
                 <p className="text-xs text-muted-foreground">High priority</p>
               </CardContent>
@@ -1050,12 +1216,14 @@ export default function SuperAdminConsole() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Resolved Today</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Resolved Today
+                </CardTitle>
                 <CheckCircle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  {mockSystemAlerts.filter(alert => alert.resolved).length}
+                  {mockSystemAlerts.filter((alert) => alert.resolved).length}
                 </div>
                 <p className="text-xs text-muted-foreground">Fixed</p>
               </CardContent>
@@ -1063,7 +1231,9 @@ export default function SuperAdminConsole() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg Resolution</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Avg Resolution
+                </CardTitle>
                 <Clock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -1077,28 +1247,39 @@ export default function SuperAdminConsole() {
           <Card>
             <CardHeader>
               <CardTitle>System Alerts</CardTitle>
-              <CardDescription>Real-time alerts across the platform</CardDescription>
+              <CardDescription>
+                Real-time alerts across the platform
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockSystemAlerts.map(alert => (
-                  <div key={alert.id} className="flex justify-between items-start p-4 border rounded-lg">
+                {mockSystemAlerts.map((alert) => (
+                  <div
+                    key={alert.id}
+                    className="flex justify-between items-start p-4 border rounded-lg"
+                  >
                     <div className="flex items-start gap-3">
-                      <Badge className={`${getSeverityColor(alert.severity)} text-white mt-1`}>
+                      <Badge
+                        className={`${getSeverityColor(alert.severity)} text-white mt-1`}
+                      >
                         {alert.severity.toUpperCase()}
                       </Badge>
                       <div>
                         <div className="font-medium">{alert.title}</div>
-                        <div className="text-sm text-gray-600 mt-1">{alert.description}</div>
+                        <div className="text-sm text-gray-600 mt-1">
+                          {alert.description}
+                        </div>
                         <div className="text-xs text-gray-500 mt-2">
-                          Affected: {alert.affectedOrgs.join(", ")} • 
+                          Affected: {alert.affectedOrgs.join(", ")} •
                           {new Date(alert.timestamp).toLocaleString()}
                         </div>
                       </div>
                     </div>
                     <div className="flex gap-2">
                       {alert.resolved ? (
-                        <Badge className="bg-green-500 text-white">Resolved</Badge>
+                        <Badge className="bg-green-500 text-white">
+                          Resolved
+                        </Badge>
                       ) : (
                         <Button size="sm">Resolve</Button>
                       )}
@@ -1115,18 +1296,24 @@ export default function SuperAdminConsole() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Audit Logs</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Audit Logs
+                </CardTitle>
                 <Database className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">2.3M</div>
-                <p className="text-xs text-muted-foreground">Events logged today</p>
+                <p className="text-xs text-muted-foreground">
+                  Events logged today
+                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Data Exports</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Data Exports
+                </CardTitle>
                 <Download className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -1137,7 +1324,9 @@ export default function SuperAdminConsole() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Compliance Score</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Compliance Score
+                </CardTitle>
                 <Shield className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -1151,14 +1340,18 @@ export default function SuperAdminConsole() {
           <Card>
             <CardHeader>
               <CardTitle>Recent Compliance Activity</CardTitle>
-              <CardDescription>Latest data access and export requests</CardDescription>
+              <CardDescription>
+                Latest data access and export requests
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 border rounded-lg">
                   <div>
                     <div className="font-medium">Data Export Request</div>
-                    <div className="text-sm text-gray-600">TechCorp Solutions - Full user data</div>
+                    <div className="text-sm text-gray-600">
+                      TechCorp Solutions - Full user data
+                    </div>
                     <div className="text-xs text-gray-500">2 hours ago</div>
                   </div>
                   <Badge className="bg-blue-500 text-white">Processing</Badge>
@@ -1167,7 +1360,9 @@ export default function SuperAdminConsole() {
                 <div className="flex justify-between items-center p-3 border rounded-lg">
                   <div>
                     <div className="font-medium">Account Deletion</div>
-                    <div className="text-sm text-gray-600">StartupXYZ - Complete data removal</div>
+                    <div className="text-sm text-gray-600">
+                      StartupXYZ - Complete data removal
+                    </div>
                     <div className="text-xs text-gray-500">Yesterday</div>
                   </div>
                   <Badge className="bg-green-500 text-white">Completed</Badge>
@@ -1176,7 +1371,9 @@ export default function SuperAdminConsole() {
                 <div className="flex justify-between items-center p-3 border rounded-lg">
                   <div>
                     <div className="font-medium">Audit Trail Access</div>
-                    <div className="text-sm text-gray-600">Fashion Boutique - 6 month history</div>
+                    <div className="text-sm text-gray-600">
+                      Fashion Boutique - 6 month history
+                    </div>
                     <div className="text-xs text-gray-500">3 days ago</div>
                   </div>
                   <Badge className="bg-green-500 text-white">Delivered</Badge>
@@ -1184,6 +1381,10 @@ export default function SuperAdminConsole() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="rbac" className="space-y-6">
+          <RBACEditor />
         </TabsContent>
       </Tabs>
     </div>

@@ -15,21 +15,23 @@ import {
   Monitor,
   Activity,
   Users,
-  Settings
+  Settings,
+  ArrowLeft,
+  LogOut,
 } from "lucide-react";
-
 
 interface SuperAdminLayoutProps {
   children: React.ReactNode;
 }
 
 export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
-
   const isActiveRoute = (path: string) => {
-    return location.pathname === path || location.pathname.startsWith(path + "/");
+    return (
+      location.pathname === path || location.pathname.startsWith(path + "/")
+    );
   };
 
   const navLinkClass = (path: string) => {
@@ -39,7 +41,6 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
         : "text-muted-foreground hover:text-foreground hover:bg-muted"
     }`;
   };
-
 
   if (!user || user.role !== "SUPER_ADMIN") {
     return (
@@ -96,9 +97,23 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
                 </p>
               </div>
             </div>
-            <Badge variant="outline" className="border-primary/30 text-primary">
-              Super Admin Access
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="outline"
+                className="border-primary/30 text-primary"
+              >
+                Super Admin Access
+              </Badge>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={logout}
+                className="text-red-600 border-red-200 hover:bg-red-50"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign Out
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -115,7 +130,10 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
               <Activity className="h-4 w-4" />
               Health Monitor
             </Link>
-            <Link to="/super-admin/analytics" className={navLinkClass("/super-admin/analytics")}>
+            <Link
+              to="/super-admin/analytics"
+              className={navLinkClass("/super-admin/analytics")}
+            >
               <Monitor className="h-4 w-4" />
               Analytics & Insights
             </Link>
@@ -127,7 +145,6 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
       <Alert className="mx-4 sm:mx-6 lg:mx-8 mt-6 mb-6 border-blue-200 bg-blue-50">
         <Shield className="h-4 w-4 text-blue-600" />
         <AlertDescription className="text-blue-800">
-
           {location.pathname.startsWith("/org-flows") ? (
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -155,7 +172,6 @@ export function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
               needed.
             </>
           )}
-
         </AlertDescription>
       </Alert>
 

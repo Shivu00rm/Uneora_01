@@ -336,7 +336,15 @@ function AuthenticatedApp() {
           <Route
             path="/app/*"
             element={
-              <RoleRoute allowedRoles={["ORG_ADMIN", "ORG_USER", "STORE_MANAGER", "CASHIER", "ONLINE_OPS_MANAGER"]}>
+              <RoleRoute
+                allowedRoles={[
+                  "ORG_ADMIN",
+                  "ORG_USER",
+                  "STORE_MANAGER",
+                  "CASHIER",
+                  "ONLINE_OPS_MANAGER",
+                ]}
+              >
                 <TenantLayout>
                   <Routes>
                     <Route path="dashboard" element={<AppDashboard />} />
@@ -560,12 +568,6 @@ function AuthenticatedApp() {
         </Routes>
       </main>
       <Footer />
-      {/* Development-only role selector */}
-      {import.meta.env.DEV && (
-        <React.Suspense fallback={null}>
-          <DevRoleSelector />
-        </React.Suspense>
-      )}
     </div>
   );
 }

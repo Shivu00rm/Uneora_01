@@ -29,6 +29,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
+import OrgRBACEditor from "@/components/org-admin/OrgRBACEditor";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -60,6 +61,40 @@ import {
   RefreshCw,
 } from "lucide-react";
 
+// Define org-level permissions matrix
+const ALL_PERMISSIONS = {
+  dashboard: { label: "Dashboard", actions: ["view"] },
+  inventory: {
+    label: "Inventory",
+    actions: ["view", "create", "edit", "delete", "export"],
+  },
+  stock_movements: {
+    label: "Stock Movements",
+    actions: ["view", "create", "edit"],
+  },
+  pos: { label: "POS", actions: ["view", "create", "refund"] },
+  vendors: { label: "Vendors", actions: ["view", "create", "edit", "delete"] },
+  purchase_orders: {
+    label: "Purchase Orders",
+    actions: ["view", "create", "edit", "approve", "delete"],
+  },
+  analytics: { label: "Analytics", actions: ["view", "export"] },
+  files: { label: "Files", actions: ["view", "upload", "delete"] },
+  users: { label: "Users", actions: ["view", "create", "edit", "delete"] },
+  settings: { label: "Settings", actions: ["view", "edit"] },
+  stores: {
+    label: "Stores",
+    actions: ["view", "create", "edit", "delete", "manage"],
+  },
+  ecommerce: {
+    label: "E-commerce",
+    actions: ["view", "create", "edit", "delete", "sync", "manage"],
+  },
+  billing: { label: "Billing", actions: ["view"] },
+} as const;
+
+type PermissionMap = Record<string, string[]>;
+
 // Mock team data for the current organization
 const mockTeamMembers = [
   {
@@ -70,15 +105,15 @@ const mockTeamMembers = [
     status: "active",
     lastLogin: "2 hours ago",
     joinedDate: "2023-01-15",
-    permissions: [
-      "inventory",
-      "pos",
-      "vendors",
-      "purchase_orders",
-      "analytics",
-      "users",
-      "settings",
-    ],
+    permissions: {
+      inventory: ["view", "create", "edit", "delete", "export"],
+      pos: ["view", "create", "refund"],
+      vendors: ["view", "create", "edit", "delete"],
+      purchase_orders: ["view", "create", "edit", "approve", "delete"],
+      analytics: ["view", "export"],
+      users: ["view", "create", "edit", "delete"],
+      settings: ["view", "edit"],
+    } as PermissionMap,
   },
   {
     id: 2,
@@ -88,7 +123,12 @@ const mockTeamMembers = [
     status: "active",
     lastLogin: "1 day ago",
     joinedDate: "2023-03-20",
-    permissions: ["inventory", "pos", "vendors", "analytics"],
+    permissions: {
+      inventory: ["view"],
+      pos: ["view"],
+      vendors: ["view"],
+      analytics: ["view"],
+    } as PermissionMap,
   },
   {
     id: 3,
@@ -98,7 +138,10 @@ const mockTeamMembers = [
     status: "active",
     lastLogin: "5 minutes ago",
     joinedDate: "2023-06-10",
-    permissions: ["pos", "inventory"],
+    permissions: {
+      inventory: ["view"],
+      pos: ["view"],
+    } as PermissionMap,
   },
   {
     id: 4,
@@ -108,7 +151,9 @@ const mockTeamMembers = [
     status: "inactive",
     lastLogin: "3 days ago",
     joinedDate: "2023-09-05",
-    permissions: ["inventory"],
+    permissions: {
+      inventory: ["view"],
+    } as PermissionMap,
   },
 ];
 
@@ -132,8 +177,14 @@ export default function TeamManagement() {
   const [filterRole, setFilterRole] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [teamMembers, setTeamMembers] = useState(mockTeamMembers);
+  const [isEditPermissionsOpen, setIsEditPermissionsOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [pendingPermissions, setPendingPermissions] = useState<PermissionMap>(
+    {},
+  );
 
-  const filteredAndSortedMembers = mockTeamMembers
+  const filteredAndSortedMembers = teamMembers
     .filter((member) => {
       const matchesSearch =
         member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -156,10 +207,8 @@ export default function TeamManagement() {
       return 0;
     });
 
-  const activeMembers = mockTeamMembers.filter(
-    (m) => m.status === "active",
-  ).length;
-  const totalMembers = mockTeamMembers.length;
+  const activeMembers = teamMembers.filter((m) => m.status === "active").length;
+  const totalMembers = teamMembers.length;
 
   const handleSelectAll = () => {
     if (selectedMembers.length === filteredAndSortedMembers.length) {
@@ -351,7 +400,7 @@ export default function TeamManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockTeamMembers.filter((m) => m.role === "ORG_ADMIN").length}
+              {teamMembers.filter((m) => m.role === "ORG_ADMIN").length}
             </div>
             <p className="text-xs text-muted-foreground">Full permissions</p>
           </CardContent>
@@ -364,7 +413,7 @@ export default function TeamManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockTeamMembers.filter((m) => m.role === "ORG_USER").length}
+              {teamMembers.filter((m) => m.role === "ORG_USER").length}
             </div>
             <p className="text-xs text-muted-foreground">Limited access</p>
           </CardContent>
@@ -623,18 +672,20 @@ export default function TeamManagement() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        {member.permissions.slice(0, 2).map((permission) => (
-                          <Badge
-                            key={permission}
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {permission}
-                          </Badge>
-                        ))}
-                        {member.permissions.length > 2 && (
+                        {Object.keys(member.permissions)
+                          .slice(0, 2)
+                          .map((module) => (
+                            <Badge
+                              key={module}
+                              variant="outline"
+                              className="text-xs"
+                            >
+                              {module.replace(/_/g, " ")}
+                            </Badge>
+                          ))}
+                        {Object.keys(member.permissions).length > 2 && (
                           <Badge variant="outline" className="text-xs">
-                            +{member.permissions.length - 2} more
+                            +{Object.keys(member.permissions).length - 2} more
                           </Badge>
                         )}
                       </div>
@@ -647,9 +698,15 @@ export default function TeamManagement() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setSelectedUser(member);
+                              setPendingPermissions(member.permissions);
+                              setIsEditPermissionsOpen(true);
+                            }}
+                          >
                             <Edit className="h-4 w-4 mr-2" />
-                            Edit Member
+                            Edit Permissions
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Mail className="h-4 w-4 mr-2" />
@@ -679,6 +736,121 @@ export default function TeamManagement() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Edit Permissions Dialog */}
+      <Dialog
+        open={isEditPermissionsOpen}
+        onOpenChange={setIsEditPermissionsOpen}
+      >
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Edit Permissions</DialogTitle>
+            <DialogDescription>
+              Update permissions for {selectedUser?.name}. Changes apply only to{" "}
+              {user?.organizationName}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 max-h-[60vh] overflow-auto">
+            {Object.entries(ALL_PERMISSIONS).map(([module, config]) => {
+              const moduleActions = pendingPermissions[module] || [];
+              const allActions = (config as any).actions as string[];
+              const moduleChecked = moduleActions.length > 0;
+              return (
+                <Card key={module}>
+                  <CardHeader className="py-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-sm font-medium">
+                        {(config as any).label}
+                      </CardTitle>
+                      <div className="flex items-center gap-2 text-sm">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={moduleChecked}
+                            onChange={(e) => {
+                              const checked = e.currentTarget.checked;
+                              setPendingPermissions((prev) => ({
+                                ...prev,
+                                [module]: checked ? [...allActions] : [],
+                              }));
+                            }}
+                          />
+                          <span>Enable</span>
+                        </label>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0 pb-4">
+                    <div className="flex flex-wrap gap-3">
+                      {allActions.map((action) => (
+                        <label
+                          key={action}
+                          className="flex items-center gap-2 border rounded px-2 py-1 text-sm"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={moduleActions.includes(action)}
+                            onChange={(e) => {
+                              const checked = e.currentTarget.checked;
+                              setPendingPermissions((prev) => {
+                                const current = prev[module] || [];
+                                const next = checked
+                                  ? Array.from(new Set([...current, action]))
+                                  : current.filter((a) => a !== action);
+                                return { ...prev, [module]: next };
+                              });
+                            }}
+                          />
+                          <span className="capitalize">
+                            {action.replace(/_/g, " ")}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsEditPermissionsOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!selectedUser) return;
+                setTeamMembers((prev) =>
+                  prev.map((m) =>
+                    m.id === selectedUser.id
+                      ? { ...m, permissions: pendingPermissions }
+                      : m,
+                  ),
+                );
+                await fetch("/api/org/users/permissions", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    orgId: user?.organizationId,
+                    userId: selectedUser.id,
+                    permissions: pendingPermissions,
+                  }),
+                });
+                setIsEditPermissionsOpen(false);
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Organization-level Permissions (RBAC) */}
+      <div className="mt-8">
+        <OrgRBACEditor />
+      </div>
     </div>
   );
 }

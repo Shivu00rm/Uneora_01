@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -21,10 +27,22 @@ import {
   Play,
   Pause,
   Edit2,
-  Trash2
+  Trash2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import type { EcommercePlatform, SyncStatusResponse } from "@shared/api";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import SafeResponsiveContainer from "@/components/charts/SafeResponsiveContainer";
 
 // Mock data for demonstration
 const mockPlatforms: EcommercePlatform[] = [
@@ -35,7 +53,7 @@ const mockPlatforms: EcommercePlatform[] = [
     name: "Main Shopify Store",
     credentials: {
       storeUrl: "mystore.myshopify.com",
-      accessToken: "shpat_***************"
+      accessToken: "shpat_***************",
     },
     syncSettings: {
       syncInventory: true,
@@ -43,10 +61,10 @@ const mockPlatforms: EcommercePlatform[] = [
       syncOrders: true,
       syncProducts: true,
       autoLowStockUpdate: true,
-      syncFrequency: "realtime"
+      syncFrequency: "realtime",
     },
     mappings: {
-      storeId: "store-1"
+      storeId: "store-1",
     },
     status: "connected",
     lastSync: "2024-01-15T10:30:00Z",
@@ -54,10 +72,10 @@ const mockPlatforms: EcommercePlatform[] = [
       productsSync: 1250,
       ordersSync: 543,
       lastSyncTime: "2024-01-15T10:30:00Z",
-      errors: []
+      errors: [],
     },
     createdAt: "2024-01-01T10:00:00Z",
-    updatedAt: "2024-01-15T10:30:00Z"
+    updatedAt: "2024-01-15T10:30:00Z",
   },
   {
     id: "platform-2",
@@ -66,7 +84,7 @@ const mockPlatforms: EcommercePlatform[] = [
     name: "Amazon Seller Account",
     credentials: {
       sellerId: "A2EXAMPLE123456",
-      accessToken: "Atza|***************"
+      accessToken: "Atza|***************",
     },
     syncSettings: {
       syncInventory: true,
@@ -74,7 +92,7 @@ const mockPlatforms: EcommercePlatform[] = [
       syncOrders: true,
       syncProducts: false,
       autoLowStockUpdate: true,
-      syncFrequency: "hourly"
+      syncFrequency: "hourly",
     },
     mappings: {},
     status: "connected",
@@ -83,10 +101,10 @@ const mockPlatforms: EcommercePlatform[] = [
       productsSync: 85,
       ordersSync: 234,
       lastSyncTime: "2024-01-15T09:00:00Z",
-      errors: ["Price sync failed for 3 products"]
+      errors: ["Price sync failed for 3 products"],
     },
     createdAt: "2024-01-05T10:00:00Z",
-    updatedAt: "2024-01-15T09:00:00Z"
+    updatedAt: "2024-01-15T09:00:00Z",
   },
   {
     id: "platform-3",
@@ -96,7 +114,7 @@ const mockPlatforms: EcommercePlatform[] = [
     credentials: {
       storeUrl: "https://mystore.com",
       apiKey: "ck_***************",
-      apiSecret: "cs_***************"
+      apiSecret: "cs_***************",
     },
     syncSettings: {
       syncInventory: true,
@@ -104,10 +122,10 @@ const mockPlatforms: EcommercePlatform[] = [
       syncOrders: true,
       syncProducts: true,
       autoLowStockUpdate: false,
-      syncFrequency: "daily"
+      syncFrequency: "daily",
     },
     mappings: {
-      storeId: "store-2"
+      storeId: "store-2",
     },
     status: "error",
     lastSync: "2024-01-14T18:00:00Z",
@@ -115,11 +133,11 @@ const mockPlatforms: EcommercePlatform[] = [
       productsSync: 0,
       ordersSync: 0,
       lastSyncTime: "2024-01-14T18:00:00Z",
-      errors: ["Authentication failed", "Connection timeout"]
+      errors: ["Authentication failed", "Connection timeout"],
     },
     createdAt: "2024-01-10T10:00:00Z",
-    updatedAt: "2024-01-14T18:00:00Z"
-  }
+    updatedAt: "2024-01-14T18:00:00Z",
+  },
 ];
 
 const mockSyncStatus: SyncStatusResponse = {
@@ -132,71 +150,91 @@ const mockSyncStatus: SyncStatusResponse = {
       syncedItems: {
         products: 1250,
         orders: 543,
-        inventory: 1250
-      }
+        inventory: 1250,
+      },
     },
     {
-      platformId: "platform-2", 
+      platformId: "platform-2",
       platformName: "Amazon Seller Account",
       status: "completed",
       lastSync: "2024-01-15T09:00:00Z",
       syncedItems: {
         products: 85,
         orders: 234,
-        inventory: 85
+        inventory: 85,
       },
-      errors: ["Price sync failed for 3 products"]
+      errors: ["Price sync failed for 3 products"],
     },
     {
       platformId: "platform-3",
-      platformName: "Website Store", 
+      platformName: "Website Store",
       status: "error",
       lastSync: "2024-01-14T18:00:00Z",
       syncedItems: {
         products: 0,
         orders: 0,
-        inventory: 0
+        inventory: 0,
       },
-      errors: ["Authentication failed", "Connection timeout"]
-    }
+      errors: ["Authentication failed", "Connection timeout"],
+    },
   ],
-  overallStatus: "warning"
+  overallStatus: "warning",
 };
 
 export default function EcommerceIntegration() {
   const { hasPermission, canManageEcommerce } = useAuth();
-  const [platforms, setPlatforms] = useState<EcommercePlatform[]>(mockPlatforms);
-  const [syncStatus, setSyncStatus] = useState<SyncStatusResponse>(mockSyncStatus);
+  const [platforms, setPlatforms] =
+    useState<EcommercePlatform[]>(mockPlatforms);
+  const [syncStatus, setSyncStatus] =
+    useState<SyncStatusResponse>(mockSyncStatus);
   const [activeTab, setActiveTab] = useState("overview");
   const [isRunningSync, setIsRunningSync] = useState(false);
+  const [analyticsView, setAnalyticsView] = useState<"list" | "bar" | "pie">(
+    "list",
+  );
 
-  const getStatusIcon = (status: EcommercePlatform['status']) => {
+  const getStatusIcon = (status: EcommercePlatform["status"]) => {
     switch (status) {
-      case 'connected': return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'disconnected': return <XCircle className="h-4 w-4 text-gray-500" />;
-      case 'error': return <AlertCircle className="h-4 w-4 text-red-500" />;
-      case 'syncing': return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
-      default: return <Clock className="h-4 w-4 text-gray-500" />;
+      case "connected":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "disconnected":
+        return <XCircle className="h-4 w-4 text-gray-500" />;
+      case "error":
+        return <AlertCircle className="h-4 w-4 text-red-500" />;
+      case "syncing":
+        return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
+      default:
+        return <Clock className="h-4 w-4 text-gray-500" />;
     }
   };
 
-  const getStatusColor = (status: EcommercePlatform['status']) => {
+  const getStatusColor = (status: EcommercePlatform["status"]) => {
     switch (status) {
-      case 'connected': return 'bg-green-500';
-      case 'disconnected': return 'bg-gray-500';
-      case 'error': return 'bg-red-500';
-      case 'syncing': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case "connected":
+        return "bg-green-500";
+      case "disconnected":
+        return "bg-gray-500";
+      case "error":
+        return "bg-red-500";
+      case "syncing":
+        return "bg-blue-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
-  const getPlatformIcon = (platform: EcommercePlatform['platform']) => {
+  const getPlatformIcon = (platform: EcommercePlatform["platform"]) => {
     switch (platform) {
-      case 'shopify': return <ShoppingCart className="h-6 w-6 text-green-600" />;
-      case 'amazon': return <Package className="h-6 w-6 text-orange-600" />;
-      case 'woocommerce': return <Globe className="h-6 w-6 text-purple-600" />;
-      case 'flipkart': return <TrendingUp className="h-6 w-6 text-blue-600" />;
-      default: return <Globe className="h-6 w-6 text-gray-600" />;
+      case "shopify":
+        return <ShoppingCart className="h-6 w-6 text-green-600" />;
+      case "amazon":
+        return <Package className="h-6 w-6 text-orange-600" />;
+      case "woocommerce":
+        return <Globe className="h-6 w-6 text-purple-600" />;
+      case "flipkart":
+        return <TrendingUp className="h-6 w-6 text-blue-600" />;
+      default:
+        return <Globe className="h-6 w-6 text-gray-600" />;
     }
   };
 
@@ -206,27 +244,40 @@ export default function EcommerceIntegration() {
     setTimeout(() => {
       setIsRunningSync(false);
       if (platformId) {
-        setPlatforms(prev => prev.map(p => 
-          p.id === platformId 
-            ? { ...p, status: "connected", lastSync: new Date().toISOString() }
-            : p
-        ));
+        setPlatforms((prev) =>
+          prev.map((p) =>
+            p.id === platformId
+              ? {
+                  ...p,
+                  status: "connected",
+                  lastSync: new Date().toISOString(),
+                }
+              : p,
+          ),
+        );
       } else {
-        setPlatforms(prev => prev.map(p => ({ 
-          ...p, 
-          status: "connected", 
-          lastSync: new Date().toISOString() 
-        })));
+        setPlatforms((prev) =>
+          prev.map((p) => ({
+            ...p,
+            status: "connected",
+            lastSync: new Date().toISOString(),
+          })),
+        );
       }
     }, 3000);
   };
 
   const handleTogglePlatform = (platformId: string) => {
-    setPlatforms(prev => prev.map(p => 
-      p.id === platformId 
-        ? { ...p, status: p.status === "connected" ? "disconnected" : "connected" }
-        : p
-    ));
+    setPlatforms((prev) =>
+      prev.map((p) =>
+        p.id === platformId
+          ? {
+              ...p,
+              status: p.status === "connected" ? "disconnected" : "connected",
+            }
+          : p,
+      ),
+    );
   };
 
   const handleEditPlatform = (platformId: string) => {
@@ -236,7 +287,7 @@ export default function EcommerceIntegration() {
 
   const handleDeletePlatform = (platformId: string) => {
     if (confirm("Are you sure you want to remove this integration?")) {
-      setPlatforms(prev => prev.filter(p => p.id !== platformId));
+      setPlatforms((prev) => prev.filter((p) => p.id !== platformId));
     }
   };
 
@@ -245,7 +296,9 @@ export default function EcommerceIntegration() {
       <div className="p-6">
         <Card>
           <CardContent className="text-center py-8">
-            <p className="text-gray-500">You don't have permission to view e-commerce integrations.</p>
+            <p className="text-gray-500">
+              You don't have permission to view e-commerce integrations.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -257,8 +310,12 @@ export default function EcommerceIntegration() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">E-commerce Integration</h1>
-          <p className="text-gray-600">Manage multi-channel sync for inventory, orders, and pricing</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            E-commerce Integration
+          </h1>
+          <p className="text-gray-600">
+            Manage multi-channel sync for inventory, orders, and pricing
+          </p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -295,11 +352,15 @@ export default function EcommerceIntegration() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Connected Platforms</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Connected Platforms
+                </CardTitle>
                 <Globe className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{platforms.filter(p => p.status === "connected").length}</div>
+                <div className="text-2xl font-bold">
+                  {platforms.filter((p) => p.status === "connected").length}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   {platforms.length} total integrations
                 </p>
@@ -308,12 +369,17 @@ export default function EcommerceIntegration() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Synced Products</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Synced Products
+                </CardTitle>
                 <Package className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {platforms.reduce((sum, p) => sum + (p.syncStats?.productsSync || 0), 0)}
+                  {platforms.reduce(
+                    (sum, p) => sum + (p.syncStats?.productsSync || 0),
+                    0,
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Across all platforms
@@ -323,12 +389,17 @@ export default function EcommerceIntegration() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Monthly Orders</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Monthly Orders
+                </CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {platforms.reduce((sum, p) => sum + (p.syncStats?.ordersSync || 0), 0)}
+                  {platforms.reduce(
+                    (sum, p) => sum + (p.syncStats?.ordersSync || 0),
+                    0,
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   +12% from last month
@@ -338,18 +409,28 @@ export default function EcommerceIntegration() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Sync Health</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Sync Health
+                </CardTitle>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
                   <div className="text-2xl font-bold">
-                    {syncStatus.overallStatus === "healthy" ? "100%" : 
-                     syncStatus.overallStatus === "warning" ? "75%" : "50%"}
+                    {syncStatus.overallStatus === "healthy"
+                      ? "100%"
+                      : syncStatus.overallStatus === "warning"
+                        ? "75%"
+                        : "50%"}
                   </div>
-                  <Badge 
-                    variant={syncStatus.overallStatus === "healthy" ? "default" : 
-                           syncStatus.overallStatus === "warning" ? "secondary" : "destructive"}
+                  <Badge
+                    variant={
+                      syncStatus.overallStatus === "healthy"
+                        ? "default"
+                        : syncStatus.overallStatus === "warning"
+                          ? "secondary"
+                          : "destructive"
+                    }
                   >
                     {syncStatus.overallStatus}
                   </Badge>
@@ -365,7 +446,9 @@ export default function EcommerceIntegration() {
           <Card>
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Manage your e-commerce integrations</CardDescription>
+              <CardDescription>
+                Manage your e-commerce integrations
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -389,17 +472,24 @@ export default function EcommerceIntegration() {
         <TabsContent value="platforms" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {platforms.map((platform) => (
-              <Card key={platform.id} className="hover:shadow-lg transition-shadow">
+              <Card
+                key={platform.id}
+                className="hover:shadow-lg transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-3">
                       {getPlatformIcon(platform.platform)}
                       <div>
-                        <CardTitle className="text-lg">{platform.name}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {platform.name}
+                        </CardTitle>
                         <CardDescription className="flex items-center gap-2">
-                          <span className="capitalize">{platform.platform}</span>
-                          <Badge 
-                            variant="outline" 
+                          <span className="capitalize">
+                            {platform.platform}
+                          </span>
+                          <Badge
+                            variant="outline"
                             className={`${getStatusColor(platform.status)} text-white border-none`}
                           >
                             {platform.status}
@@ -471,11 +561,15 @@ export default function EcommerceIntegration() {
                   {platform.syncStats && (
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <div className="text-lg font-semibold">{platform.syncStats.productsSync}</div>
+                        <div className="text-lg font-semibold">
+                          {platform.syncStats.productsSync}
+                        </div>
                         <div className="text-gray-600">Products</div>
                       </div>
                       <div>
-                        <div className="text-lg font-semibold">{platform.syncStats.ordersSync}</div>
+                        <div className="text-lg font-semibold">
+                          {platform.syncStats.ordersSync}
+                        </div>
                         <div className="text-gray-600">Orders</div>
                       </div>
                     </div>
@@ -489,16 +583,19 @@ export default function EcommerceIntegration() {
                   )}
 
                   {/* Errors */}
-                  {platform.syncStats?.errors && platform.syncStats.errors.length > 0 && (
-                    <div className="text-sm text-red-600">
-                      <div className="font-medium">Recent Errors:</div>
-                      <ul className="list-disc list-inside">
-                        {platform.syncStats.errors.slice(0, 2).map((error, index) => (
-                          <li key={index}>{error}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  {platform.syncStats?.errors &&
+                    platform.syncStats.errors.length > 0 && (
+                      <div className="text-sm text-red-600">
+                        <div className="font-medium">Recent Errors:</div>
+                        <ul className="list-disc list-inside">
+                          {platform.syncStats.errors
+                            .slice(0, 2)
+                            .map((error, index) => (
+                              <li key={index}>{error}</li>
+                            ))}
+                        </ul>
+                      </div>
+                    )}
 
                   {/* Action Buttons */}
                   <div className="flex gap-2 pt-2">
@@ -516,9 +613,9 @@ export default function EcommerceIntegration() {
                       )}
                       Sync
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleTogglePlatform(platform.id)}
                     >
                       {platform.status === "connected" ? (
@@ -538,24 +635,33 @@ export default function EcommerceIntegration() {
           <Card>
             <CardHeader>
               <CardTitle>Sync Status</CardTitle>
-              <CardDescription>Real-time sync status for all connected platforms</CardDescription>
+              <CardDescription>
+                Real-time sync status for all connected platforms
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {syncStatus.platforms.map((platform) => (
-                  <div key={platform.platformId} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div
+                    key={platform.platformId}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
                     <div className="flex items-center gap-4">
                       {getStatusIcon(platform.status as any)}
                       <div>
-                        <div className="font-medium">{platform.platformName}</div>
+                        <div className="font-medium">
+                          {platform.platformName}
+                        </div>
                         <div className="text-sm text-gray-600">
-                          Last sync: {new Date(platform.lastSync).toLocaleString()}
+                          Last sync:{" "}
+                          {new Date(platform.lastSync).toLocaleString()}
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-medium">
-                        {platform.syncedItems.products} products, {platform.syncedItems.orders} orders
+                        {platform.syncedItems.products} products,{" "}
+                        {platform.syncedItems.orders} orders
                       </div>
                       {platform.errors && platform.errors.length > 0 && (
                         <div className="text-xs text-red-600">
@@ -571,49 +677,138 @@ export default function EcommerceIntegration() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Channel Performance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {platforms.map((platform) => (
-                    <div key={platform.id} className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        {getPlatformIcon(platform.platform)}
-                        <span>{platform.name}</span>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-medium">{platform.syncStats?.ordersSync || 0} orders</div>
-                        <div className="text-sm text-gray-600">
-                          {platform.syncStats?.productsSync || 0} products
+          <div className="flex items-center justify-end">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">View:</span>
+              <select
+                className="border rounded px-2 py-1 text-sm"
+                value={analyticsView}
+                onChange={(e) => setAnalyticsView(e.target.value as any)}
+              >
+                <option value="list">List</option>
+                <option value="bar">Bar</option>
+                <option value="pie">Pie</option>
+              </select>
+            </div>
+          </div>
+          {analyticsView === "list" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Channel Performance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {platforms.map((platform) => (
+                      <div
+                        key={platform.id}
+                        className="flex justify-between items-center"
+                      >
+                        <div className="flex items-center gap-2">
+                          {getPlatformIcon(platform.platform)}
+                          <span>{platform.name}</span>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-medium">
+                            {platform.syncStats?.ordersSync || 0} orders
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {platform.syncStats?.productsSync || 0} products
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
 
+              <Card>
+                <CardHeader>
+                  <CardTitle>Sync Frequency</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {platforms.map((platform) => (
+                      <div
+                        key={platform.id}
+                        className="flex justify-between items-center"
+                      >
+                        <span>{platform.name}</span>
+                        <Badge variant="outline" className="capitalize">
+                          {platform.syncSettings.syncFrequency}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {analyticsView === "bar" && (
             <Card>
               <CardHeader>
-                <CardTitle>Sync Frequency</CardTitle>
+                <CardTitle>Orders and Products by Channel</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {platforms.map((platform) => (
-                    <div key={platform.id} className="flex justify-between items-center">
-                      <span>{platform.name}</span>
-                      <Badge variant="outline" className="capitalize">
-                        {platform.syncSettings.syncFrequency}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
+              <CardContent style={{ height: 320 }}>
+                <SafeResponsiveContainer width="100%" height="100%">
+                  <BarChart data={platforms}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar
+                      dataKey={(d: any) => d.syncStats?.ordersSync || 0}
+                      name="Orders"
+                      fill="#60a5fa"
+                    />
+                    <Bar
+                      dataKey={(d: any) => d.syncStats?.productsSync || 0}
+                      name="Products"
+                      fill="#34d399"
+                    />
+                  </BarChart>
+                </SafeResponsiveContainer>
               </CardContent>
             </Card>
-          </div>
+          )}
+
+          {analyticsView === "pie" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Orders Share by Channel</CardTitle>
+              </CardHeader>
+              <CardContent style={{ height: 320 }}>
+                <SafeResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={platforms.map((p) => ({
+                        name: p.name,
+                        value: p.syncStats?.ordersSync || 0,
+                      }))}
+                      dataKey="value"
+                      nameKey="name"
+                      outerRadius={110}
+                      label
+                    >
+                      {platforms.map((_, idx) => (
+                        <Cell
+                          key={idx}
+                          fill={
+                            ["#60a5fa", "#34d399", "#f59e0b", "#f472b6"][
+                              idx % 4
+                            ]
+                          }
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </SafeResponsiveContainer>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
     </div>
