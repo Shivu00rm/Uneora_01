@@ -583,6 +583,7 @@ export default function EcommerceIntegration() {
               </select>
             </div>
           </div>
+          {analyticsView === "list" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -626,6 +627,48 @@ export default function EcommerceIntegration() {
               </CardContent>
             </Card>
           </div>
+          )}
+
+          {analyticsView === "bar" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Orders and Products by Channel</CardTitle>
+              </CardHeader>
+              <CardContent style={{ height: 320 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={platforms}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey={(d: any) => d.syncStats?.ordersSync || 0} name="Orders" fill="#60a5fa" />
+                    <Bar dataKey={(d: any) => d.syncStats?.productsSync || 0} name="Products" fill="#34d399" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          )}
+
+          {analyticsView === "pie" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Orders Share by Channel</CardTitle>
+              </CardHeader>
+              <CardContent style={{ height: 320 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={platforms.map(p => ({ name: p.name, value: p.syncStats?.ordersSync || 0 }))} dataKey="value" nameKey="name" outerRadius={110} label>
+                      {platforms.map((_, idx) => (
+                        <Cell key={idx} fill={["#60a5fa", "#34d399", "#f59e0b", "#f472b6"][idx % 4]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
     </div>
