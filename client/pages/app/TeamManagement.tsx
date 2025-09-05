@@ -61,6 +61,25 @@ import {
   RefreshCw,
 } from "lucide-react";
 
+// Define org-level permissions matrix
+const ALL_PERMISSIONS = {
+  dashboard: { label: "Dashboard", actions: ["view"] },
+  inventory: { label: "Inventory", actions: ["view", "create", "edit", "delete", "export"] },
+  stock_movements: { label: "Stock Movements", actions: ["view", "create", "edit"] },
+  pos: { label: "POS", actions: ["view", "create", "refund"] },
+  vendors: { label: "Vendors", actions: ["view", "create", "edit", "delete"] },
+  purchase_orders: { label: "Purchase Orders", actions: ["view", "create", "edit", "approve", "delete"] },
+  analytics: { label: "Analytics", actions: ["view", "export"] },
+  files: { label: "Files", actions: ["view", "upload", "delete"] },
+  users: { label: "Users", actions: ["view", "create", "edit", "delete"] },
+  settings: { label: "Settings", actions: ["view", "edit"] },
+  stores: { label: "Stores", actions: ["view", "create", "edit", "delete", "manage"] },
+  ecommerce: { label: "E-commerce", actions: ["view", "create", "edit", "delete", "sync", "manage"] },
+  billing: { label: "Billing", actions: ["view"] },
+} as const;
+
+type PermissionMap = Record<string, string[]>;
+
 // Mock team data for the current organization
 const mockTeamMembers = [
   {
@@ -71,15 +90,15 @@ const mockTeamMembers = [
     status: "active",
     lastLogin: "2 hours ago",
     joinedDate: "2023-01-15",
-    permissions: [
-      "inventory",
-      "pos",
-      "vendors",
-      "purchase_orders",
-      "analytics",
-      "users",
-      "settings",
-    ],
+    permissions: {
+      inventory: ["view", "create", "edit", "delete", "export"],
+      pos: ["view", "create", "refund"],
+      vendors: ["view", "create", "edit", "delete"],
+      purchase_orders: ["view", "create", "edit", "approve", "delete"],
+      analytics: ["view", "export"],
+      users: ["view", "create", "edit", "delete"],
+      settings: ["view", "edit"],
+    } as PermissionMap,
   },
   {
     id: 2,
@@ -89,7 +108,12 @@ const mockTeamMembers = [
     status: "active",
     lastLogin: "1 day ago",
     joinedDate: "2023-03-20",
-    permissions: ["inventory", "pos", "vendors", "analytics"],
+    permissions: {
+      inventory: ["view"],
+      pos: ["view"],
+      vendors: ["view"],
+      analytics: ["view"],
+    } as PermissionMap,
   },
   {
     id: 3,
@@ -99,7 +123,10 @@ const mockTeamMembers = [
     status: "active",
     lastLogin: "5 minutes ago",
     joinedDate: "2023-06-10",
-    permissions: ["pos", "inventory"],
+    permissions: {
+      inventory: ["view"],
+      pos: ["view"]
+    } as PermissionMap,
   },
   {
     id: 4,
@@ -109,7 +136,9 @@ const mockTeamMembers = [
     status: "inactive",
     lastLogin: "3 days ago",
     joinedDate: "2023-09-05",
-    permissions: ["inventory"],
+    permissions: {
+      inventory: ["view"]
+    } as PermissionMap,
   },
 ];
 
