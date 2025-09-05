@@ -657,18 +657,14 @@ export default function TeamManagement() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        {member.permissions.slice(0, 2).map((permission) => (
-                          <Badge
-                            key={permission}
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {permission}
+                        {Object.keys(member.permissions).slice(0, 2).map((module) => (
+                          <Badge key={module} variant="outline" className="text-xs">
+                            {module.replace(/_/g, " ")}
                           </Badge>
                         ))}
-                        {member.permissions.length > 2 && (
+                        {Object.keys(member.permissions).length > 2 && (
                           <Badge variant="outline" className="text-xs">
-                            +{member.permissions.length - 2} more
+                            +{Object.keys(member.permissions).length - 2} more
                           </Badge>
                         )}
                       </div>
