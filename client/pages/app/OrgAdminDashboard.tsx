@@ -159,6 +159,8 @@ const mockDashboardData = {
   }
 };
 
+type ViewMode = "cards" | "bar" | "pie";
+
 export default function OrgAdminDashboard() {
   const { isOrgAdmin, hasPermission } = useAuth();
   const [data] = useState(mockDashboardData);
