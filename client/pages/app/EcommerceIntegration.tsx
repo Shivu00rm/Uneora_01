@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import type { EcommercePlatform, SyncStatusResponse } from "@shared/api";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
 
 // Mock data for demonstration
 const mockPlatforms: EcommercePlatform[] = [
