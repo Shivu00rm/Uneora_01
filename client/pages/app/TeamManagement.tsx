@@ -29,6 +29,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
+import OrgRBACEditor from "@/components/org-admin/OrgRBACEditor";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -679,6 +680,11 @@ export default function TeamManagement() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Organization-level Permissions (RBAC) */}
+      <div className="mt-8">
+        <OrgRBACEditor />
+      </div>
     </div>
   );
 }
