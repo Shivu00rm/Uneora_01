@@ -170,6 +170,7 @@ export default function EcommerceIntegration() {
   const [syncStatus, setSyncStatus] = useState<SyncStatusResponse>(mockSyncStatus);
   const [activeTab, setActiveTab] = useState("overview");
   const [isRunningSync, setIsRunningSync] = useState(false);
+  const [analyticsView, setAnalyticsView] = useState<"list" | "bar" | "pie">("list");
 
   const getStatusIcon = (status: EcommercePlatform['status']) => {
     switch (status) {
