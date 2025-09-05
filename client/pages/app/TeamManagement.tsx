@@ -677,9 +677,9 @@ export default function TeamManagement() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => { setSelectedUser(member); setPendingPermissions(member.permissions); setIsEditPermissionsOpen(true); }}>
                             <Edit className="h-4 w-4 mr-2" />
-                            Edit Member
+                            Edit Permissions
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Mail className="h-4 w-4 mr-2" />
